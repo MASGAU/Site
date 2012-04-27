@@ -144,6 +144,14 @@ class Exporter extends MASGAUBase {
                         appendChild($this->createTextNode($code->prefix));
                 $tag->appendChild($this->xml->createAttribute("suffix"))->
                         appendChild($this->createTextNode(str_pad($code->suffix, 5, "0", STR_PAD_LEFT)));
+                if($code->append!=null) {
+                    $tag->appendChild($this->xml->createAttribute("append"))->
+                            appendChild($this->createTextNode($code->append));
+                }
+                if($code->type!=null) {
+                    $tag->appendChild($this->xml->createAttribute("type"))->
+                            appendChild($this->createTextNode($code->type));
+                }
         }
 
         if ($version->override_virtualstore) {
