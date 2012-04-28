@@ -7,7 +7,7 @@ class ShortcutLocation extends Location {
     public $ev;
     public $path;
     
-    public function loadFromDb($id) {
+    public function loadFromDb($id,$con) {
         $sql = 'select * from masgau_game_data.game_shortcuts where id = '.$id.'';
         $result = mysql_query($sql);
         
@@ -18,7 +18,7 @@ class ShortcutLocation extends Location {
             }
             $this->path = $row['path'];
         }        
-        parent::loadFromDb($id);
+        parent::loadFromDb($id,$con);
     }
     
     function loadFromXml($node) {
@@ -42,19 +42,14 @@ class ShortcutLocation extends Location {
             }
         }
         
-        $wgOut->addHTML('<tr><td>');
-        $wgOut->addHTML($this->ev.'|'.$this->path.'|');
         parent::loadFromXml($node);
-        $wgOut->addHTML('</td></tr>');
     }
 
-    public function writeToDb($id) {
-        global $wgOut;
-        $wgOut->addWikiText('*** Writing shortcut ' . $this->ev. '\\'.$this->path.' to database');
+    public function writeToDb($id,$con) {
 
         $insert = array('ev'=>$this->ev,'path'=>$this->path);
         
-        $this->writeAllToDb($id,'masgau_game_data.game_shortcuts', $insert);
+        $this->writeAllToDb($id,'masgau_game_data.game_shortcuts', $insert, $con,"Writing Shortcut Location to Database");
 
     }        
     

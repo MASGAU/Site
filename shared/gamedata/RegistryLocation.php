@@ -18,7 +18,7 @@ class RegistryLocation extends Location {
     public $key;
     public $value = null;
     
-    public function loadFromDb($id) {
+    public function loadFromDb($id,$con) {
         $sql = 'select * from masgau_game_data.game_registry_keys where id = '.$id.'';
         $result = mysql_query($sql);
         
@@ -27,7 +27,7 @@ class RegistryLocation extends Location {
             $this->key = $row['key'];
             $this->value = $row['value'];
         }        
-        parent::loadFromDb($id);
+        parent::loadFromDb($id,$con);
     }
     
     function loadFromXml($node) {
@@ -53,21 +53,16 @@ class RegistryLocation extends Location {
                     throw new Exception($attribute->name.' not supported');
             }
         }
-        $wgOut->addHTML('<tr><td>');
-        $wgOut->addHTML($this->root.'|'.$this->key.'|'.$this->value.'|');
         parent::loadFromXml($node);
-        $wgOut->addHTML('</td></tr>');
     }
     
-    public function writeToDb($id) {
-        global $wgOut;
-        $wgOut->addWikiText('*** Writing registry key ' . $this->root. '\\'.$this->key.'\\'.$this->value.' to database');
+    public function writeToDb($id,$con) {
 
         $insert = array('root'=>$this->root,'`key`'=>$this->key);
         if($this->value!=null)
                 $insert['value']= $this->value;
         
-        $this->writeAllToDb($id,'masgau_game_data.game_registry_keys', $insert);
+        $this->writeAllToDb($id,'masgau_game_data.game_registry_keys', $insert, $con, "Writing Registry Key Location to Database");
     }    
 }
 

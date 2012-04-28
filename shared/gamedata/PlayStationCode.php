@@ -10,13 +10,15 @@
  *
  * @author TKMAYN9
  */
-class PlayStationCode {
+ 
+include_once 'AXmlData.php';
+class PlayStationCode extends AXmlData {
     public $suffix;
     public $prefix;
     public $append;
     public $type;
     
-    function loadFromDb($row) {
+    function loadFromDb($row, $con) {
         $this->prefix = $row['prefix'];
         $this->suffix = $row['suffix'];
         $this->append = $row['append'];
@@ -44,19 +46,15 @@ class PlayStationCode {
                     throw new Exception($attribute->name.' not supported');
             }
         }
-        $wgOut->addHTML('<tr><td>'.$this->prefix.'|'.$this->suffix.'</td></tr>');
     }
     
-    public function writeToDb($id) {
-        global $wgOut;
-        $dbw = wfGetDB(DB_MASTER);
-        $wgOut->addWikiText('*** Writing playstation code ' . $this->prefix. '-'.$this->suffix.' to database');
-        $dbw->insert('masgau_game_data.playstation_codes', array('game_version'=>$id,
+    public function writeToDb($id, $con) {
+        self::InsertRow('masgau_game_data.playstation_codes', array('game_version'=>$id,
             'prefix'=>$this->prefix,
             'append'=>$this->append,
             'type'=>$this->type,
-            'suffix'=>$this->suffix), 
-                $fname = 'Database::insert', $options = array());
+            'suffix'=>$this->suffix),$con,'Writing PlayStation Code to database'); 
+        
         
     }
     

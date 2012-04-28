@@ -6,7 +6,7 @@ class PathLocation extends Location {
     public $ev;
     public $path;
     
-    public function loadfromDb($id) {
+    public function loadfromDb($id,$con) {
         $sql = 'select * from masgau_game_data.game_paths where id = '.$id.'';
         $result = mysql_query($sql);
         
@@ -14,7 +14,7 @@ class PathLocation extends Location {
             $this->ev = $row['ev'];
             $this->path = $row['path'];
         }        
-        parent::loadFromDb($id);
+        parent::loadFromDb($id,$con);
     }
     
     public function loadFromXml($node) {
@@ -38,19 +38,15 @@ class PathLocation extends Location {
             }
         }
         
-        $wgOut->addHTML('<tr><td>');
-        $wgOut->addHTML($this->ev.'|'.$this->path.'|');
         parent::loadFromXml($node);
-        $wgOut->addHTML('</td></tr>');
     }
     
-    public function writeToDb($id) {
+    public function writeToDb($id,$con) {
         global $wgOut;
-        $wgOut->addWikiText('*** Writing location ' . $this->ev. '\\'.$this->path.' to database');
 
         $insert = array('ev'=>$this->ev,'path'=>$this->path);
         
-        $this->writeAllToDb($id,'masgau_game_data.game_paths', $insert);
+        $this->writeAllToDb($id,'masgau_game_data.game_paths', $insert,$con,"Writing Path Location to Database");
 
     }    
 }

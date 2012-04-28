@@ -10,14 +10,15 @@
  *
  * @author TKMAYN9
  */
-class SaveFile {
+ include_once 'AXmlData.php';
+class SaveFile extends AXmlData {
     public $mode;
     public $path;
     public $name;
     public $type;
     public $modified_after;
 
-    function loadFromDb($row) {
+    function loadFromDb($row,$con) {
 
         $this->mode = $row['action'];
         $this->path = $row['path'];
@@ -63,13 +64,9 @@ class SaveFile {
                     throw new Exception($attribute->name.' not supported');
             }
         }
-        $wgOut->addHTML('<tr><td>'.$this->mode.'|'.$this->path.'|'.$this->name.'</td></tr>');
     }
     
-    public function writeToDb($id) {
-        global $wgOut;
-        $dbw = wfGetDB(DB_MASTER);
-        $wgOut->addWikiText('*** Writing '.$this->mode.' file ' . $this->path. '\\'.$this->name.' ('.$this->type.') to database');
+    public function writeToDb($id,$con) {
 
         $insert = array('game_version'=>$id,'action'=>$this->mode);
         if($this->modified_after!=null)
@@ -81,8 +78,8 @@ class SaveFile {
         if($this->type!=null)
                 $insert['type']= $this->type;
         
-        $dbw->insert('masgau_game_data.files', $insert, 
-                $fname = 'Database::insert', $options = array());
+        
+        self::InsertRow('masgau_game_data.files', $insert, $con, 'Writing SaveFile to database');
 
     }
     

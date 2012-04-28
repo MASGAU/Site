@@ -10,7 +10,9 @@
  *
  * @author TKMAYN9
  */
-class GameVersion {
+ include_once 'AXmlData.php';
+class GameVersion extends AXmlData {
+    
     // Tag properties
     public $title = null;
     public $name;
@@ -29,7 +31,7 @@ class GameVersion {
     public $contributors = array();
     public $ps_codes = array();
 
-    public function loadFromDb($id) {
+    public function loadFromDb($id,$con) {
         $sql = 'select * from masgau_game_data.game_versions where id = '.$id.'';
         $result = mysql_query($sql);
         
@@ -58,7 +60,7 @@ class GameVersion {
             while($row = mysql_fetch_assoc($result)) {
                 require_once 'PathLocation.php';
                 $loc = new PathLocation();
-                $loc->loadfromDb($row['id']);
+                $loc->loadfromDb($row['id'],$con);
                 
                 $c = sizeof($this->locations);
                 $this->locations[$c] = $loc;
@@ -71,7 +73,7 @@ class GameVersion {
                 while($row = mysql_fetch_assoc($result)) {
                     require_once 'RegistryLocation.php';
                     $loc = new RegistryLocation();
-                    $loc->loadfromDb($row['id']);
+                    $loc->loadfromDb($row['id'],$con);
 
                     $c = sizeof($this->locations);
                     $this->locations[$c] = $loc;
@@ -85,7 +87,7 @@ class GameVersion {
                 while($row = mysql_fetch_assoc($result)) {
                     require_once 'ShortcutLocation.php';
                     $loc = new ShortcutLocation();
-                    $loc->loadfromDb($row['id']);
+                    $loc->loadfromDb($row['id'],$con);
 
                     $c = sizeof($this->locations);
                     $this->locations[$c] = $loc;
@@ -99,7 +101,7 @@ class GameVersion {
                 while($row = mysql_fetch_assoc($result)) {
                     require_once 'GameLocation.php';
                     $loc = new GameLocation();
-                    $loc->loadfromDb($row['id']);
+                    $loc->loadfromDb($row['id'],$con);
 
                     $c = sizeof($this->locations);
                     $this->locations[$c] = $loc;
@@ -113,7 +115,7 @@ class GameVersion {
             while($row = mysql_fetch_assoc($result)) {
                 require_once 'PlayStationCode.php';
                 $code = new PlayStationCode();
-                $code->loadFromDb($row);
+                $code->loadFromDb($row,$con);
                 $c = sizeof($this->ps_codes);
                 $this->ps_codes[$c] = $code;
             }
@@ -124,7 +126,7 @@ class GameVersion {
             while($row = mysql_fetch_assoc($result)) {
                 require_once 'SaveFile.php';
                 $code = new SaveFile();
-                $code->loadFromDb($row);
+                $code->loadFromDb($row,$con);
                 $c = sizeof($this->files);
                 $this->files[$c] = $code;
             }
@@ -163,7 +165,6 @@ class GameVersion {
             }
         }
 
-        $wgOut->addHTML('<table class="wikitable">');
 
         foreach ($node->childNodes as $element) {
             $l = sizeof($this->locations);
@@ -239,36 +240,15 @@ class GameVersion {
             }
         }
 
+        echo '<details><summary>'.$this->getVersionString().'</summary>';
+        echo '<pre>'.print_r($this,true).'</pre>';
+        echo '</details>';
 
-        $wgOut->addHTML('<tr><td>VStoreOverride: ' . $this->override_virtualstore . '</td></tr>');
-        $wgOut->addHTML('<tr><td>Title: ' . $this->title . '</td></tr>');
-        $wgOut->addHTML('<tr><td>Version: ' . $this->getVersionString() . '</td></tr>');
-
-        if ($this->require_detection) {
-            $wgOut->addHTML('<tr><td>Requires Detection For Restore</td></tr>');
-        }
-
-        foreach ($this->contributors as $comment) {
-            $wgOut->addHTML('<tr><td>Contrib: ' . $comment . '</td></tr>');
-        }
-
-        $wgOut->addHTML('<tr><td>Comment: ' . $this->comment . '</td></tr>');
-        $wgOut->addHTML('<tr><td>Restore Comment: ' . $this->restore_comment . '</td></tr>');
-
-        if ($this->deprecated) {
-            $wgOut->addHTML('<tr><td>GAME IS DEPRECATED</td></tr>');
-        }
-
-        $wgOut->addHTML('</table>');
     }
 
 
-    public function writeToDb($replace) {
-        global $wgOut;
-
-        $dbr = wfGetDB(DB_SLAVE);
-        $criteria = array();
-        $criteria[0] = 'name = \'' . $this->name . '\'';
+    public function writeToDb($replace,$con) {
+        $criteria = ' WHERE name = \'' . $this->name . '\'';
 
         $insert = array('name' => $this->name);
 
@@ -285,93 +265,85 @@ class GameVersion {
             $insert['require_detection'] = $this->require_detection;
 
         if ($this->platform == null) {
-            $criteria[1] = 'platform = \'UNIVERSAL\'';
+            $criteria .= ' AND platform = \'UNIVERSAL\'';
         } else {
             $insert['platform'] = $this->platform;
-            $criteria[1] = 'platform = \'' . $this->platform . '\'';
+            $criteria .= ' AND platform = \'' . $this->platform . '\'';
         }
 
         if ($this->region == null) {
-            $criteria[2] = 'region = \'UNIVERSAL\'';
+            $criteria .= ' AND region = \'UNIVERSAL\'';
         } else {
             $insert['region'] = $this->region;
-            $criteria[2] = 'region = \'' . $this->region . '\'';
+            $criteria .= ' AND region = \'' . $this->region . '\'';
         }
 
-        $res = $dbr->select('masgau_game_data.game_versions', 'count(*) as count', // $vars (columns of the table)
-                        $criteria, __METHOD__, // $fname = 'Database::select',
-                        null
-                    );
 
-        $dbw = wfGetDB(DB_MASTER);
+        $data = self::RunQuery("SELECT * FROM masgau_game_data.game_versions"
+                                .$criteria
+                                ,$con);
 
-        if ($res->fetchObject()->count==1) {
-            $wgOut->addWikiText('** \'\'\'Game version ' . $this->getVersionString() . ' already exists in database\'\'\'');
+        echo '<details open="true">';
+        if (mysql_num_rows($data)==1) {
             if (!$replace) {
-                $wgOut->addWikiText('*** \'\'\'Replace is not enabled, skipping\'\'\'');
+                echo '<summary style="color:yellow;">'.$this->getVersionString().' (';
+                echo 'SKIPPING';
+                echo ')</summary></details>';
                 return;
             }
-            $wgOut->addWikiText('*** \'\'\'Replace enabled, deleting current version\'\'\'');
+                echo '<summary style="color:orange;">'.$this->getVersionString().' (';
+                echo 'REPLACING';
             
-            $res = $dbw->select('masgau_game_data.game_versions', 'id', // $vars (columns of the table)
-                            $criteria, __METHOD__, // $fname = 'Database::select',
-                            SQL_NO_CACHE
-                        );
+            $row = mysql_fetch_assoc($data);
 
-            $id = $res->fetchObject()->id;
+            $id = $row['id'];
             $insert['id'] = $id;
-
-            $dbw->delete('masgau_game_data.game_versions',$criteria, $fname= 'DatabaseBase::delete');
+            echo ')</summary>';
+            self::DeleteRow("masgau_game_data.game_versions",array('id'=>$id),$con,"Deleting Current Version ($id)");
+        } else {
+                echo '<summary style="color:red;">'.$this->getVersionString().' (';
+                echo 'ADDING';
+                echo ')</summary>';
         }
-
-        $res = $dbr->select('masgau_game_data.games', 'title', // $vars (columns of the table)
-                        'name = \'' . $this->name . '\'', __METHOD__, // $fname = 'Database::select',
-                        null
-                    );
-        if ($this->title != null && $res->fetchObject()->title != $this->title) {
+        
+        
+        $data = self::RunQuery("SELECT * FROM masgau_game_data.games"
+                                ." WHERE name = '" . $this->name . "'",$con);
+                                
+        $row = mysql_fetch_assoc($data);
+        
+        if ($this->title != null && $row['title'] != $this->title) {
             $insert['version_title'] = $this->title;
+            echo "Has unique version title: ".$this->title;
         }
 
-        $wgOut->addWikiText('** Writing game version ' . $this->getVersionString() . ' to database (' . $this->name . ')');
-
-        $dbw->insert('masgau_game_data.game_versions', $insert, $fname = 'Database::insert', $options = array());
-
-        // Gets the Id of the new row
-        $res = $dbw->select('masgau_game_data.game_versions', 'id', // $vars (columns of the table)
-                        $criteria, __METHOD__, // $fname = 'Database::select',
-                        SQL_NO_CACHE
-                    );
-
-        $id = $res->fetchObject()->id;
+        $id = self::InsertRow('masgau_game_data.game_versions', $insert, $con, "Adding version");
         
         foreach($this->contributors as $contributor) {
-            $wgOut->addWikiText('** Writing contribution by ' . $contributor . ' to database');
-            
-            $res = $dbr->select('masgau_game_data.contributors', 'count(*) count', // $vars (columns of the table)
-                            'name = \''.$contributor.'\'', __METHOD__, // $fname = 'Database::select',
-                            null
-                        );
-            if($res->fetchObject()->count==0) {
-                $wgOut->addWikiText('*** Contributor is new, adding');
-                $dbw->insert('masgau_game_data.contributors', array('name'=>$contributor), 
-                        $fname = 'Database::insert', $options = array());
+            $data = self::RunQuery("SELECT * FROM masgau_game_data.contributors"
+                            ." WHERE name = '".$contributor."'",$con);
+                            
+            if(mysql_num_rows($data)==0) {
+                self::InsertRow('masgau_game_data.contributors', array('name'=>$contributor), $con,'Contributor is new, adding');
             }
-            
-            $dbw->insert('masgau_game_data.contributions', 
+            self::InsertRow('masgau_game_data.contributions', 
                     array('game_version'=>$id,
-                        'contributor'=>$contributor), 
-                    $fname = 'Database::insert', $options = array());
-            
+                        'contributor'=>$contributor), $con,"Writing contribution by " . $contributor . " to database");
         }
+        
         foreach($this->ps_codes as $ps_code) {
-            $ps_code->writeToDb($id);
+            $ps_code->writeToDb($id,$con);
         }
+        
         foreach($this->files as $file) {
-            $file->writeToDb($id);
+            $file->writeToDb($id,$con);
         }
         foreach($this->locations as $location) {
-            $location->writeToDb($id);
+            $location->writeToDb($id,$con);
         }
+        
+        echo '</details>';
+        
     }
 
     public function getVersionString() {

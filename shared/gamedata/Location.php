@@ -10,14 +10,15 @@
  *
  * @author TKMAYN9
  */
-class Location {
+ include_once 'AXmlData.php';
+abstract class Location extends AXmlData {
     public $append = null;
     public $detract = null;
     public $platform_version = null;
     public $deprecated = false;
     
     
-    protected function loadFromDb($id) {
+    public function loadFromDb($id,$con) {
         $sql = 'select * from masgau_game_data.game_locations where id = '.$id.'';
         $result = mysql_query($sql);
         
@@ -29,7 +30,7 @@ class Location {
         }        
     }
     
-    protected function loadFromXml($node) {
+    public function loadFromXml($node) {
         global $wgOut;
         foreach($node->attributes as $attribute) {
             switch($attribute->name) {
@@ -51,26 +52,11 @@ class Location {
                     //throw new Exception($attribute->name.' not supported');
             }
         }
-        $wgOut->addHTML('Append:'.$this->append.'|Detract:'.$this->detract.'|Platform Ver.:'.$this->platform_version.'|Deprecated:'.$this->deprecated);
     }
 
-    protected function writeAllToDb($id,$table,$sub_insert) {
-        $dbw = wfGetDB(DB_MASTER);
-        global $wgOut;
-        $wgOut->addWikiText('**** Additional Location write: Append: ' . $this->append. ' Detract: '.$this->detract.' Platform Ver.: '.$this->platform_version.' Deprecated: '.$this->deprecated);
-        
-
-        $res = $dbw->select('masgau_game_data.game_locations', 'max(id) max', // $vars (columns of the table)
-                null, __METHOD__, // $fname = 'Database::select',
-                SQL_NO_CACHE
-         );
-        
-        $loc_id = $res->fetchObject()->max;
-        $loc_id++;
-        
-        $insert = array('game_version'=>$id,'id'=>$loc_id);
-        
-        
+    protected function writeAllToDb($id,$table,$sub_insert, $con , $message = null) {
+        $insert = array('game_version'=>$id);
+                
         if($this->append!=null) 
                 $insert['append']= $this->append;
         if($this->detract!=null)
@@ -80,15 +66,9 @@ class Location {
         if($this->deprecated!=null)
                 $insert['deprecated']= $this->deprecated;
         
+        $sub_insert['id'] = self::InsertRow('masgau_game_data.game_locations', $insert, $con,"Writing common location information");
         
-        $dbw->insert('masgau_game_data.game_locations', $insert, 
-                $fname = 'Database::insert', $options = array());
-        
-
-        $sub_insert['id'] = $loc_id;
-        
-        $dbw->insert($table, $sub_insert, 
-                $fname = 'Database::insert', $options = array());
+        self::InsertRow($table, $sub_insert, $con,$message);
         
         }            
 }

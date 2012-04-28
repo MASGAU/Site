@@ -147,6 +147,9 @@ public function ajax() {
 
             echo '</div>';
             
+            if(!isset($this->filter))
+                return;
+
             $this->criteria .= " AND ". $this->criterias[$this->filter];
             
             
