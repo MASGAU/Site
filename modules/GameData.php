@@ -6,8 +6,8 @@ include_once 'shared/CompatabilityTable.php';
 class GameData extends AModule
 {
     public function draw() {
-                
-        echo '<div id="ajax"></div>';
+        echo '<div id="game_list"></div>';
+        echo '<div id="game_data"></div>';
     }
     
     public function title() {
@@ -21,52 +21,80 @@ class GameData extends AModule
     }
         public function footer() {
     }
+    private static function printCommonPathAttributes($location) {
+        if (get_class($location) != "PathLocation") {
+            if ($location->append != null)
+                echo '<td>' . $location->append . '</td>';
+            else
+                echo '<td></td>';
+
+            if ($location->detract != null)
+                echo '<td>' . $location->detract . '</td>';
+            else
+                echo '<td></td>';
+        }
+        if ($location->platform_version != null)
+            echo '<td>Only works with ' . $location->platform_version . '</td>';
+
+        if ($location->deprecated)
+            echo '<td style="background-color:red">Deprecated</td>';
+    }
+              private static  function printFiles($files) {
+                    
+                    foreach ($files as $file) {
+                        echo  '<tr>';
+                        if ($file->mode == 'IDENTIFIER') {
+                            echo '<td>' . $file->path . '</td>';
+                            echo '<td>' . $file->name . '</td>';
+                        } else {
+        
+                            echo '<td>' . $file->path . '</td>';
+                            echo '<td>';
+                            if ($file->name == null)
+                                echo "* (Includes subfolders)";
+                            else
+                                echo $file->name;
+                            echo '</td>';
+                            echo '<td>' . $file->type . '</td>';
+                            echo '<td>' . $file->modified_after . '</td>';
+                        }
+                        echo '</tr>';
+                    }
+                }
+
 
     public function ajax() {
         if(isset($_GET["name"])) {
+        echo '<div class="back_link"><a href="javascript:history.go(-1)">Go Back</a></div>';                
             $name = $_GET["name"];
-            echo '<div class="back_link">'.self::CreateLink().'Return To Game List</a></div>';
         
-//            echo '<h2>MASGAU Compatibility</h2>';
+        
             require_once 'shared/gamedata//Game.php';
             $game_data = new Game();
             $game_data->loadFromDb($name, null);
             
-            echo '<h1>'.$game_data->title.'</h1>';
-        
             $data = $this->runQuery("SELECT * FROM masgau_game_data.games"
                                     ." WHERE name = '".$name."'"
                                     ." ORDER BY name ASC");
                                     
             if(mysql_num_rows($data)>0) {
                 $compat_table = new CompatabilityTable($this->connection);
-                echo $compat_table->drawTable($data, "Current Compatability");
+                echo $compat_table->drawTable($data,false);
             }
             
             
-            
+            echo '<div id="tabs"><ul>';
+            $i = 0;
             foreach ($game_data->versions as $version) {
+                echo '<li><a href="#tabs-'.$i.'">'.$version->getVersionTitle().'</a></li>';
+                $i++;
+            }
+            echo '</ul>';
+            $i = 0;
+            foreach ($game_data->versions as $version) {
+                echo '<div class="game_data_tab" id="tabs-'.$i.'">';
+                $i++;
                 // Begin title code
-                if ($version->region != null) {
-                    if ($version->platform != null) {
-                        $header = $version->platform . ' - ' . $version->region;
-                    } else {
-                        $header = $version->region;
-                    }
-                } else {
-                    if ($version->platform != null) {
-                        $header = $version->platform;
-                    } else {
-                        $header = 'Platform Neutral';
-                    }
-                }
-                $header .=' Version';
-    
-                if ($version->deprecated)
-                    $header .= ' (Deprecated)';
-    
-                if ($version->title != null)
-                    $header .= ' (' . $version->title . ')';
     
                 // End title code
                 
@@ -83,150 +111,96 @@ class GameData extends AModule
                 
                 
                 // Side info box
-                echo '<div style="float:left;border:solid 1px;padding:5px;width:200px;" class="wikitable">';
+                echo '<div class="contributor_list">';
         
-                echo 'Contributors:<ul>';
+                echo '<p>Contributors:</p>';
                 foreach ($version->contributors as $contributor) {
-                    echo '<li>'.Contributors::CreateLink($contributor).$contributor.'</a></li>';
+                    echo '<p>'.Contributors::CreateLink($contributor).$contributor.'</a></p>';
                 }
-                echo '</ul></div>';
-    
-                    echo '<h2>' . $header . '</h2>';
+                echo '</div>';
 
                 //PS codes
                 if (sizeof($version->ps_codes) > 0) {
-                    echo '<h3>PlayStation Codes</h3><ul>';
+                    echo '<table><caption>PlayStation Codes</caption>';
+                    echo '<tr><th>Prefix</th><th>Suffix</th><th>Append</th><th>Type</th></tr>';
                     foreach ($version->ps_codes as $path) {
-                        echo '<li>' . $path->prefix . '-' . $path->suffix;
+                        echo '<tr><td>' . $path->prefix . '</td><td>' . $path->suffix.'</td>'
+                                .'<td>'.$path->append.'</td><td>'.$path->type.'</td></tr>';
                     }
-                    echo '</ul>';
+                    echo '</table>';
                 }
                 
                 // Paths
                 if (sizeof($version->locations) > 0) {
                     echo '<h3>Locations</h3>';
-                    $paths = null;
-                    $reg_keys = null;
-                    $shortcuts = null;
-                    $parent_games = null;
-                    foreach ($version->locations as $location) {
-                        $line = '';
-                        if (get_class($location) != "PathLocation") {
-                            if ($location->append != null)
-                                $line = '<td>' . $location->append . '</td>';
-                            else
-                                $line = '<td></td>';
-    
-                            if ($location->detract != null)
-                                $line .= '<td>' . $location->detract . '</td>';
-                            else
-                                $line .= '<td></td>';
+                    if (sizeof($version->path_locations) > 0) {
+                        echo '<table><caption>Paths</caption><tr><th>Environment Variable</th><th>Path</th></tr>';
+                        foreach ($version->path_locations as $location) {
+                            echo '<tr><td>' . $location->ev . '</td><td>' . $location->path . '</td>';     
+
+                                self::printCommonPathAttributes($location);
+                            echo '</tr>';
                         }
-    
-                        if ($location->platform_version != null)
-                            $line = '<td>Only works with ' . $location->platform_version . '</td>';
-    
-                        if ($location->platform_version != null)
-                            $line = '<td>Only works with ' . $location->platform_version . '</td>';
-    
-                        if ($location->deprecated)
-                            $line .= '<td style="background-color:red">Deprecated</td>';
-    
-                        switch (get_class($location)) {
-                            case "PathLocation":
-                                if ($paths == null) {
-                                    $paths = '<table class="wikitable"><caption>Paths</caption><tr><th>Environment Variable</th><th>Path</th></tr>';
-                                }
-                                $paths .= '<tr><td>' . $location->ev . '</td><td>' . $location->path . '</td>' . $line . '</tr>';
-                                break;
-                            case "RegistryLocation":
-                                if ($reg_keys == null) {
-                                    $reg_keys = '<table class="wikitable"><caption>Registry Keys</caption><tr><th>Root</th><th>Key</th><th>Value</th><th>Append</th><th>Detract</th></tr>';
-                                }
-                                $reg_keys .='<tr><td>' . $location->root . '</td><td>' . $location->key . '</td>';
-                                if ($location->value == null)
-                                    $reg_keys .='<td>(Default)</td>';
-                                else
-                                    $reg_keys .='<td>' . $location->value . '</td>';
-                                $reg_keys .= $line . '</tr>';
-                                break;
-                            case "ShortcutLocation":
-                                if ($shortcuts == null) {
-                                    $shortcuts = '<table class="wikitable"><caption>Shortcuts</caption><tr><th>Environment Variable</th><th>Path</th><th>Append</th><th>Detract</th></tr>';
-                                }
-                                $shortcuts .= '<tr><td>' . $location->ev . '</td><td>' . $location->path . '</td>' . $line . '</tr>';
-                                break;
-                            case "GameLocation":
-                                if ($parent_games == null) {
-                                    $parent_games = '<table class="wikitable"><caption>Parent Game Versions</caption><tr>
-                                        <th>Game</th><th>Platform</th><th>Region</th><th>Append</th><th>Detract</th></tr>';
-                                }
-                                $parent_games .= '<tr><td>'.GameData::CreateLink($location->name). $location->name . '</a></td><td>' . $location->platform . '</td><td>' . $location->region . '</td>' . $line . '</tr>';
-                                break;
-                            default:
-                                continue;
-                        }
+                        echo '</table>';
                     }
-    
-                    if ($paths != null)
-                        echo $paths . '</table>';
-                    if ($reg_keys != null)
-                        echo $reg_keys . '</table>';
-                    if ($shortcuts != null)
-                        echo $shortcuts . '</table>';
-                    if ($parent_games != null)
-                        echo $parent_games . '</table>';
+                    if (sizeof($version->registry_locations) > 0) {
+                        echo '<table><caption>Registry Keys</caption><tr><th>Root</th><th>Key</th><th>Value</th><th>Append</th><th>Detract</th></tr>';
+                        foreach ($version->registry_locations as $location) {
+                            echo  '<tr><td>' . $location->root . '</td><td>' . $location->key . '</td>';
+                            if ($location->value == null)
+                                echo '<td>(Default)</td>';
+                            else
+                                echo '<td>' . $location->value . '</td>';
+                            self::printCommonPathAttributes($location);
+                            echo '</tr>';
+                        }
+                        echo '</table>';
+                    }
+                    if (sizeof($version->shortcut_locations) > 0) {
+                        echo '<table><caption>Shortcuts</caption><tr><th>Environment Variable</th><th>Path</th><th>Append</th><th>Detract</th></tr>';
+                        foreach ($version->shortcut_locations as $location) {
+                            echo '<tr><td>' . $location->ev . '</td><td>' . $location->path . '</td>';
+                            self::printCommonPathAttributes($location);
+                            echo '</tr>';
+                        }
+                        echo '</table>';
+                    }
+                    if (sizeof($version->game_locations) > 0) {
+                        echo '<table class="wikitable"><caption>Parent Game Versions</caption><tr><th>Game</th><th>Platform</th><th>Region</th><th>Append</th><th>Detract</th></tr>';
+                        foreach ($version->game_locations as $location) {
+                            echo '<tr><td>'.GameData::CreateLink($location->name). $location->name . '</a></td><td>' . $location->platform . '</td><td>' . $location->region . '</td>';
+                            self::printCommonPathAttributes($location);
+                            echo '</tr>';
+                        }
+                        echo '</table>';
+                    }
                 }
 
-                $saves = null;
-                $ignores = null;
-                $identifiers = null;
-                foreach ($version->files as $file) {
-    
-                    $line = '<tr>';
-                    if ($file->mode == 'IDENTIFIER') {
-                        $line .= '<td>' . $file->path . '</td>';
-                        $line .= '<td>' . $file->name . '</td>';
-                    } else {
-                        if ($file->name == null)
-                            $filename = "* (Includes subfolders)";
-                        else
-                            $filename = $file->name;
-    
-                        $line .= '<td>' . $file->path . '</td>';
-                        $line .= '<td>' . $filename . '</td>';
-                        $line .= '<td>' . $file->type . '</td>';
-                        $line .= '<td>' . $file->modified_after . '</td>';
-                    }
-                    $line .= '</tr>';
-    
-                    switch ($file->mode) {
-                        case 'SAVE':
-                            if ($saves == null)
-                                $saves = '<table><caption>To Save</caption><tr><th>Path</th><th>Filename</th><th>Type</th><th>Modified After</th></tr>';
-                            $saves .= $line;
-                            break;
-                        case 'IGNORE':
-                            if ($ignores == null)
-                                $ignores = '<table><caption>To Ignore</caption><tr><th>Path</th><th>Filename</th><th>Type</th><th>Modified After</th></tr>';
-                            $ignores .= $line;
-                            break;
-                        case 'IDENTIFIER':
-                            if ($identifiers == null)
-                                $identifiers = '<table><caption>Used To Identify Game</caption><tr><th>Path</th><th>Filename</th></tr>';
-                            $identifiers .= $line;
-                            break;
-                    }
-                }
-    
-                if ($saves != null || $ignores != null || $identifiers != null) {
+                if (sizeof($version->files) > 0) {
                     echo '<h3>Files</h3>';
-                    if ($identifiers != null)
-                        echo $identifiers . '</table>';
-                    if ($saves != null)
-                        echo $saves . '</table>';
-                    if ($ignores != null)
-                        echo $ignores . '</table>';
+                    if (sizeof($version->save_files) > 0) {
+                        echo '<table><caption>To Save</caption>';
+                        echo '<tr><th>Path</th><th>Filename</th>';
+                        echo '<th>Type</th><th>Modified After</th>';
+                        echo '</tr>';
+                            self::printFiles($version->save_files);
+                        echo '</table>';
+                    }
+                    if (sizeof($version->ignore_files) > 0) {
+                        echo '<table><caption>To Ignore</caption>';
+                        echo '<tr><th>Path</th><th>Filename</th>';
+                        echo '<th>Type</th><th>Modified After</th>';
+                        echo '</tr>';
+                            self::printFiles($version->ignore_files);
+                        echo '</table>';
+                    }
+                    if (sizeof($version->identifier_files) > 0) {
+                        echo '<table><caption>Used To Identify Game</caption>';
+                        echo '<tr><th>Path</th><th>Filename</th>';
+                        echo '</tr>';
+                            self::printFiles($version->identifier_files);
+                        echo '</table>';
+                    }
                 }
     
                 if ($version->comment != null) {
@@ -262,6 +236,11 @@ class GameData extends AModule
                 }
                 
                 echo '<div class="clear_both"></div>';
+                
+                echo '</div>';
+                    
+                echo '<script type="text/javascript">$("#tabs").tabs();</script>';
+
             }
             
         } else {
@@ -280,7 +259,7 @@ class GameData extends AModule
 
     public static function CreateLink($game = null) {
         if($game==null)
-        return '<a href="?module=game_data">';
+        return '<a href="?module=game_data#">';
         else
         return '<a href="?module=game_data#'.urlencode($game).'">';
     }

@@ -1,7 +1,8 @@
-div.back_link{
-    position:absolute;
-    top:30px;
-    left:30px;
-    }
+
 #ajax {
 }
+
+    
+    table.compatibility {
+        margin-top:60px;
+        }

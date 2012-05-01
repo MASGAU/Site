@@ -6,10 +6,21 @@ $(document).ready(function() {
         if(window.location.hash != current_hash) {
             current_hash = window.location.hash;
             if(current_hash==false) {
-                $('#ajax').load("ajax.php?module=game_data");
+                $('#game_list').load("ajax.php?module=game_data",function() {
+                        $('.back_link').fadeOut(animation_timing);
+                        $('#game_data').fadeOut(animation_timing, function() {
+                            $('#game_list').fadeIn(animation_timing);
+                        });
+                    });
             } else {
                 name = current_hash.substring(1);
-                $('#ajax').load("ajax.php?module=game_data&name="+name);
+                $('#game_data').load("ajax.php?module=game_data&name="+name, function() {
+                        $('#game_list').fadeOut(animation_timing, function() {
+                            $('#game_data').fadeIn(animation_timing);
+                            $('.back_link').fadeIn(animation_timing);
+                        });
+                        prepareTabs();                        
+                    });
                 name = name.replace('+','_');
                 if(last_name!=false) {
                     $('#'+last_name+'_link').removeClass('selected_link');
@@ -20,4 +31,7 @@ $(document).ready(function() {
         }        
     }, 100); 
 });
+
+function prepareTabs() {
+}
 

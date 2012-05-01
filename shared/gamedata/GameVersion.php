@@ -27,7 +27,19 @@ class GameVersion extends AXmlData {
     public $restore_comment = null;
 
     public $locations = array();
+
+    public $path_locations = array();
+    public $registry_locations = array();
+    public $shortcut_locations = array();
+    public $game_locations = array();
+
+
     public $files = array();
+    public $save_files = array();
+    public $ignore_files = array();
+    public $identifier_files = array();
+    
+    
     public $contributors = array();
     public $ps_codes = array();
 
@@ -62,8 +74,8 @@ class GameVersion extends AXmlData {
                 $loc = new PathLocation();
                 $loc->loadfromDb($row['id'],$con);
                 
-                $c = sizeof($this->locations);
-                $this->locations[$c] = $loc;
+                array_push($this->locations,$loc);
+                array_push($this->path_locations,$loc);
             }
             
             // Load registry keys
@@ -75,8 +87,8 @@ class GameVersion extends AXmlData {
                     $loc = new RegistryLocation();
                     $loc->loadfromDb($row['id'],$con);
 
-                    $c = sizeof($this->locations);
-                    $this->locations[$c] = $loc;
+                    array_push($this->registry_locations,$loc);
+                    array_push($this->locations,$loc);
                 }
             }
 
@@ -89,8 +101,8 @@ class GameVersion extends AXmlData {
                     $loc = new ShortcutLocation();
                     $loc->loadfromDb($row['id'],$con);
 
-                    $c = sizeof($this->locations);
-                    $this->locations[$c] = $loc;
+                    array_push($this->shortcut_locations,$loc);
+                    array_push($this->locations,$loc);
                 }
             }
             
@@ -103,8 +115,8 @@ class GameVersion extends AXmlData {
                     $loc = new GameLocation();
                     $loc->loadfromDb($row['id'],$con);
 
-                    $c = sizeof($this->locations);
-                    $this->locations[$c] = $loc;
+                    array_push($this->game_locations,$loc);
+                    array_push($this->locations,$loc);
                 }
             }
             
@@ -116,8 +128,8 @@ class GameVersion extends AXmlData {
                 require_once 'PlayStationCode.php';
                 $code = new PlayStationCode();
                 $code->loadFromDb($row,$con);
-                $c = sizeof($this->ps_codes);
-                $this->ps_codes[$c] = $code;
+                
+                array_push($this->ps_codes, $code);
             }
             
             // Load files
@@ -125,10 +137,22 @@ class GameVersion extends AXmlData {
             $result = mysql_query($sql);
             while($row = mysql_fetch_assoc($result)) {
                 require_once 'SaveFile.php';
-                $code = new SaveFile();
-                $code->loadFromDb($row,$con);
-                $c = sizeof($this->files);
-                $this->files[$c] = $code;
+                $file = new SaveFile();
+                $file->loadFromDb($row,$con);
+
+                array_push($this->files,$file);
+                switch($row['action']) {
+                    case 'IGNORE':
+                        array_push($this->ignore_files,$file);
+                        break;
+                    case 'SAVE':
+                        array_push($this->save_files,$file);
+                        break;
+                    case 'IDENTIFIER':
+                        array_push($this->identifier_files,$file);
+                        break;
+                }
+                
             }
             
              
@@ -136,8 +160,8 @@ class GameVersion extends AXmlData {
             $sql = 'select * from masgau_game_data.contributions where game_version = '.$id.'';
             $result = mysql_query($sql);
             while($row = mysql_fetch_assoc($result)) {
-                $c = sizeof($this->contributors);
-                $this->contributors[$c] = $row['contributor'];
+
+                array_push($this->contributors,$row['contributor']);
             }
         }        
     }
@@ -167,10 +191,6 @@ class GameVersion extends AXmlData {
 
 
         foreach ($node->childNodes as $element) {
-            $l = sizeof($this->locations);
-            $f = sizeof($this->files);
-            $c = sizeof($this->contributors);
-            $p = sizeof($this->ps_codes);
             switch ($element->localName) {
                 case '':
                     break;
@@ -181,25 +201,29 @@ class GameVersion extends AXmlData {
                     require_once 'RegistryLocation.php';
                     $loc = new RegistryLocation();
                     $loc->loadFromXml($element);
-                    $this->locations[$l] = $loc;
+                    array_push($this->locations,$loc);
+                    array_push($this->registry_locations,$loc);
                     break;
                 case 'location_path':
                     require_once 'PathLocation.php';
                     $loc = new PathLocation();
                     $loc->loadFromXml($element);
-                    $this->locations[$l] = $loc;
+                    array_push($this->locations,$loc);
+                    array_push($this->path_locations,$loc);
                     break;
                 case 'location_shortcut':
                     require_once 'ShortcutLocation.php';
                     $loc = new ShortcutLocation();
                     $loc->loadFromXml($element);
-                    $this->locations[$l] = $loc;
+                    array_push($this->locations,$loc);
+                    array_push($this->shortcut_locations,$loc);
                     break;
                 case 'location_game':
                     require_once 'GameLocation.php';
                     $loc = new GameLocation();
                     $loc->loadFromXml($element);
-                    $this->locations[$l] = $loc;
+                    array_push($this->locations,$loc);
+                    array_push($this->game_locations,$loc);
                     break;
                 case 'save':
                 case 'ignore':
@@ -207,16 +231,24 @@ class GameVersion extends AXmlData {
                     require_once 'SaveFile.php';
                     $file = new SaveFile();
                     $file->loadFromXml($element);
-                    $this->files[$f] = $file;
+                    array_push($this->files,$file);
+                case 'save':
+                    array_push($this->save_files,$file);
+                    break;
+                case 'ignore':
+                    array_push($this->ignore_files,$file);
+                    break;
+                case 'identifier':
+                    array_push($this->identifier_files,$file);
                     break;
                 case 'ps_code':
                     require_once 'PlayStationCode.php';
                     $code = new PlayStationCode();
                     $code->loadFromXml($element);
-                    $this->ps_codes[$p] = $code;
+                    array_push($this->ps_codes,$code);
                     break;
                 case 'contributor':
-                    $this->contributors[$c] = $element->textContent;
+                    array_push($this->contributors,$element->textContent);
                     break;
                 case 'comment':
                     $this->comment = $element->textContent;
@@ -345,6 +377,31 @@ class GameVersion extends AXmlData {
         echo '</details>';
         
     }
+
+    public function getVersionTitle() {
+        if ($this->region != null) {
+            if ($this->platform != null) {
+                $header = $this->platform . ' - ' . $this->region;
+            } else {
+                $header = $this->region;
+            }
+        } else {
+            if ($this->platform != null) {
+                $header = $this->platform;
+            } else {
+                $header = 'Platform Neutral';
+            }
+        }
+        $header .=' Version';
+
+        if ($this->deprecated)
+            $header .= ' (Deprecated)';
+
+        if ($this->title != null)
+            $header .= ' (' . $this->title . ')';
+        return $header;
+    }
+
 
     public function getVersionString() {
         $return_me = $this->name;

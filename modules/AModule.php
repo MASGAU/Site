@@ -73,7 +73,7 @@ abstract class AModule
                 include_once 'modules/Contributors.php';
                 return Contributors::CreateLink($option);
             case "hyperlink":
-                return '<a href="'.$option.'" target="_new">';
+                return '<a href="'.$option.'" target="_blank">';
             case "downloads":
                 include_once 'modules/Downloads.php';
                 return Downloads::CreateLink();

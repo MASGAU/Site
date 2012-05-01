@@ -65,8 +65,9 @@ class Support extends AModule
 
     
     public function draw() {
-        
+        echo '<div id="game_data"></div>';
 
+        echo '<div id="compat_table">';
         $query = "SELECT type, count(DISTINCT games.name) as count FROM ".$this->game_tables
             ." WHERE ".$this->criteria
             ." GROUP BY games.type";
@@ -124,6 +125,8 @@ class Support extends AModule
         echo '<p>If your experience differs from what is presented here, please e-mail me at <a href="mailto:sanmadjack@masgau.org">sanmadjack@masgau.org</a>. We will figure it out.';
 
         echo '<div id="ajax"></div>';
+        
+        echo '</div>';
 }
 
 

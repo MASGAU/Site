@@ -5,7 +5,6 @@ body {
     background-position:top center;
     color:#eeeeec;
 }
-    
     div#yoxview_popupWrap {
         z-index:1000;
         }
@@ -39,6 +38,9 @@ h1, h2, h3, h4 {
     width:100%;
 }
     
+table {
+    border-radius: 10px;
+}
 th {
     border-color:rgba(0,0,0,0);
     border-width:1px;
@@ -225,10 +227,30 @@ div.menu div.items {
     left:750px;
 }
 
-td.medias img {
+div.media_icon {
+    position:relative;
+    display:inline;
+}
+div.media_icon img {
     padding:3px;
     width:32px  !important;
     height:32px  !important;
+    vertical-align:middle;
+}
+div.media_icon div.description {
+    padding:3px;
+    vertical-align:middle;
+    text-align:left;
+    position:absolute;
+    top:25px;
+    left:35px;
+    display:none;
+    z-index:50;
+    background-color:rgba(0,0,0,0.8);
+    border:solid 2px rgba(0,0,0,0.5);
+    font-size:12px;
+    width:250px;
+    color:#eeeeec;
 }
 div.filter_letters {
     font-size:20px;
@@ -251,4 +273,31 @@ div.image_thumb {
     text-align:center;
     margin-bottom:10px;
     margin-left:20px;
+}
+
+div.back_link{
+    position:absolute;
+    top:50px;
+    left:30px;
+    display:none;
+}
+
+div#tabs {
+    margin-top:20px;
+    
+    }
+    
+    div.game_data_tab {
+        color:#eeeeec;
+        font-size:12px;
+        }
+    div.game_data_tab  table,     div.game_data_tab  h3 {
+        width:700px;
+        margin-bottom:20px;
+    }
+div.contributor_list {
+    float:right;
+    padding:5px;
+    width:200px;
+    text-align:center;
 }

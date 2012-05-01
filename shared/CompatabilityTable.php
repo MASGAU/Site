@@ -1,7 +1,7 @@
 <?php
 include_once 'modules/GameData.php';
 class CompatabilityTable {
-    private static $con;
+    private static $con = null;
     private static $decoder;
     private static $playstation_consoles = "'PS1','PS2','PS3','PSP','PSVITA'";
     private static $consoles = "'PS1','PS2','PS3','PSP','PSVITA'";
@@ -21,7 +21,8 @@ class CompatabilityTable {
         }
     }
 
-    public static function init() {
+    public static function init($con) {
+        self::$con = $con;
         self::$decoder = self::runQuery("SELECT * FROM masgau_game_data.compatibility_equivalencies ORDER BY priority");
         self::$platforms = self::runQuery("SELECT * FROM masgau_game_data.compatibility_platforms compat"
             ." WHERE compat.display = 1"
@@ -32,28 +33,51 @@ class CompatabilityTable {
     }
 
     public function __construct($con) {
-        self::$con = $con;
-        if(self::$decoder==null) {
-            self::init();
+        if(self::$con==null) {
+            self::init($con);
         }
     }
 
-    public function drawTable($games_data, $title_override = null) {
+    public function drawTable($games_data, $make_link = true) {
         $table = $this->beginTable();
         $table .= $this->drawCompatHeader();
-        $table .= $this->drawCompatRows($games_data, $title_override);
+        $table .= $this->drawCompatRows($games_data, $make_link);
         $table .= $this->endTable();
+        $table .= '<script type="text/javascript">setUpFades();</script>';
         return $table;
     }
 
     public function beginTable() {
-        return '<table class="wikitable compatibility" cellpadding="5" cellspacing="0" border="1">'."\n";
+        return '<table class="compatibility" cellpadding="5" cellspacing="0" border="1">'."\n";
     }
 
     public function endTable() {
       return '</table>'."\n";
     }
     private $i = 1;
+    
+    private static function DrawMediaIcon($media) {
+        $return = '<div class="media_icon">';
+        if($media['url']==null) {
+            $return .= '<img src="images/media/' . $media['icon'] . '" alt="' . $media['title'] . '" title="' . $media['title'] . '" />';
+        } else {
+            $return .= '<a href="'.$media['url'].'" target="_blank"><img src="images/media/' . $media['icon'] . '" alt="' . $media['title'] . '" title="' . $media['title'] . '" /></a>';
+        }
+        $return .= '<div class="description">'.$media['description'].'</div>';
+        $return .= '</div>';
+        return $return;
+    }
+    
+    
+    public static function DrawLegend() {
+        mysql_data_seek (self::$medias , 0) ;
+        $medias = array();
+        while($media = mysql_fetch_array(self::$medias)) {
+            if($media['display']) {
+                echo self::DrawMediaIcon($media);
+            }
+        }
+    }
     
     public function drawCompatHeader() {
         $header;
@@ -70,7 +94,7 @@ class CompatabilityTable {
         return $header;
     }
 
-    public function drawCompatRows($games_data, $title_override = null, $state = 'current') {
+    public function drawCompatRows($games_data, $make_link = true, $state = 'current') {
         $rows = "";
         mysql_data_seek ( $games_data , 0) ;
         while($row = mysql_fetch_array($games_data)) {
@@ -78,7 +102,7 @@ class CompatabilityTable {
                 // Prints the table header every 50 or so, or when we're at a new letter
                 $rows .= $this->drawCompatHeader();
             }
-            $rows .= $this->drawCompatRow($row, $title_override, $state);
+            $rows .= $this->drawCompatRow($row, $make_link, $state);
             $this->i++;
             if ($this->i == $this->max_games) {
                 $this->i = 0;
@@ -95,25 +119,12 @@ class CompatabilityTable {
         return $compats;
     }
     
-    function drawCompatRow($game_res, $name_overide = null, $state = 'current') {
+    function drawCompatRow($game_res, $make_link = true, $state = 'current') {
         $new_row = '<tr class="compatibility"><th>';
-        if ($name_overide == null) {
-            $string = GameData::CreateLink($game_res['name']) . $game_res['title'] . '</a>';
-            if ($state == 'upcoming') {
-                $res = $dbr->select(array('compat' => 'masgau_game_data.game_versions'), array('*'), // $vars (columns of the table)
-                        array('compat.name=\'' . $game_res->name . '\''), // $conds
-                        __METHOD__, // $fname = 'Database::select',
-                        null
-                );
-                if ($res->numRows() == 0) {
-                    $string .= ' (New!)';
-                } else {
-                    $string .= ' (Updated!)';
-                }
-            }
-            $new_row .= $string;
+        if($make_link) {
+            $new_row .= GameData::CreateLink($game_res['name']) . $game_res['title'] . '</a>';
         } else {
-            $new_row .= $name_overide;
+            $new_row .= $game_res['title'];
         }
         $new_row .= '</th>';
 
@@ -155,7 +166,7 @@ class CompatabilityTable {
                             if ($platform['name'] == "dos" && $compat[0] == "disc") {
                                 $medias = $this->addUnique($medias,'<img src="images/media/floppy.png" alt=Disk />');
                             } else {
-                               $medias = $this->addUnique($medias,'<a href="'.$media['url'].'"><img src="images/media/' . $media['icon'] . '" alt="' . $media['title'] . '" /></a>');
+                               $medias = $this->addUnique($medias,self::DrawMediaIcon($media));
                             }
                             $found = true;
                         } else if($compat[0]==null&&$platform['name'] == "playstation") {

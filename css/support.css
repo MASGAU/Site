@@ -10,3 +10,6 @@ tr.compatibility td{
 tr.compatibility_header {
     height:10px;
 }
+div#game_data {
+    margin-top:50px;
+}
