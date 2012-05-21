@@ -84,7 +84,7 @@ class Support extends AModule
                 $game_counts[$i] .= ' ' . $row['type'];
             else
                 $game_counts[$i] .= ' ' . $row['type'] . 's';
-            $count += $row['count'];
+            $count += number_format($row['count']);
             $i++;
         }
         $count_string = '';
@@ -98,7 +98,7 @@ class Support extends AModule
                 }
             }
             if (sizeof($game_counts) > 1) {
-                $count_string .= ' (' . $count . ' total)';
+                $count_string .= ' (' . number_format($count) . ' total)';
             }
         } else {
             $count_string = "currently no games (for now)";

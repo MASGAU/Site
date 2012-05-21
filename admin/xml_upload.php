@@ -49,7 +49,7 @@ XML File Import From Data Branch Of GitHub
 <?php
     $data = AXmlData::RunQuery("SELECT * FROM masgau_game_data.xml_files ORDER BY name ASC",$con);
     while ($row = mysql_fetch_assoc($data)) {
-        echo '<br /><input type="radio" name="file"  value="'.$row['name'].'">' . $row['name'] . ' (Last Updated '.$row['last_updated'].')</input>';
+        echo '<br /><input type="radio" name="file"  value="'.$row['git_path'].'">' . $row['git_path'] . ' (Last Updated '.$row['last_updated'].')</input>';
 
     }
 
@@ -99,8 +99,8 @@ Erase game
     
     if(isset($_POST['file'])) {
         $file = $_POST['file'];
-        $base_url = "https://raw.github.com/MASGAU/MASGAU/data/Data/";
-        $schema_url = $base_url.'data/games.xsd';
+        $base_url = "https://raw.github.com/MASGAU/Data/update/";
+        $schema_url = $base_url.'games.xsd';
         
         echo "<details open='true' style='clear:both;'><summary>".$file."</summary>";
         $url = $base_url.$file;
@@ -119,7 +119,7 @@ Erase game
         if(isset($_POST['update_time'])) {
 
             AXmlData::UpdateRow('masgau_game_data.xml_files',
-                                array('name'=>$file),
+                                array('git_path'=>$file),
                                 array('last_updated'=>date("Y-m-d H:i:s")),
                                 $con,"Updating modified time for ".$file);
         }

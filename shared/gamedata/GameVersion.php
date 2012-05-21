@@ -32,7 +32,7 @@ class GameVersion extends AXmlData {
     public $registry_locations = array();
     public $shortcut_locations = array();
     public $game_locations = array();
-
+    public $scumm_locations = array();
 
     public $files = array();
     public $save_files = array();
@@ -119,8 +119,24 @@ class GameVersion extends AXmlData {
                     array_push($this->locations,$loc);
                 }
             }
-            
-            
+
+
+            // Load scummvm
+            $sql = 'select * from masgau_game_data.game_locations loc, 
+                masgau_game_data.game_scummvm scumm where game_version = '.$id.' and loc.id = scumm.id';
+            if($result = mysql_query($sql)) {
+                while($row = mysql_fetch_assoc($result)) {
+                    require_once 'ScummLocation.php';
+                    $loc = new ScummLocation();
+                    $loc->loadfromDb($row['id'],$con);
+
+                    array_push($this->scumm_locations,$loc);
+                    array_push($this->locations,$loc);
+                }
+            }
+
+
+
             // Load playstation codes
             $sql = 'select * from masgau_game_data.playstation_codes where game_version = '.$id.'';
             $result = mysql_query($sql);
@@ -217,6 +233,13 @@ class GameVersion extends AXmlData {
                     $loc->loadFromXml($element);
                     array_push($this->locations,$loc);
                     array_push($this->shortcut_locations,$loc);
+                    break;
+                case 'location_scummvm':
+                    require_once 'ScummLocation.php';
+                    $loc = new ScummLocation();
+                    $loc->loadFromXml($element);
+                    array_push($this->locations,$loc);
+                    array_push($this->scumm_locations,$loc);
                     break;
                 case 'location_game':
                     require_once 'GameLocation.php';

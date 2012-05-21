@@ -85,16 +85,16 @@ class MASGAUBase {
 
     protected static function cleanUp($string) {
         //$string = str_replace('"', '&quot;', $string);
-        $string = str_replace('&', '&amp;', $string);
+        //$string = str_replace('&', '&amp;', $string);
         //$string = str_replace('', '&apos;', $string);
         //$string = str_replace('<', '&lt;', $string);
         //$string = str_replace('>', '&gt;', $string);
-        
+        $string = htmlspecialchars($string,ENT_COMPAT|ENT_XML1,'UTF-8');
         return $string;
     }
 
     protected function createTextNode($text) {
-        return $this->xml->createTextNode(self::cleanUp($text));
+        return $this->xml->createTextNode($text);
     }
 
     protected function createElement($name, $content = null) {

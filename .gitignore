@@ -1,3 +1,7 @@
+DBSettings.php
+*.swp
+.*.*
+
 # Visual Studio build folders #
 bin/
 obj/

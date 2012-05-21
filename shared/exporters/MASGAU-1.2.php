@@ -25,10 +25,9 @@ class Exporter extends MASGAUBase {
 
         // Title
         if ($version->title!=null) {
-            $new_game->appendChild($this->createElement("title",str_replace('&','&amp;'
-                ,$version->title)));
+            $new_game->appendChild($this->createElement("title",$version->title));
         } else {
-            $new_game->appendChild($this->createElement("title",str_replace('&','&amp;',$game->title)));
+            $new_game->appendChild($this->createElement("title",$game->title));
         }
         
         
@@ -73,6 +72,11 @@ class Exporter extends MASGAUBase {
                         $tag->appendChild($this->xml->createAttribute("country"))->
                                 appendChild($this->createTextNode($location->region));
                     }
+                    break;
+                case "ScummLocation":
+                    $tag = $new_game->appendChild($this->createElement("location_scummvm"));
+                    $tag->appendChild($this->xml->createAttribute("name"))->
+                            appendChild($this->createTextNode($location->name));
                     break;
                 default:
                     throw new Exception("Location type ".get_class($location)." not known");

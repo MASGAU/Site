@@ -121,7 +121,7 @@ class Game extends AXmlData {
                         
                         
             self::InsertRow('masgau_game_data.games', $fields
-                    ,$con); 
+                    ,$con,"Writing game to database"); 
         } else {
             echo '<summary style="color:green">'.$this->getTitle().' ('.$this->name.') (';
             echo 'EXISTS)</summary>';

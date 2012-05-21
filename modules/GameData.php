@@ -133,6 +133,14 @@ class GameData extends AModule
                 // Paths
                 if (sizeof($version->locations) > 0) {
                     echo '<h3>Locations</h3>';
+                    if (sizeof($version->scumm_locations) > 0) {
+                        echo '<table class="wikitable"><caption>ScummVM Name(s)</caption>';
+                        foreach ($version->scumm_locations as $location) {
+                            echo '<tr><td>'. $location->name . '</td><td>';
+                            echo '</tr>';
+                        }
+                        echo '</table>';
+                    }
                     if (sizeof($version->path_locations) > 0) {
                         echo '<table><caption>Paths</caption><tr><th>Environment Variable</th><th>Path</th></tr>';
                         foreach ($version->path_locations as $location) {
