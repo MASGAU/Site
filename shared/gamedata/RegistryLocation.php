@@ -17,9 +17,15 @@ class RegistryLocation extends Location {
     public $root;
     public $key;
     public $value = null;
+
+	public static $table_name = "game_location_registry_keys";
     
+	function __construct() {
+		parent::__construct(self::$table_name);
+	}
+
     public function loadFromDb($id,$con) {
-        $sql = 'select * from masgau_game_data.game_registry_keys where id = '.$id.'';
+        $sql = 'select * from '.$this->table.' where id = '.$id.'';
         $result = mysql_query($sql);
         
         if($row = mysql_fetch_assoc($result)) {
@@ -62,7 +68,7 @@ class RegistryLocation extends Location {
         if($this->value!=null)
                 $insert['value']= $this->value;
         
-        $this->writeAllToDb($id,'masgau_game_data.game_registry_keys', $insert, $con, "Writing Registry Key Location to Database");
+        $this->writeAllToDb($id,$this->table, $insert, $con, "Writing Registry Key Location to Database");
     }    
 }
 

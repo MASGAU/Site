@@ -7,8 +7,14 @@ class ShortcutLocation extends Location {
     public $ev;
     public $path;
     
+	public static $table_name = 'game_location_shortcuts';
+
+	function __construct() {
+		parent::__construct(self::$table_name);
+	}
+
     public function loadFromDb($id,$con) {
-        $sql = 'select * from masgau_game_data.game_shortcuts where id = '.$id.'';
+        $sql = 'select * from '.$this->table.' where id = '.$id.'';
         $result = mysql_query($sql);
         
         if($row = mysql_fetch_assoc($result)) {
@@ -49,7 +55,7 @@ class ShortcutLocation extends Location {
 
         $insert = array('ev'=>$this->ev,'path'=>$this->path);
         
-        $this->writeAllToDb($id,'masgau_game_data.game_shortcuts', $insert, $con,"Writing Shortcut Location to Database");
+        $this->writeAllToDb($id,$this->table, $insert, $con,"Writing Shortcut Location to Database");
 
     }        
     

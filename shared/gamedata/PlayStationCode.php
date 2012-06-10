@@ -18,7 +18,13 @@ class PlayStationCode extends AXmlData {
     public $append;
     public $type;
     
-    function loadFromDb($row, $con) {
+	public static $table_name = "game_playstation_codes";
+
+    function __construct() {
+	parent::__construct(self::$table_name);
+	}
+
+	function loadFromDb($row, $con) {
         $this->prefix = $row['prefix'];
         $this->suffix = $row['suffix'];
         $this->append = $row['append'];
@@ -49,7 +55,7 @@ class PlayStationCode extends AXmlData {
     }
     
     public function writeToDb($id, $con) {
-        self::InsertRow('masgau_game_data.playstation_codes', array('game_version'=>$id,
+        self::InsertRow($this->table, array('game_version'=>$id,
             'prefix'=>$this->prefix,
             'append'=>$this->append,
             'type'=>$this->type,

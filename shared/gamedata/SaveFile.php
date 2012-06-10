@@ -18,6 +18,13 @@ class SaveFile extends AXmlData {
     public $type;
     public $modified_after;
 
+	public static $table_name = "game_files";
+
+	function __construct() {
+		parent::__construct(self::$table_name);
+	}
+
+
     function loadFromDb($row,$con) {
 
         $this->mode = $row['action'];
@@ -25,6 +32,7 @@ class SaveFile extends AXmlData {
         $this->name = $row['filename'];
         $this->type = $row['type'];
         if($row['modified_after']!=null) {
+		date_default_timezone_set("UTC");
             $date = new DateTime($row['modified_after']);
             $this->modified_after = $date;
         }
@@ -79,7 +87,7 @@ class SaveFile extends AXmlData {
                 $insert['type']= $this->type;
         
         
-        self::InsertRow('masgau_game_data.files', $insert, $con, 'Writing SaveFile to database');
+        self::InsertRow($this->table, $insert, $con, 'Writing SaveFile to database');
 
     }
     

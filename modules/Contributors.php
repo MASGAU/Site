@@ -20,7 +20,7 @@ class Contributors extends AModule
             echo "<h1>Game Data Contributors</h1>";
             
             $data = $this->runQuery("SELECT contributor, count(*) as count"
-                                ." FROM masgau_game_data.contributions con"
+                                ." FROM game_contributions con"
                                 ." GROUP BY contributor"
                                 ." ORDER BY count desc, contributor asc"
                                 );
@@ -62,9 +62,9 @@ class Contributors extends AModule
             $name = $_GET["name"];
             
             $data = $this->runQuery("SELECT * FROM"
-                                ." masgau_game_data.contributions con"
-                                .", masgau_game_data.game_versions ver"
-                                .", masgau_game_data.games game"
+                                ." game_contributions con"
+                                .", game_versions ver"
+                                .", games game"
                                 ." WHERE contributor = '"    . $name . "'"
                                 ." AND con.game_version = ver.id"
                                 ." AND game.name = ver.name"

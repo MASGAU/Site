@@ -34,6 +34,7 @@ class Exporter extends MASGAUBase {
 
 
         // Locations
+	$usable_locations = 0;
         foreach ($version->locations as $location) {
             $tag = null;
             switch (get_class($location)) {
@@ -43,7 +44,8 @@ class Exporter extends MASGAUBase {
                             appendChild($this->createTextNode($location->ev));
                     $tag->appendChild($this->xml->createAttribute("path"))->
                             appendChild($this->createTextNode($location->path));
-                    break;
+                    $usable_locations++;
+			break;
                 case "RegistryLocation":
                     $tag = $new_game->appendChild($this->createElement("location_registry"));
                     $tag->appendChild($this->xml->createAttribute("root"))->
@@ -54,6 +56,7 @@ class Exporter extends MASGAUBase {
                         $tag->appendChild($this->xml->createAttribute("value"))->
                                 appendChild($this->createTextNode($location->value));
                     }
+                    $usable_locations++;
                     break;
                 case "ShortcutLocation":
                     if ($location->ev == "startmenu") {
@@ -74,6 +77,7 @@ class Exporter extends MASGAUBase {
                         $tag->appendChild($this->xml->createAttribute("country"))->
                                 appendChild($this->createTextNode($location->region));
                     }
+                    $usable_locations++;
                     break;
 		case "ScummLocation":
 		    continue;
@@ -147,6 +151,10 @@ class Exporter extends MASGAUBase {
                     appendChild($this->createTextNode($code->prefix));
             $tag->appendChild($this->xml->createAttribute("suffix"))->
                     appendChild($this->createTextNode(str_pad($code->suffix, 5, "0", STR_PAD_LEFT)));
+		$usable_locations++;
+        }
+	if($usable_locations==0) {
+                return null;
         }
 
         if ($version->override_virtualstore) {

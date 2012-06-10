@@ -22,6 +22,9 @@ class Exporter extends MASGAUBase {
             $new_game->appendChild($this->xml->createAttribute("deprecated"))->
                     appendChild($this->createTextNode("true"));
         }
+	$new_game->appendChild($this->xml->createAttribute("type"))->
+                appendChild($this->createTextNode($game->type));
+	
 
         // Title
         if ($version->title!=null) {

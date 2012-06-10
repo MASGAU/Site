@@ -1,5 +1,14 @@
 <?php
 abstract class AXmlData {
+	protected static $database;
+	protected $table;
+	function __construct($table) {
+		global $settings;
+		self::$database = $settings['sql_database'];
+		$this->table = self::$database.".".$table;
+	}
+
+
     public static function SelectRow($db,$fields,$criteria,$options,$con,$message = null) {
         $sql = "SELECT";
         if($fields==null) {
@@ -83,6 +92,17 @@ abstract class AXmlData {
             if($message!=null) {
                 echo "<details><summary>".$message."</summary><pre>";
                 print_r($id);
+                echo $sql;
+                echo "</pre></details>";
+            }
+            self::RunQuery($sql,$con);
+    }
+
+
+    public static function ResetAutoIncrement($db,$con,$message = null) {
+            $sql = "ALTER TABLE ".$db." AUTO_INCREMENT = 0";
+            if($message!=null) {
+                echo "<details><summary>".$message."</summary><pre>";
                 echo $sql;
                 echo "</pre></details>";
             }

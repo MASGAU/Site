@@ -8,9 +8,15 @@ class GameLocation extends Location {
     public $platform;
     public $region;
     
-    public function loadFromDb($id,$con) {
+    
+	public static $table_name = "game_location_parents";
+	function __construct() {
+		parent::__construct(self::$table_name);
+	}
+
+	public function loadFromDb($id,$con) {
         parent::loadFromDb($id,$con);
-        $sql = 'select * from masgau_game_data.game_parents where id = '.$id.'';
+        $sql = 'select * from '.$this->table.' where id = '.$id.'';
         $result = mysql_query($sql);
 
         if($row = mysql_fetch_assoc($result)) {
@@ -67,7 +73,7 @@ class GameLocation extends Location {
             $criteria['region'] = $this->region;
         }
 
-        $data = self::SelectRow('masgau_game_data.game_versions', 'id', $criteria, null, $con,"Retreiving parent id");
+        $data = self::SelectRow(self::$database.'.game_versions', 'id', $criteria, null, $con,"Retreiving parent id");
         $row = mysql_fetch_array($data);
         $parent_id = $row['id'];
         
@@ -77,7 +83,7 @@ class GameLocation extends Location {
         
         $insert = array('parent_game_version'=>$parent_id);
         
-        $this->writeAllToDb($id,'masgau_game_data.game_parents', $insert, $con, "Writing Parent Game Location to Database");
+        $this->writeAllToDb($id,$this->table, $insert, $con, "Writing Parent Game Location to Database");
 
     }    
 }

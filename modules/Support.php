@@ -11,7 +11,7 @@ class Support extends AModule
     private $criteria_index = 'A';
     private $true_index = 'A';
 
-    private $database = 'masgau_game_data';
+    private $database = 'masgau';
     private $criteria = "games.type != 'system'";
     private $game_tables;
     public function footer() {
@@ -32,14 +32,15 @@ class Support extends AModule
             $this->filter = '#';
         }
         
-        $this->game_tables = $this->database . '.games games';
+        $this->game_tables = 'games';
         if ($this->table == "upcoming") {
-            $this->game_tables .= ", ". $this->database . '.compatibility compat';
+            $this->game_tables .= ", compatibility compat";
             $this->criteria .= " AND compat.state = 'upcoming'";
             $this->criteria .= " AND games.name = compat.name";
         } else {
-            $this->game_tables .= ", ". $this->database . '.game_versions versions';
+            $this->game_tables .= ', game_versions versions';
             $this->criteria .= " AND versions.name = games.name";
+	    $this->criteria .= " AND versions.deprecated = 0";
         }
 
     }
@@ -101,11 +102,11 @@ class Support extends AModule
                 $count_string .= ' (' . number_format($count) . ' total)';
             }
         } else {
-            $count_string = "currently no games (for now)";
+            $count_string = "no games (for now)";
         }
     
         if ($this->table == "current") {
-            $query = "SELECT max(last_updated) as date FROM masgau_game_data.xml_files";
+            $query = "SELECT max(last_updated) as date FROM xml_files";
             $data = $this->runQuery($query);
             $row = mysql_fetch_array($data);
             echo '<p>This list reflects the game compatibility of the current data, which was released on ' . $row['date'] . '.</p>';

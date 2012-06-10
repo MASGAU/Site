@@ -43,8 +43,14 @@ class GameVersion extends AXmlData {
     public $contributors = array();
     public $ps_codes = array();
 
+	public static $table_name = "game_versions";
+
+    function __construct() {
+    	parent::__construct(self::$table_name);
+    }
+
     public function loadFromDb($id,$con) {
-        $sql = 'select * from masgau_game_data.game_versions where id = '.$id.'';
+	$sql = 'select * from '.$this->table.' where id = '.$id.'';
         $result = mysql_query($sql);
         
         if($row = mysql_fetch_assoc($result)) {
@@ -64,13 +70,17 @@ class GameVersion extends AXmlData {
             
             $this->comment = $row['comment'];
             $this->restore_comment = $row['restore_comment'];
-            
-            // Load paths
-            $sql = 'select * from masgau_game_data.game_locations loc, 
-                masgau_game_data.game_paths path where game_version = '.$id.' and loc.id = path.id';
+           
+	    // Load locations
+	    require_once 'Location.php'; 
+		$db = self::$database;
+		$loc_table = $db.'.'.Location::$table_name;
+	    // Load paths
+            require_once 'PathLocation.php';
+            $sql = 'select * from '.$loc_table.' loc, 
+                '.$db.'.'.PathLocation::$table_name.' path where game_version = '.$id.' and loc.id = path.id';
             $result = mysql_query($sql);
             while($row = mysql_fetch_assoc($result)) {
-                require_once 'PathLocation.php';
                 $loc = new PathLocation();
                 $loc->loadfromDb($row['id'],$con);
                 
@@ -79,11 +89,11 @@ class GameVersion extends AXmlData {
             }
             
             // Load registry keys
-            $sql = 'select * from masgau_game_data.game_locations loc, 
-                masgau_game_data.game_registry_keys `keys` where game_version = '.$id.' and loc.id = `keys`.id';
+                    require_once 'RegistryLocation.php';
+            $sql = 'select * from '.$loc_table.' loc, 
+                '.$db.'.'.RegistryLocation::$table_name.' `keys` where game_version = '.$id.' and loc.id = `keys`.id';
             if($result = mysql_query($sql)) {
                 while($row = mysql_fetch_assoc($result)) {
-                    require_once 'RegistryLocation.php';
                     $loc = new RegistryLocation();
                     $loc->loadfromDb($row['id'],$con);
 
@@ -93,11 +103,11 @@ class GameVersion extends AXmlData {
             }
 
             // Load shortcuts
-            $sql = 'select * from masgau_game_data.game_locations loc, 
-                masgau_game_data.game_shortcuts short where game_version = '.$id.' and loc.id = short.id';
+                    require_once 'ShortcutLocation.php';
+            $sql = 'select * from '.$loc_table.' loc, 
+                '.$db.'.'.ShortcutLocation::$table_name.' short where game_version = '.$id.' and loc.id = short.id';
             if($result = mysql_query($sql)) {
                 while($row = mysql_fetch_assoc($result)) {
-                    require_once 'ShortcutLocation.php';
                     $loc = new ShortcutLocation();
                     $loc->loadfromDb($row['id'],$con);
 
@@ -107,11 +117,11 @@ class GameVersion extends AXmlData {
             }
             
             // Load parents
-            $sql = 'select * from masgau_game_data.game_locations loc, 
-                masgau_game_data.game_parents par where game_version = '.$id.' and loc.id = par.id';
+                    require_once 'GameLocation.php';
+            $sql = 'select * from '.$loc_table.' loc, 
+                '.$db.'.'.GameLocation::$table_name.' par where game_version = '.$id.' and loc.id = par.id';
             if($result = mysql_query($sql)) {
                 while($row = mysql_fetch_assoc($result)) {
-                    require_once 'GameLocation.php';
                     $loc = new GameLocation();
                     $loc->loadfromDb($row['id'],$con);
 
@@ -122,11 +132,11 @@ class GameVersion extends AXmlData {
 
 
             // Load scummvm
-            $sql = 'select * from masgau_game_data.game_locations loc, 
-                masgau_game_data.game_scummvm scumm where game_version = '.$id.' and loc.id = scumm.id';
+                    require_once 'ScummLocation.php';
+            $sql = 'select * from '.$loc_table.' loc, 
+                '.$db.'.'.ScummLocation::$table_name.' scumm where game_version = '.$id.' and loc.id = scumm.id';
             if($result = mysql_query($sql)) {
                 while($row = mysql_fetch_assoc($result)) {
-                    require_once 'ScummLocation.php';
                     $loc = new ScummLocation();
                     $loc->loadfromDb($row['id'],$con);
 
@@ -138,10 +148,10 @@ class GameVersion extends AXmlData {
 
 
             // Load playstation codes
-            $sql = 'select * from masgau_game_data.playstation_codes where game_version = '.$id.'';
+            require_once 'PlayStationCode.php';
+            $sql = 'select * from '.$db.'.'.PlayStationCode::$table_name.' where game_version = '.$id.'';
             $result = mysql_query($sql);
             while($row = mysql_fetch_assoc($result)) {
-                require_once 'PlayStationCode.php';
                 $code = new PlayStationCode();
                 $code->loadFromDb($row,$con);
                 
@@ -149,10 +159,10 @@ class GameVersion extends AXmlData {
             }
             
             // Load files
-            $sql = 'select * from masgau_game_data.files where game_version = '.$id.'';
+                require_once 'SaveFile.php';
+            $sql = 'select * from '.$db.'.'.SaveFile::$table_name.' where game_version = '.$id.'';
             $result = mysql_query($sql);
             while($row = mysql_fetch_assoc($result)) {
-                require_once 'SaveFile.php';
                 $file = new SaveFile();
                 $file->loadFromDb($row,$con);
 
@@ -173,7 +183,7 @@ class GameVersion extends AXmlData {
             
              
             // Load contributors
-            $sql = 'select * from masgau_game_data.contributions where game_version = '.$id.'';
+            $sql = 'select * from '.$db.'.game_contributions where game_version = '.$id.'';
             $result = mysql_query($sql);
             while($row = mysql_fetch_assoc($result)) {
 
@@ -200,6 +210,9 @@ class GameVersion extends AXmlData {
                     if($attribute->value=="true")
                         $this->deprecated = true;
                     break;
+		case 'type':
+			// This should be handled by the parent object
+			break;
                 default:
                     throw new Exception($attribute->name . ' not supported');
             }
@@ -334,7 +347,7 @@ class GameVersion extends AXmlData {
         }
 
 
-        $data = self::RunQuery("SELECT * FROM masgau_game_data.game_versions"
+        $data = self::RunQuery("SELECT * FROM ".$this->table
                                 .$criteria
                                 ,$con);
 
@@ -354,7 +367,7 @@ class GameVersion extends AXmlData {
             $id = $row['id'];
             $insert['id'] = $id;
             echo ')</summary>';
-            self::DeleteRow("masgau_game_data.game_versions",array('id'=>$id),$con,"Deleting Current Version ($id)");
+            self::DeleteRow($this->table,array('id'=>$id),$con,"Deleting Current Version ($id)");
         } else {
                 echo '<summary style="color:red;">'.$this->getVersionString().' (';
                 echo 'ADDING';
@@ -362,7 +375,7 @@ class GameVersion extends AXmlData {
         }
         
         
-        $data = self::RunQuery("SELECT * FROM masgau_game_data.games"
+        $data = self::RunQuery("SELECT * FROM ".self::$database.".games"
                                 ." WHERE name = '" . $this->name . "'",$con);
                                 
         $row = mysql_fetch_assoc($data);
@@ -372,16 +385,16 @@ class GameVersion extends AXmlData {
             echo "Has unique version title: ".$this->title;
         }
 
-        $id = self::InsertRow('masgau_game_data.game_versions', $insert, $con, "Adding version");
+        $id = self::InsertRow($this->table, $insert, $con, "Adding version");
         
         foreach($this->contributors as $contributor) {
-            $data = self::RunQuery("SELECT * FROM masgau_game_data.contributors"
+            $data = self::RunQuery("SELECT * FROM ".self::$database.".game_contributors"
                             ." WHERE name = '".$contributor."'",$con);
                             
             if(mysql_num_rows($data)==0) {
-                self::InsertRow('masgau_game_data.contributors', array('name'=>$contributor), $con,'Contributor is new, adding');
+                self::InsertRow(self::$database.'.game_contributors', array('name'=>$contributor), $con,'Contributor is new, adding');
             }
-            self::InsertRow('masgau_game_data.contributions', 
+            self::InsertRow(self::$database.'.game_contributions', 
                     array('game_version'=>$id,
                         'contributor'=>$contributor), $con,"Writing contribution by " . $contributor . " to database");
         }

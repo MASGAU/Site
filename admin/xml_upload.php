@@ -1,16 +1,25 @@
 <?php
+
+	include_once "../../DBSettings.php";
+	
     include_once '../headers.php';
     include_once '../shared/gamedata/AXmlData.php';
-    
+   
+
+	$db = $settings['sql_database'];
+
     if(isset($_POST['erase_game_safety'])) {
         if($_POST['erase_game']=="ALL GAME IN DATABASE") {
-            AXmlData::DeleteRow('masgau_game_data.games',null,$con,"Deleting All Games From Database");
+            AXmlData::DeleteRow($db.'.games',null,$con,"Deleting All Games From Database");
+	AXmlData::DeleteRow($db.'.game_contributors',null,$con,"Deleting All Contributors From Database");
+AXmlData::ResetAutoIncrement($db.".game_versions",$con,"Resetting Game Version AI to 0");
+AXmlData::ResetAutoIncrement($db.".game_locations",$con,"Resetting Game Locations AI to 0");
         } else {
             $game = $_POST['erase_game'];
             if($_POST[$game]=="ALL") {
-                AXmlData::DeleteRow('masgau_game_data.games',array('name'=>$_POST['erase_game']),$con,"Deleting Game ".$_POST['erase_game']." From the Database");
+                AXmlData::DeleteRow($db.'.games',array('name'=>$_POST['erase_game']),$con,"Deleting Game ".$_POST['erase_game']." From the Database");
             } else {
-                AXmlData::DeleteRow('masgau_game_data.game_versions',array('id'=>$_POST[$game]),$con,"Deleting Game ".$_POST['erase_game']."'s version ID ".$_POST[$game]." From the Database");
+                AXmlData::DeleteRow($db.'.game_versions',array('id'=>$_POST[$game]),$con,"Deleting Game ".$_POST['erase_game']."'s version ID ".$_POST[$game]." From the Database");
             }
         }
     }
@@ -47,7 +56,7 @@ XML File Import From Data Branch Of GitHub
 <input name='overwrite' type='checkbox' />Overwrite Existing
 <input name='update_time' type='checkbox' />Update File Modified Time
 <?php
-    $data = AXmlData::RunQuery("SELECT * FROM masgau_game_data.xml_files ORDER BY name ASC",$con);
+    $data = AXmlData::RunQuery("SELECT * FROM ".$db.".xml_files ORDER BY name ASC",$con);
     while ($row = mysql_fetch_assoc($data)) {
         echo '<br /><input type="radio" name="file"  value="'.$row['git_path'].'">' . $row['git_path'] . ' (Last Updated '.$row['last_updated'].')</input>';
 
@@ -66,7 +75,7 @@ Erase game
 <select name="erase_game" id="game_select">
 <option selected="true">ALL GAME IN DATABASE</option>
 <?php 
-    $data = AXmlData::RunQuery("SELECT * FROM masgau_game_data.games ORDER BY name ASC",$con);
+    $data = AXmlData::RunQuery("SELECT * FROM ".$db.".games ORDER BY name ASC",$con);
     while ($row = mysql_fetch_assoc($data)) {
         echo '<option value="'.$row['name'].'">' . $row['name'] . '</option>';
     }
@@ -76,7 +85,7 @@ Erase game
     if(mysql_num_rows($data)>0) {
         mysql_data_seek($data,0);
         while ($row = mysql_fetch_assoc($data)) {
-            $datas = AXmlData::RunQuery("SELECT * FROM masgau_game_data.game_versions WHERE name = '".$row['name']."'",$con);
+            $datas = AXmlData::RunQuery("SELECT * FROM ".$db.".game_versions WHERE name = '".$row['name']."'",$con);
             echo '<select name="'.$row['name'].'" id="'.$row['name'].'" class="version_select">';
             echo '<option selected="true">ALL</option>';
             while ($row = mysql_fetch_assoc($datas)) {
@@ -117,8 +126,8 @@ Erase game
             $games->writeToDb(false,$con,$file);
         echo '</div>';
         if(isset($_POST['update_time'])) {
-
-            AXmlData::UpdateRow('masgau_game_data.xml_files',
+		date_default_timezone_set("UTC");
+            AXmlData::UpdateRow($db.'.xml_files',
                                 array('git_path'=>$file),
                                 array('last_updated'=>date("Y-m-d H:i:s")),
                                 $con,"Updating modified time for ".$file);

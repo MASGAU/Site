@@ -4,9 +4,14 @@ class ScummLocation extends Location {
     //put your code here
     
     public $name;
-    
+
+	public static $table_name = "game_location_scummvm";   
+	function __construct() {
+		parent::__construct(self::$table_name);
+	} 
+
     public function loadfromDb($id,$con) {
-        $sql = 'select * from masgau_game_data.game_scummvm where id = '.$id.'';
+        $sql = 'select * from '.$this->table.' where id = '.$id.'';
         $result = mysql_query($sql);
         
         if($row = mysql_fetch_assoc($result)) {
@@ -41,7 +46,7 @@ class ScummLocation extends Location {
 
         $insert = array('name'=>$this->name);
         
-        $this->writeAllToDb($id,'masgau_game_data.game_scummvm', $insert,$con,"Writing ScummVM Location to Database");
+        $this->writeAllToDb($id,$this->table, $insert,$con,"Writing ScummVM Location to Database");
 
     }    
 }

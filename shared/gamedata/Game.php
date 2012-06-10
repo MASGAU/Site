@@ -18,23 +18,25 @@ class Game extends AXmlData {
     public $type;
     public $versions = array();
 
-
+    function __construct() {
+    	parent::__construct("games");
+    }
     public function loadFromDb($name,$con,$criteria = null) {
-        $sql = 'select * from masgau_game_data.games where name = \''.$name.'\'';
+	$sql = 'select * from '.$this->table.' where name = \''.$name.'\'';
         $result = mysql_query($sql);
         
         if($row = mysql_fetch_assoc($result)) {
             $this->name = $row['name'];
             $this->title = $row['title'];
-
-            $sql = 'select * from masgau_game_data.game_versions where name = \'' . $name . '\'';
+	$this->type = $row['type'];
+                require_once 'GameVersion.php';
+            $sql = 'select * from '.self::$database.'.'.GameVersion::$table_name.' where name = \'' . $name . '\'';
             if($criteria!=null) {
                 $sql .= ' AND '.$criteria;
             }
             $result = mysql_query($sql);
 
             while ($sub_row = mysql_fetch_assoc($result)) {
-                require_once 'GameVersion.php';
                 $version = new GameVersion();
                 $version->loadFromDb($sub_row['id'],$con);
                 
@@ -53,11 +55,14 @@ class Game extends AXmlData {
             switch ($attribute->name) {
                 case 'name':
                     if($this->name==null)
-                        $this->name = $node->attributes->getNamedItem('name')->value;
+                        $this->name = $attribute->value;
                     else if ($this->name != $attribute->value)
                         throw new Exception('GAME MISMATCH ' . $this->name . ' ' . $attribute->value);
                     break;
-                //default:
+                case 'type':
+			$this->type = $attribute->value;		
+			break;
+		//default:
                 //throw new Exception($attribute->name.' not supported');
             }
         }
@@ -88,7 +93,7 @@ class Game extends AXmlData {
     }
     
     public function writeToDb($replace,$con,$file = null) {        
-        $data = self::RunQuery("SELECT * FROM masgau_game_data.games"
+        $data = self::RunQuery("SELECT * FROM ".$this->table.""
                                 ." WHERE name = '".$this->name."'",$con);
     
                         $path = pathinfo($file);
@@ -97,30 +102,13 @@ class Game extends AXmlData {
             echo '<summary style="color:red">'.$this->getTitle().' ('.$this->name.') ';
             $fields = array('name'=>$this->name,
                         'title'=>$this->getTitle());
-                        
-            switch($path['basename']) {
-                case "system.xml":
-                    $fields['type'] = 'system';
-                    echo '(System) ';
-                    break;
-                case "mods.xml":
-                    $fields['type'] = 'mod';
-                    echo '(Mod) ';
-                    break;
-                case "expansions.xml":
-                    $fields['type'] = 'expansion';
-                    echo '(Expansion) ';
-                    break;
-                default:
-                    echo "(Game) ";
-                    break;
-                    
-            }
+            $fields['type'] = $this->type;    
+		echo '('.$this->type.') ';        
 
             echo '(ADDING)</summary>';
                         
                         
-            self::InsertRow('masgau_game_data.games', $fields
+            self::InsertRow($this->table, $fields
                     ,$con,"Writing game to database"); 
         } else {
             echo '<summary style="color:green">'.$this->getTitle().' ('.$this->name.') (';

@@ -21,7 +21,8 @@ class MASGAUBase {
     //put your code here
 
     public static function formatDate($string) {
-        return date_format(new DateTime($string), self::$date_format);
+        date_default_timezone_set("UTC");
+	return date_format(new DateTime($string), self::$date_format);
     }
 
     protected function __construct($major, $minor, $file) {
@@ -44,8 +45,8 @@ class MASGAUBase {
             $this->root->appendChild($this->xml->createAttribute("minorVersion"))->
                     appendChild($this->xml->createTextNode($minor));
 
-
-            $sql = 'select * from masgau_game_data.xml_files where name = \'' . $file . '\'';
+		global $settings;
+            $sql = 'select * from '.$settings['sql_database'].'.xml_files where name = \'' . $file . '\'';
             $result = mysql_query($sql);
             if ($row = mysql_fetch_assoc($result)) {
                 $this->root->appendChild($this->xml->createAttribute("date"))->
@@ -63,7 +64,10 @@ class MASGAUBase {
         foreach ($games->games as $game) {
             foreach ($game->versions as $version) {
                 // Write root game tag
-                $this->root->appendChild($this->exportGameVersion($game, $version));
+                $game_xml = $this->exportGameVersion($game, $version);
+		if($game_xml!=null) {
+			$this->root->appendChild($game_xml);
+		}
             }
         }
         
@@ -75,9 +79,10 @@ class MASGAUBase {
         }
         
 
-        if (!$this->xml->schemaValidate($schema))
+        if (!$this->xml->schemaValidate($schema)) {
+		echo $this->xml->saveXML();
             throw new Exception("XML DID NOT PASS VALIDATION: " . $schema);
-
+	}
 
 
         return $this->xml->saveXML();

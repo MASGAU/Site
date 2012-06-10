@@ -1,4 +1,5 @@
 <?php
+include_once "../config.php";
 include_once '../shared/gamedata/AXmlData.php';
 include_once '../shared/gamedata/Games.php';
 
@@ -15,7 +16,9 @@ function curPageURL() {
 
 ini_set('default_charset', 'UTF-8');
 define('MASGAU', 'whut');
-require_once '../DBSettings.php';
+
+include_once("../../DBSettings.php");
+$sql_database = $settings['sql_database'];
 $link = mysql_connect($db_server, $db_user, $db_password);
 mysql_set_charset('utf8', $link);
 
@@ -47,9 +50,9 @@ if (isset($_GET['version'])) {
         require_once '../shared/exporters/MASGAUBase.php';
         
         if($version=='1.1') {
-            $sql = "select * from masgau_game_data.program_versions where edition = 'installable' order by major desc, minor desc, revision desc";
+            $sql = "select * from ".$sql_database.".program_versions where edition = 'installable' and stable = 1 order by major desc, minor desc, revision desc";
         } else {
-            $sql = 'select * from masgau_game_data.program_versions order by major desc, minor desc, revision desc';
+            $sql = "select * from ".$sql_database.".program_versions order by major desc, minor desc, revision desc";
         }
         $result = AXmlData::RunQuery($sql,$link);
         
@@ -70,12 +73,19 @@ if (isset($_GET['version'])) {
                         appendChild($xml->createTextNode($row['edition']));
                 $file->appendChild($xml->createAttribute("os"))->
                         appendChild($xml->createTextNode($row['os']));
+		if($row['stable']==0) {
+			$file->appendChild($xml->createAttribute("stable"))->
+				appendChild($xml->createTextNode("false"));
+		} else {
+			$file->appendChild($xml->createAttribute("stable"))->
+                                appendChild($xml->createTextNode("true"));
+		}
             }
         }
         $ver_id = $ver_id = Games::getVersionId($version,$link);
 
-        $sql = "select * from masgau_game_data.xml_files xml"
-                .", masgau_game_data.xml_file_versions file"
+        $sql = "select * from ".$sql_database.".xml_files xml"
+                .", ".$sql_database.".xml_file_versions file"
                 ." where version in (0,".$ver_id.")"
                 ." AND xml.name = file.file"
                 ." order by name asc";
@@ -97,12 +107,12 @@ if (isset($_GET['version'])) {
 } else {
     echo "VERSION NOT PROVIDED, RUNNING IN TEST MODE<br />";
 
-    $result = AXmlData::RunQuery('select * from masgau_game_data.xml_files order by name asc',$link);
-    $result_ver = AXmlData::RunQuery('select * from masgau_game_data.xml_versions order by string asc',$link);
+    $result = AXmlData::RunQuery('select * from '.$sql_database.'.xml_files order by name asc',$link);
+    $result_ver = AXmlData::RunQuery('select * from '.$sql_database.'.xml_versions order by string asc',$link);
 
     echo "<ul>";
     while ($row_ver = mysql_fetch_assoc($result_ver)) {
-        $result_file = AXmlData::RunQuery('select * from masgau_game_data.xml_file_versions WHERE version in (0,'.$row_ver['id'].') order by file asc',$link);
+        $result_file = AXmlData::RunQuery('select * from '.$sql_database.'.xml_file_versions WHERE version in (0,'.$row_ver['id'].') order by file asc',$link);
 
         if($row_ver['string']=="No Version")
             continue;

@@ -105,7 +105,7 @@ class Page extends AModule
         if(isset($_GET["name"])) {
             $this->name = $_GET["name"];
 
-            $query = "SELECT * FROM masgau_site.pages"
+            $query = "SELECT * FROM site_pages"
                                     ." WHERE name = '".$this->name."'";
             $data = $this->runQuery($query);
             

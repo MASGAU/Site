@@ -16,7 +16,7 @@ class Downloads extends AModule
         
         echo '<h2>Download Installer</h2>';
         echo '<p>You can download the latest version from the <a href="https://github.com/MASGAU/MASGAU/">GitHub page</a>, or from here:</p>';
-        $data = $this->runQuery("select * from masgau_game_data.program_versions WHERE edition = 'installable' order by major desc, minor desc, revision desc");
+        $data = $this->runQuery("select * from program_versions WHERE edition = 'installable' AND stable = 1 order by major desc, minor desc, revision desc");
         while($row = mysql_fetch_assoc($data)) {
             echo '<h3><a href="'.$row['url'].'">DOWNLOAD MASGAU V.'.$row['string'].' INSTALLER FOR '.strtoupper($row['os']).'</a></h3>';
         }
@@ -50,7 +50,7 @@ class Downloads extends AModule
         
         .'<p>This version is just a zip file, extract it wherever, then go in and double-click MASGAU.exe or whatever you want to run. All config files are contained within the program\'s folder.</p>';
         
-        $data = $this->runQuery("select * from masgau_game_data.program_versions WHERE edition = 'portable' order by major desc, minor desc, revision desc");
+        $data = $this->runQuery("select * from program_versions WHERE edition = 'portable' AND stable = 1 order by major desc, minor desc, revision desc");
         while($row = mysql_fetch_assoc($data)) {
             echo '<h3><a href="'.$row['url'].'">DOWNLOAD MASGAU V.'.$row['string'].' PORTABLE VERSION FOR '.strtoupper($row['os']).'</a></h3>';
         }

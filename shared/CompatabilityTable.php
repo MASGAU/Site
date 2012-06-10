@@ -23,11 +23,11 @@ class CompatabilityTable {
 
     public static function init($con) {
         self::$con = $con;
-        self::$decoder = self::runQuery("SELECT * FROM masgau_game_data.compatibility_equivalencies ORDER BY priority");
-        self::$platforms = self::runQuery("SELECT * FROM masgau_game_data.compatibility_platforms compat"
+        self::$decoder = self::runQuery("SELECT * FROM compatibility_equivalencies ORDER BY priority");
+        self::$platforms = self::runQuery("SELECT * FROM compatibility_platforms compat"
             ." WHERE compat.display = 1"
             ." ORDER BY compat.order ASC");
-        self::$medias = self::runQuery("SELECT * FROM masgau_game_data.compatibility_medias compat"
+        self::$medias = self::runQuery("SELECT * FROM compatibility_medias compat"
             ." WHERE compat.display = 1"
             ." ORDER BY compat.order ASC");
     }
@@ -136,16 +136,17 @@ class CompatabilityTable {
 
 
 // Here we calculate the automatic compatibility entries
-        $locations = self::runQuery("SELECT * FROM masgau_game_data.game_versions ver"
-            ." LEFT JOIN masgau_game_data.game_locations loc ON loc.game_version=ver.id"
-            ." LEFT JOIN masgau_game_data.game_paths paths ON loc.id=paths.id"
-            ." LEFT JOIN masgau_game_data.game_parents parents ON loc.id=parents.id"
+        $locations = self::runQuery("SELECT * FROM game_versions ver"
+            ." LEFT JOIN game_locations loc ON loc.game_version=ver.id"
+            ." LEFT JOIN game_location_paths paths ON loc.id=paths.id"
+            ." LEFT JOIN game_location_parents parents ON loc.id=parents.id"
             ." WHERE ver.name='" . $game_res['name'] . "'"
+	    ." AND ver.deprecated = 0"
             ." ORDER BY ver.region");
                 
         $compats = $this->processLocations($compats,$locations);
 
-        $data = self::runQuery("SELECT * FROM masgau_game_data.compatibility_override"
+        $data = self::runQuery("SELECT * FROM compatibility_override"
                                 ." WHERE name = '". $game_res['name'] . "'");
         while($override = mysql_fetch_array($data)) {
             $compats = $this->addCompat($compats,$override['platform'],$override['media']);
@@ -184,7 +185,7 @@ class CompatabilityTable {
 
         $new_row .= '<td>';
 
-        $data = self::runQuery("SELECT * FROM masgau_game_data.game_versions"
+        $data = self::runQuery("SELECT * FROM game_versions"
         ." WHERE name='" . $game_res['name'] . "'"
         ." AND (comment != '' OR restore_comment != '')");
         
@@ -211,10 +212,10 @@ class CompatabilityTable {
     function processLocations($array,$locations) {
         while($location = mysql_fetch_array($locations)) {
             if($location['parent_game_version']!=null) {
-                $parent = self::runQuery("SELECT * FROM masgau_game_data.game_versions ver"
-                    ." LEFT JOIN masgau_game_data.game_locations loc ON loc.game_version=ver.id"
-                    ." LEFT JOIN masgau_game_data.game_paths paths ON loc.id=paths.id"
-                    ." LEFT JOIN masgau_game_data.game_parents parents ON loc.id=parents.id"
+                $parent = self::runQuery("SELECT * FROM game_versions ver"
+                    ." LEFT JOIN game_locations loc ON loc.game_version=ver.id"
+                    ." LEFT JOIN game_location_paths paths ON loc.id=paths.id"
+                    ." LEFT JOIN game_location_parents parents ON loc.id=parents.id"
                     ." WHERE ver.id='" . $location['parent_game_version'] . "'"
                     ." ORDER BY ver.region");
                     $array = $this->processLocations($array,$parent);

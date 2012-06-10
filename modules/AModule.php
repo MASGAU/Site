@@ -44,8 +44,9 @@ abstract class AModule
     
     
     public static function RunQueryOnConnection($query, $con) {
+		global $settings;
         $data = mysql_query($query, $con);
-    
+		mysql_select_db($settings['sql_database'], $con);  
         if($data) {
             return $data;
         } else {
@@ -153,7 +154,7 @@ abstract class AModule
     }
     
     protected function getGameLetters() {
-        $data = $this->runQuery("SELECT substr(name,1,1) as letter FROM masgau_game_data.games GROUP BY letter ORDER BY letter ASC");
+        $data = $this->runQuery("SELECT substr(name,1,1) as letter FROM games GROUP BY letter ORDER BY letter ASC");
 
         $letters = array();
         while($row = mysql_fetch_array($data)) {

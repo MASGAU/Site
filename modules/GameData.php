@@ -73,7 +73,7 @@ class GameData extends AModule
             $game_data = new Game();
             $game_data->loadFromDb($name, null);
             
-            $data = $this->runQuery("SELECT * FROM masgau_game_data.games"
+            $data = $this->runQuery("SELECT * FROM games"
                                     ." WHERE name = '".$name."'"
                                     ." ORDER BY name ASC");
                                     
@@ -221,8 +221,8 @@ class GameData extends AModule
                     echo $version->restore_comment;
                 }
                 
-                $data = $this->runQuery("SELECT * FROM masgau_game_data.xml_versions ver"
-                                        .", masgau_game_data.exporters ex"
+                $data = $this->runQuery("SELECT * FROM xml_versions ver"
+                                        .", xml_exporters ex"
                                         ." WHERE ver.exporter = ex.name"
                                         ." ORDER BY major desc, minor desc");
 
@@ -253,7 +253,7 @@ class GameData extends AModule
             
         } else {
             echo '<h3>These are all the games and other things that MASGAU has information for</h3>';
-            $data = $this->runQuery("SELECT * FROM masgau_game_data.games"
+            $data = $this->runQuery("SELECT * FROM games"
                                 ." ORDER BY name ASC");
             
             $games = array();

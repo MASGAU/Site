@@ -1,6 +1,8 @@
 <?php
     $title = "MASGAU";
-    include_once 'modules/AModule.php';
+	include_once '../DBSettings.php';
+    include_once 'config.php';
+	include_once 'modules/AModule.php';
     include_once 'modules/Page.php';
     include_once 'modules/Downloads.php';
 
@@ -23,7 +25,7 @@
 <link media="Screen" href="css/masgau.css" type="text/css" rel="stylesheet" />
 <link media="Screen" href="libs/jquery/css/dark-hive/jquery-ui-1.8.19.custom.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="libs/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="libs/jquery/jquery-ui-1.8.19.custom.min.js"></script>
+<script type="text/javascript" src="libs/jquery/jquery-ui-1.8.19.custom.min"></script>
 <script type="text/javascript" src="libs/yoxview/yoxview-init.js"></script>
 <script type="text/javascript" src="javascript/masgau.js"></script>
 
@@ -68,7 +70,7 @@
 <div class="fb-like" data-href="http://masgau.org/" data-send="false" data-layout="box_count" data-width="100" data-show-faces="false"></div></div>
 
 <?php 
-    $menus = AModule::RunQueryOnConnection("SELECT * FROM masgau_site.menus ORDER BY `order`",$con);
+    $menus = AModule::RunQueryOnConnection("SELECT * FROM site_menus ORDER BY `order`",$con);
     $i = 1;
     while($row = mysql_fetch_array($menus)) {
         echo '<div class="menu_title" id="menu_title_'.$i.'">'.$row['title'].'</div>';
@@ -86,7 +88,7 @@
         echo '<div class="menu" id="menu_'.$i.'">';
         echo '<div class="items">';
         
-        $items = AModule::RunQueryOnConnection("SELECT * FROM masgau_site.menu_items WHERE menu = ".$row['id']." ORDER BY `order`",$con);
+        $items = AModule::RunQueryOnConnection("SELECT * FROM site_menu_items WHERE menu = ".$row['id']." ORDER BY `order`",$con);
         while($item = mysql_fetch_array($items)) {
             echo AModule::CreateLinkForModule($item['type'],$item['option']).$item['title'].'</a><br />';
         }

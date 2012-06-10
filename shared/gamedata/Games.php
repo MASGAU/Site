@@ -1,5 +1,4 @@
 <?php
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -13,6 +12,7 @@
 class Games {
     private $document;
     public $games = array();
+
 
     public function loadFromXml($xml_file,$schema) {
         global $wgOut;
@@ -42,7 +42,8 @@ class Games {
     }
 
     public static function getVersionId($name,$con) {
-        $ver_resul = AXmlData::RunQuery("SELECT * FROM masgau_game_data.xml_versions WHERE string = '".$name."'",$con);
+	global $settings;
+        $ver_resul = AXmlData::RunQuery("SELECT * FROM ".$settings['sql_database'].".xml_versions WHERE string = '".$name."'",$con);
         $row = mysql_fetch_assoc($ver_resul);
         $ver_id = $row['id'];
         return $ver_id;
@@ -50,9 +51,9 @@ class Games {
 
     public function loadFromDb($file,$version,$con) {
         $ver_id = self::getVersionId($version,$con);
-        
+        global $settings;
         if($file!=null) {
-            $result = AXmlData::RunQuery("select * from masgau_game_data.xml_file_versions"
+            $result = AXmlData::RunQuery("select * from ".$settings['sql_database'].".xml_file_versions"
                                         ." where file = '".$file."' AND version in (0,".$ver_id.")",$con);
 
             if($row = mysql_fetch_assoc($result)) {
@@ -62,9 +63,9 @@ class Games {
         }
         
         if($criteria!=null)
-            $sql = 'select * from masgau_game_data.games WHERE '.$criteria.' order by name asc';
+            $sql = 'select * from '.$settings['sql_database'].'.games WHERE '.$criteria.' order by name asc';
         else
-            $sql = 'select * from masgau_game_data.games order by name asc';
+            $sql = 'select * from '.$settings['sql_database'].'.games order by name asc';
 
         $result = AXmlData::RunQuery($sql,$con);
 
@@ -78,10 +79,16 @@ class Games {
     
     public function writeToDb($replace,$con,$file) {
         global $wgOut;
-        echo 'Writing games to database';
-        foreach ($this->games as $game) {
-            $game->writeToDb($replace,$con,$file);
-        }
+	$types = array("Game", "System", "Mod", "Expansion");
+	foreach($types as $type) {
+		echo "<details open=\"true\"><summary>Writing ".$type."s</summary>";
+	        foreach ($this->games as $game) {
+			if($game->type == $type) {
+        	    		$game->writeToDb($replace,$con,$file);
+			}
+        	}
+		echo "</details>";
+	}
     }
 
 }

@@ -5,9 +5,15 @@ class PathLocation extends Location {
     
     public $ev;
     public $path;
-    
+   
+    public static $table_name = "game_location_paths";
+
+    function __construct() {
+    	parent::__construct(self::$table_name);
+    }
+ 
     public function loadfromDb($id,$con) {
-        $sql = 'select * from masgau_game_data.game_paths where id = '.$id.'';
+	$sql = 'select * from '.$this->table.' where id = '.$id;
         $result = mysql_query($sql);
         
         if($row = mysql_fetch_assoc($result)) {
@@ -46,7 +52,7 @@ class PathLocation extends Location {
 
         $insert = array('ev'=>$this->ev,'path'=>$this->path);
         
-        $this->writeAllToDb($id,'masgau_game_data.game_paths', $insert,$con,"Writing Path Location to Database");
+        $this->writeAllToDb($id,$this->table, $insert,$con,"Writing Path Location to Database");
 
     }    
 }

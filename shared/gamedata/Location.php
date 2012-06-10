@@ -16,10 +16,17 @@ abstract class Location extends AXmlData {
     public $detract = null;
     public $platform_version = null;
     public $deprecated = false;
-    
-    
+    public static $table_name = "game_locations";    
+	protected $loc_table;   
+
+ 
+    function __construct($table) {
+    	parent::__construct($table);
+	$this->loc_table = self::$database.".".self::$table_name;
+    }
+
     public function loadFromDb($id,$con) {
-        $sql = 'select * from masgau_game_data.game_locations where id = '.$id.'';
+	$sql = 'select * from '.$this->loc_table.' where id = '.$id.'';
         $result = mysql_query($sql);
         
         if($row = mysql_fetch_assoc($result)) {
@@ -31,7 +38,6 @@ abstract class Location extends AXmlData {
     }
     
     public function loadFromXml($node) {
-        global $wgOut;
         foreach($node->attributes as $attribute) {
             switch($attribute->name) {
                 case 'append':
@@ -66,7 +72,7 @@ abstract class Location extends AXmlData {
         if($this->deprecated!=null)
                 $insert['deprecated']= $this->deprecated;
         
-        $sub_insert['id'] = self::InsertRow('masgau_game_data.game_locations', $insert, $con,"Writing common location information");
+        $sub_insert['id'] = self::InsertRow($this->loc_table, $insert, $con,"Writing common location information");
         
         self::InsertRow($table, $sub_insert, $con,$message);
         
