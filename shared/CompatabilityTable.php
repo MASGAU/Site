@@ -1,7 +1,7 @@
 <?php
 include_once 'modules/GameData.php';
 class CompatabilityTable {
-    private static $con = null;
+    private static $db = null;
     private static $decoder;
     private static $playstation_consoles = "'PS1','PS2','PS3','PSP','PSVITA'";
     private static $consoles = "'PS1','PS2','PS3','PSP','PSVITA'";
@@ -10,31 +10,16 @@ class CompatabilityTable {
     public $max_games = 50;
     private $state = 'current';
     
-    protected static function runQuery($query) {
-        $data = mysql_query($query, self::$con);
-    
-        if($data) {
-            return $data;
-        } else {
-            echo mysql_error()."<br /><br />";
-            echo $query."<br /><br />";
-        }
+    public static function init($db) {
+        self::$db = $db;
+        self::$decoder = $db->Select("compatibility_equivalencies",null,null,"priority");
+        self::$platforms = $db->Select("compatibility_platforms",null,array("display"=>1),array("order"));
+        self::$medias = $db->Select("compatibility_medias compat",null,array("display"=>1),array("order"));
     }
 
-    public static function init($con) {
-        self::$con = $con;
-        self::$decoder = self::runQuery("SELECT * FROM compatibility_equivalencies ORDER BY priority");
-        self::$platforms = self::runQuery("SELECT * FROM compatibility_platforms compat"
-            ." WHERE compat.display = 1"
-            ." ORDER BY compat.order ASC");
-        self::$medias = self::runQuery("SELECT * FROM compatibility_medias compat"
-            ." WHERE compat.display = 1"
-            ." ORDER BY compat.order ASC");
-    }
-
-    public function __construct($con) {
-        if(self::$con==null) {
-            self::init($con);
+    public function __construct($db) {
+        if(self::$db==null) {
+            self::init($db);
         }
     }
 
@@ -58,12 +43,12 @@ class CompatabilityTable {
     
     private static function DrawMediaIcon($media) {
         $return = '<div class="media_icon">';
-        if($media['url']==null) {
-            $return .= '<img src="images/media/' . $media['icon'] . '" alt="' . $media['title'] . '" title="' . $media['title'] . '" />';
+        if($media->url==null) {
+            $return .= '<img src="images/media/' . $media->icon . '" alt="' . $media->title . '" title="' . $media->title . '" />';
         } else {
-            $return .= '<a href="'.$media['url'].'" target="_blank"><img src="images/media/' . $media['icon'] . '" alt="' . $media['title'] . '" title="' . $media['title'] . '" /></a>';
+            $return .= '<a href="'.$media->url.'" target="_blank"><img src="images/media/' . $media->icon . '" alt="' . $media->title . '" title="' . $media->title . '" /></a>';
         }
-        $return .= '<div class="description">'.$media['description'].'</div>';
+        $return .= '<div class="description">'.$media->description.'</div>';
         $return .= '</div>';
         return $return;
     }
@@ -85,9 +70,8 @@ class CompatabilityTable {
         $header .= '<th style="width:20%"></th>';
         
         
-        mysql_data_seek ( self::$platforms , 0) ;
-        while($platform = mysql_fetch_array(self::$platforms)) {
-            $header .= '<th style="width:' . $platform['width'] . '">' . $platform['title'] . '</th>';
+        foreach(self::$platforms as $platform) {
+            $header .= '<th style="width:' . $platform->width . '">' . $platform->title . '</th>';
         }
         $header .= '<th style="width:20%">Comments</th>';
         $header .= '</tr>';
@@ -96,8 +80,7 @@ class CompatabilityTable {
 
     public function drawCompatRows($games_data, $make_link = true, $state = 'current') {
         $rows = "";
-        mysql_data_seek ( $games_data , 0) ;
-        while($row = mysql_fetch_array($games_data)) {
+        foreach($games_data as $row) {
             if ($this->i == 0) {
                 // Prints the table header every 50 or so, or when we're at a new letter
                 $rows .= $this->drawCompatHeader();
@@ -119,58 +102,49 @@ class CompatabilityTable {
         return $compats;
     }
     
-    function drawCompatRow($game_res, $make_link = true, $state = 'current') {
+    function drawCompatRow($game_res, $make_link = true) {
         $new_row = '<tr class="compatibility"><th>';
-        if($make_link) {
-            $new_row .= GameData::CreateLink($game_res['name']) . $game_res['title'] . '</a>';
-        } else {
-            $new_row .= $game_res['title'];
-        }
+        $new_row .= '<a href="http://gamesave.info/#'.$game_res->name.'">'. $game_res->title . '</a>';
         $new_row .= '</th>';
 
         $compats = array();
-        mysql_data_seek (self::$platforms , 0) ;
-        while($platform = mysql_fetch_array(self::$platforms)) {
-            $compats[$platform['name']] = array();
+        foreach(self::$platforms as $platform) {
+            $compats[$platform->name] = array();
         }
 
 
 // Here we calculate the automatic compatibility entries
-        $locations = self::runQuery("SELECT * FROM game_versions ver"
+        $locations = self::$db->RunStatement("SELECT * FROM game_versions ver"
             ." LEFT JOIN game_locations loc ON loc.game_version=ver.id"
             ." LEFT JOIN game_location_paths paths ON loc.id=paths.id"
             ." LEFT JOIN game_location_parents parents ON loc.id=parents.id"
-            ." WHERE ver.name='" . $game_res['name'] . "'"
-	    ." AND ver.deprecated = 0"
-            ." ORDER BY ver.region");
+            ." WHERE ver.name='" . $game_res->name . "'");
                 
         $compats = $this->processLocations($compats,$locations);
 
-        $data = self::runQuery("SELECT * FROM compatibility_override"
-                                ." WHERE name = '". $game_res['name'] . "'");
-        while($override = mysql_fetch_array($data)) {
-            $compats = $this->addCompat($compats,$override['platform'],$override['media']);
+        $data = self::$db->Select("compatibility_override",null,
+                                array("name"=>$game_res->name),null);
+        $found = false;
+        foreach($data as $override) {
+            $found = true;
+            $compats = $this->addCompat($compats,$override->platform,$override->media);
         }
         
-        mysql_data_seek (self::$platforms , 0) ;
-        while($platform = mysql_fetch_array(self::$platforms)) {
-            if (count($compats[$platform['name']]) == 0) {
-                $new_row .= '<td class="empty ' . $platform['name'] . '_column">';
+        foreach(self::$platforms as $platform) {
+            if (count($compats[$platform->name]) == 0) {
+                $new_row .= '<td class="empty ' . $platform->name . '_column">';
             } else {
-                $new_row .= '<td class="medias ' . $platform['name'] . '_column">';
-                mysql_data_seek (self::$medias , 0) ;
+                $found = true;
+                $new_row .= '<td class="medias ' . $platform->name . '_column">';
+
                 $medias = array();
-                while($media = mysql_fetch_array(self::$medias)) {
-                    foreach ($compats[$platform['name']] as $compat) {
+                foreach(self::$medias as $media) {
+                    foreach ($compats[$platform->name] as $compat) {
                        // print_r($compat);
-                        if ($media['name']==$compat[0]) {
-                            if ($platform['name'] == "dos" && $compat[0] == "disc") {
-                                $medias = $this->addUnique($medias,'<img src="images/media/floppy.png" alt=Disk />');
-                            } else {
-                               $medias = $this->addUnique($medias,self::DrawMediaIcon($media));
-                            }
+                        if ($media->name==$compat[0]) {
+                           $medias = $this->addUnique($medias,self::DrawMediaIcon($media));
                             $found = true;
-                        } else if($compat[0]==null&&$platform['name'] == "playstation") {
+                        } else if($compat[0]==null&&$platform->name == "playstation") {
                             $medias = $this->addUnique($medias, $compat[2].' ('.$compat[1].')<br/>');
                         }
                     }
@@ -181,63 +155,72 @@ class CompatabilityTable {
             }
             $new_row .= '</td>';
         }
+        if(!$found) {
+            return "";
+            throw new Exception('No criteria apply to this game:<a href="http://gamesave.info/#'.$game_res->name.'">'.$game_res->name.'</a>');   
+        }
 
 
         $new_row .= '<td>';
 
-        $data = self::runQuery("SELECT * FROM game_versions"
-        ." WHERE name='" . $game_res['name'] . "'"
+        $data = self::$db->RunStatement("SELECT * FROM game_versions"
+        ." WHERE name='" . $game_res->name . "'"
         ." AND (comment != '' OR restore_comment != '')");
         
-        $row = mysql_fetch_array($data);
-        if ($row == false) {
-            $new_row .= 'None';
-        } else {
-            mysql_data_seek ($data , 0) ;
-            while($row = mysql_fetch_array($data)) {
-                if ($row['comment'] != null) {
-                    $new_row .= $row['comment'];
+        $comments = array();
+        if($game_res->comment!=null) {
+            array_push($comments,$game_res->comment);
+        } 
+        
+        if (sizeof($data)>0) {
+            foreach($data as $row) {
+                if ($row->comment != null) {
+                    $comments = $this->addUnique($comments,$row->comment);
                 }
-                if ($row['restore_comment'] != null) {
-                    $new_row .= $row['restore_comment'];
+                if ($row->restore_comment != null) {
+                    $comments = $this->addUnique($comments,$row->restore_comment);
                 }
             }
         }
-
+        
+        if (sizeof($comments)==0) {
+            $new_row .= 'None';
+        } else {
+            foreach($comments as $comment) {
+                $new_row .= $comment."<br/>";
+            }
+        }
         $new_row .= '</td></tr>';
         
         return $new_row;
     }
     
     function processLocations($array,$locations) {
-        while($location = mysql_fetch_array($locations)) {
-            if($location['parent_game_version']!=null) {
-                $parent = self::runQuery("SELECT * FROM game_versions ver"
+        foreach($locations as $location) {
+            if($location->parent_game_version!=null) {
+                $parent = self::$db->RunStatement("SELECT * FROM game_versions ver"
                     ." LEFT JOIN game_locations loc ON loc.game_version=ver.id"
                     ." LEFT JOIN game_location_paths paths ON loc.id=paths.id"
                     ." LEFT JOIN game_location_parents parents ON loc.id=parents.id"
-                    ." WHERE ver.id='" . $location['parent_game_version'] . "'"
-                    ." ORDER BY ver.region");
+                    ." WHERE ver.id='" . $location->parent_game_version . "'");
                     $array = $this->processLocations($array,$parent);
                 continue;
             }
             
-            mysql_data_seek(self::$decoder,0);
-            while($criteria = mysql_fetch_array(self::$decoder)) {
+            foreach(self::$decoder as $criteria) {
                 //print_r($criteria);
-                if($criteria['platform']!=$location['platform']&&$criteria['platform']!=null) {
-                    continue;
-                } else {
+                $props = array("os","platform","media","ev");
+                foreach($props as $prop) {
+                    if($criteria->$prop!=null && $criteria->$prop != $location->$prop) {
+                        continue 2;   
+                    }
                 }
-                if($criteria['ev']!=$location['ev']&&$criteria['ev']!=null) {
-                    continue;
-                }   
-                if($criteria['regex']!=null) {
-                    if(preg_match(';'.$criteria['regex'].';',$location['path'])==0)
+                if($criteria->regex!=null) {
+                    if(preg_match(';'.$criteria->regex.';',$location->path)==0)
                     continue;
                 }
-                $array = $this->addCompat($array,$criteria['compat_platform'],$criteria['compat_media'],$location['region'],$criteria['platform']);
-                if($criteria['stop'])
+                $array = $this->addCompat($array,$criteria->compat_platform,$criteria->compat_media,$location->region,$criteria->os);
+                if($criteria->stop)
                     break;
             }
         }

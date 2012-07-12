@@ -3,7 +3,7 @@ abstract class AModule
 {
     // property declaration
     public $var = 'a default value';
-    protected $connection = null;
+    protected $db = null;
     
     abstract public function title();
     abstract public function draw();
@@ -11,8 +11,12 @@ abstract class AModule
     abstract public function headers();
     abstract public function footer();
     
-    protected function __construct($con) {
-        $this->connection = $con;
+    protected $gdb;
+
+    protected function __construct($db) {
+        $this->db = $db;
+        $this->gdb = Databases::$gamesaveinfo;
+        $this->gdb->connect();
     }
     
     protected static function CreateImageThumb($file,$width,$text = null) {
@@ -40,23 +44,6 @@ abstract class AModule
     // method declaration
     public function displayVar() {
         echo $this->var;
-    }
-    
-    
-    public static function RunQueryOnConnection($query, $con) {
-		global $settings;
-        $data = mysql_query($query, $con);
-		mysql_select_db($settings['sql_database'], $con);  
-        if($data) {
-            return $data;
-        } else {
-            echo mysql_error()."<br /><br />";
-            echo $query."<br /><br />";
-        }
-    }
-    
-    protected function runQuery($query) {
-        return self::RunQueryOnConnection($query,$this->connection);
     }
     
     public static function CreateLinkForModule($type, $option = null) {
@@ -151,23 +138,6 @@ abstract class AModule
 
         return $return;
         
-    }
-    
-    protected function getGameLetters() {
-        $data = $this->runQuery("SELECT substr(name,1,1) as letter FROM games GROUP BY letter ORDER BY letter ASC");
-
-        $letters = array();
-        while($row = mysql_fetch_array($data)) {
-            if(is_numeric($row['letter'])) {
-                $letters['#'] = 'games.name REGEXP \'^[0-9]\'';
-            } else {
-                $letter = strtoupper($row['letter']);
-                $letters[$letter] = 'games.name like "'.$letter.'%"';
-            }
-        }
-        return $letters;
-    }
-
-    
+    }    
 }
 ?>

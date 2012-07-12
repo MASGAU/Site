@@ -1,7 +1,5 @@
 <?php
     $title = "MASGAU";
-	include_once '../DBSettings.php';
-    include_once 'config.php';
 	include_once 'modules/AModule.php';
     include_once 'modules/Page.php';
     include_once 'modules/Downloads.php';
@@ -9,7 +7,7 @@
     include_once 'headers.php';
     if(!isset($module)) {
         $_GET['name'] = 'home';
-        $module = AModule::LoadModule('page',$con);
+        $module = AModule::LoadModule('page',$db);
     }
     if(isset($module)) {
         $title .= $module->title();
@@ -25,7 +23,7 @@
 <link media="Screen" href="css/masgau.css" type="text/css" rel="stylesheet" />
 <link media="Screen" href="libs/jquery/css/dark-hive/jquery-ui-1.8.19.custom.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="libs/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="libs/jquery/jquery-ui-1.8.19.custom.min"></script>
+<script type="text/javascript" src="libs/jquery/jquery-ui-1.8.19.custom.min.js"></script>
 <script type="text/javascript" src="libs/yoxview/yoxview-init.js"></script>
 <script type="text/javascript" src="javascript/masgau.js"></script>
 
@@ -34,6 +32,21 @@
         $module->headers();
     }
 ?>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-28092952-1']);
+  _gaq.push(['_setDomainName', 'masgau.org']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
 </head>
 <body>
 <div class="left_side side">&nbsp;</div>
@@ -70,10 +83,10 @@
 <div class="fb-like" data-href="http://masgau.org/" data-send="false" data-layout="box_count" data-width="100" data-show-faces="false"></div></div>
 
 <?php 
-    $menus = AModule::RunQueryOnConnection("SELECT * FROM site_menus ORDER BY `order`",$con);
+    $menus = $db->Select("site_menus",null,null,array("order"));
     $i = 1;
-    while($row = mysql_fetch_array($menus)) {
-        echo '<div class="menu_title" id="menu_title_'.$i.'">'.$row['title'].'</div>';
+    foreach($menus as $row) {
+        echo '<div class="menu_title" id="menu_title_'.$i.'">'.$row->title.'</div>';
         $i++;
     }
 ?>
@@ -82,15 +95,14 @@
 <div class="fadeout">&nbsp;</div>
 
 <?php 
-    mysql_data_seek($menus,0);
     $i = 1;
-    while($row = mysql_fetch_array($menus)) {
+    foreach($menus as $row) {
         echo '<div class="menu" id="menu_'.$i.'">';
         echo '<div class="items">';
         
-        $items = AModule::RunQueryOnConnection("SELECT * FROM site_menu_items WHERE menu = ".$row['id']." ORDER BY `order`",$con);
-        while($item = mysql_fetch_array($items)) {
-            echo AModule::CreateLinkForModule($item['type'],$item['option']).$item['title'].'</a><br />';
+        $items = $db->Select("site_menu_items",null,array("menu"=>$row->id),array("order"));
+        foreach($items as $item) {
+            echo AModule::CreateLinkForModule($item->type,$item->option).$item->title.'</a><br />';
         }
         
         echo '</div></div>';
@@ -130,4 +142,4 @@ if(isset($module)) {
 </body>
 </html>
 
-<?php mysql_close($con); ?>
+<?php $db->close(); ?>

@@ -19,36 +19,35 @@ class Contributors extends AModule
         if(!isset($this->name)) {
             echo "<h1>Game Data Contributors</h1>";
             
-            $data = $this->runQuery("SELECT contributor, count(*) as count"
+            $data = $this->gdb->RunStatement("SELECT contributor, count(*) as count"
                                 ." FROM game_contributions con"
                                 ." GROUP BY contributor"
                                 ." ORDER BY count desc, contributor asc"
                                 );
             
     
-            if (!$data) {
+            if (sizeof($data)==0) {
                 echo 'Where the hell are all the contributors!?!';
             } else {
-                $per_column = ceil((float)mysql_num_rows($data) / (float)3);
+                $per_column = ceil((float)sizeof($data) / (float)3);
                 $column_count = null;
-                echo '<div style="width:20%;" class="column">';
-                while($row = mysql_fetch_array($data)) {
-//                    if ($column_count == null) {
-  //                      echo '<div style="width:30%;float:left;overflow:hidden;position:relative;left:100px;">';
-    //                    $column_count = 0;
-      //              }
-                    echo '<li type="1" value="' . $row['count'] . '">';
-                    echo '<a href="?module=contributors#' . urlencode($row['contributor']) . '" id="' . str_replace(' ','_',$row['contributor']) . '_link">' . $row['contributor'] . '</a>';
+                echo '<div style="width:100%;" class="column">';
+                foreach($data as $row) {
+                    if ($column_count == null) {
+                       echo '<div style="width:30%;float:left;overflow:hidden;position:relative;left:100px;">';
+                        $column_count = 0;
+                    }
+                    echo '<li type="1" value="' . $row->count . '">';
+                    echo $row->contributor;
                     echo '</li>';
                     
-        //            $column_count++;
-          //          if($column_count>=$per_column) {
-                //        echo '</div>';
-            //            $column_count = null;
-              //      }
+                    $column_count++;
+                    if($column_count>=$per_column) {
+                        echo '</div>';
+                        $column_count = null;
+                    }
                 }
                 echo "</div>";
-                echo '<div style="width:80%;" class="column" id="ajax"><h2>Select A User For Details!</h2>';
                 echo "</div>";
             }
         }

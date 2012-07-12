@@ -64,6 +64,10 @@ class GameData extends AModule
 
 
     public function ajax() {
+        
+        
+        return;
+        
         if(isset($_GET["name"])) {
         echo '<div class="back_link"><a href="javascript:history.go(-1)">Go Back</a></div>';                
             $name = $_GET["name"];

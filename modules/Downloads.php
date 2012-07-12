@@ -10,15 +10,17 @@ class Downloads extends AModule
 
     public function draw() {
         
-        echo 'MASGAU is technically still Beta, so please add all problems found to the <a href="https://github.com/MASGAU/MASGAU/issues/new">Issues List</a>';
+        echo 'MASGAU is technically still Beta, so please add all problems found to the <a href="https://github.com/MASGAU/.NET/issues/new">Issues List</a>';
 
         
         
         echo '<h2>Download Installer</h2>';
-        echo '<p>You can download the latest version from the <a href="https://github.com/MASGAU/MASGAU/">GitHub page</a>, or from here:</p>';
-        $data = $this->runQuery("select * from program_versions WHERE edition = 'installable' AND stable = 1 order by major desc, minor desc, revision desc");
-        while($row = mysql_fetch_assoc($data)) {
-            echo '<h3><a href="'.$row['url'].'">DOWNLOAD MASGAU V.'.$row['string'].' INSTALLER FOR '.strtoupper($row['os']).'</a></h3>';
+        echo '<p>You can download the latest version from the <a href="https://github.com/MASGAU/">GitHub page</a>, or from here:</p>';
+        $data = $this->db->Select("program_versions",null,
+                                    array("edition"=>'installable',"stable"=>1),
+                                    array("major"=>"DESC","minor"=>"DESC","revision"=>"DESC"));
+        foreach($data as $row) {
+            echo '<h3><a href="'.$row->url.'">DOWNLOAD MASGAU V.'.$row->string.' INSTALLER FOR '.strtoupper($row->os).'</a></h3>';
         }
 /*        
         
@@ -50,9 +52,11 @@ class Downloads extends AModule
         
         .'<p>This version is just a zip file, extract it wherever, then go in and double-click MASGAU.exe or whatever you want to run. All config files are contained within the program\'s folder.</p>';
         
-        $data = $this->runQuery("select * from program_versions WHERE edition = 'portable' AND stable = 1 order by major desc, minor desc, revision desc");
-        while($row = mysql_fetch_assoc($data)) {
-            echo '<h3><a href="'.$row['url'].'">DOWNLOAD MASGAU V.'.$row['string'].' PORTABLE VERSION FOR '.strtoupper($row['os']).'</a></h3>';
+        $data = $this->db->Select("program_versions",null,
+                                    array("edition"=>'portable',"stable"=>1),
+                                    array("major"=>"DESC","minor"=>"DESC","revision"=>"DESC"));
+        foreach($data as $row) {
+            echo '<h3><a href="'.$row->url.'">DOWNLOAD MASGAU V.'.$row->string.' PORTABLE VERSION FOR '.strtoupper($row->os).'</a></h3>';
         }
         
         echo '<p>This version does not contain .NET 4.0, which must be installed on the computer in order for MASGAU to run.</p>'
@@ -64,20 +68,31 @@ class Downloads extends AModule
         
         .'<h2>Download Test Build</h2>'
         
-        .'<p>This link always points to the latest test build:</p>'
+        .'<p>This link always points to the latest test build:</p>';
         
-        .'<h3>CURRENTLY DOWN, NO TEST BUILDS</h3>'
-         
-        .'<p>Features currently in testing:'
+        $data = $this->db->Select("program_versions",null,
+                                    array("edition"=>'installable',"stable"=>0),
+                                    array("major"=>"DESC","minor"=>"DESC","revision"=>"DESC"));
+                                    
+                                    
+        if(sizeof($data)>0) {
+            foreach($data as $row) {
+                echo '<h3><a href="'.$row->url.'">DOWNLOAD MASGAU V.'.$row->string.' <B>TEST</B> VERSION FOR '.strtoupper($row->os).'</a></h3>';
+            }
+}            else {
+        echo '<h3>CURRENTLY DOWN, NO TEST BUILDS</h3>';
+            }
+        echo '<p>Features currently in testing:'
         .'<ul>'
-        .'<li>None!</li>'
+        .'<li>Interface re-write</li>'
+        .'<li>New XML data format for <a href="http://gamesave.info/">GameSave.Info</a> compatability</li>'
         .'</ul>'
         .'</p>'
         
         .'<h2>Download Source Code (GitHub)</h2>'
         .'<p>The source code for MASGAU is available through GitHub</p>'
         
-        .'<h3><a href="https://github.com/MASGAU/MASGAU/">https://github.com/MASGAU/MASGAU/</a></h3>';
+        .'<h3><a href="https://github.com/MASGAU/">https://github.com/MASGAU/</a></h3>';
     }
         
     public function title() {

@@ -1,20 +1,16 @@
 <?php
-    ini_set('default_charset', 'UTF-8');
-
-	include_once "config.php";    
     // Includes 
-    include_once 'libs/geshi/geshi.php';
+    $folder =  dirname(__FILE__);
+    require_once $folder.'/libs/geshi/geshi.php';
+    include_once $folder.'/config.php';
 
-    $con = mysql_connect($db_server,$db_user,$db_password);
+    global $db;
+    $db = Databases::$masgau;
+    $db->connect();
     
-    if (!$con)
-    {
-        die('Could not connect: ' . mysql_error());
-    }
-	
-    mysql_select_db($settings['sql_database'], $con);    
-    mysql_set_charset('utf8', $con);
-
+    global $gdb;
+    $gdb = Databases::$gamesaveinfo;
+    $gdb->connect();
 
     if(isset($_GET["module"])) {
         $module = $_GET["module"];
@@ -22,7 +18,7 @@
     
     if(isset($module)) {
         include_once 'modules/AModule.php';
-        $module = AModule::LoadModule($module, $con);
+        $module = AModule::LoadModule($module, $db);
     }
 
 ?>

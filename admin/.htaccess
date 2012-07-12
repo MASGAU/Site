@@ -1,4 +1,0 @@
-AuthType Basic
-AuthName "MASGAU Admin"
-AuthUserFile /home/masgau/.htpasswd
-Require valid-user

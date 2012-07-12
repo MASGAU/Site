@@ -105,14 +105,14 @@ class Page extends AModule
         if(isset($_GET["name"])) {
             $this->name = $_GET["name"];
 
-            $query = "SELECT * FROM site_pages"
-                                    ." WHERE name = '".$this->name."'";
-            $data = $this->runQuery($query);
+            $data = $this->db->Select("site_pages",null,array("name"=>$this->name),null);
             
-            if($row = mysql_fetch_array($data)) {
-                $this->body = $row['content'];
-                $this->footer = $row['footer'];
-                return " - ".$row['title'];
+            
+            if(sizeof($data)==1) {
+                $row = $data[0];
+                $this->body = $row->content;
+                $this->footer = $row->footer;
+                return " - ".$row->title;
             }
             
         }
