@@ -237,21 +237,6 @@ div.media_icon img {
     height:32px  !important;
     vertical-align:middle;
 }
-div.media_icon div.description {
-    white-space:nowrap;
-    padding:3px;
-    vertical-align:middle;
-    text-align:left;
-    position:absolute;
-    top:25px;
-    left:35px;
-    display:none;
-    z-index:50;
-    background-color:rgba(0,0,0,0.8);
-    border:solid 2px rgba(0,0,0,0.5);
-    font-size:12px;
-    color:#eeeeec;
-}
 div.filter_letters {
     font-size:20px;
     font-weight:bold;

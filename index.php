@@ -21,10 +21,12 @@
 <head>
 <title><?php echo $title; ?></title>
 <link media="Screen" href="css/masgau.css" type="text/css" rel="stylesheet" />
+<link media="Screen" href="libs/tooltip.css" type="text/css" rel="stylesheet" />
 <link media="Screen" href="libs/jquery/css/dark-hive/jquery-ui-1.8.19.custom.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="libs/jquery/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="libs/jquery/jquery-ui-1.8.19.custom.min.js"></script>
 <script type="text/javascript" src="libs/yoxview/yoxview-init.js"></script>
+<script type="text/javascript" src="libs/tooltip.js"></script>
 <script type="text/javascript" src="javascript/masgau.js"></script>
 
 <?php 
