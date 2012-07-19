@@ -1,5 +1,5 @@
 <?php
-require_once '../gamesaveinfo/exporters/AExporter.php';
+require_once '../gamesaveinfo/api/exporters/AExporter.php';
 abstract class AUpdateList {
     
     protected $xml;
@@ -23,7 +23,7 @@ abstract class AUpdateList {
         $last_updated = $last_updated[0];
         $last_updated = $last_updated->timestamp;        
         
-        $result = $this->gamelink->Select("xml_export_files",null,array("exporter"=>$this->exporterName()),"file");
+        $result = $this->sitelink->Select("xml_files",null,array("exporter"=>$this->exporterName()),"file");
                 
         foreach ($result as $row) {
             $file = $this->xml->createElement("file");

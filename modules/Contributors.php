@@ -11,8 +11,8 @@ class Contributors extends AModule
     }
 
     public function headers() {
-        echo '<link media="Screen" href="css/contributors.css" type="text/css" rel="stylesheet" />';
-        echo '<script type="text/javascript" src="javascript/contributors.js"></script>';
+        echo '<link media="Screen" href="/css/contributors.css" type="text/css" rel="stylesheet" />';
+        echo '<script type="text/javascript" src="/js/contributors.js"></script>';
     }
     
     public function draw() {
@@ -98,7 +98,7 @@ class Contributors extends AModule
     }
     
     public static function CreateLink($name) {
-        return '<a href="?module=contributors#'.urlencode($name).'">';
+        return '<a href="/contributors/#'.urlencode($name).'">';
     }
 
 }

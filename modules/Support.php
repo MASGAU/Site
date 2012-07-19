@@ -23,7 +23,7 @@ class Support extends AModule
 
 
     public static function CreateLink($name) {
-        return '<a href="?module=support#'.urlencode($name).'">';
+        return '<a href="/support/#'.urlencode($name).'">';
     }
 
     
@@ -36,8 +36,8 @@ class Support extends AModule
     }
     
     public function headers() {
-        echo '<link media="Screen" href="css/support.css" type="text/css" rel="stylesheet" />';
-        echo '<script type="text/javascript" src="javascript/support.js"></script>';
+        echo '<link media="Screen" href="/css/support.css" type="text/css" rel="stylesheet" />';
+        echo '<script type="text/javascript" src="/js/support.js"></script>';
     }
 
     
@@ -74,7 +74,7 @@ private function drawLetters() {
                 else
                     $links .=  $key;
             } else {
-                $links .= '<a href="?module=support#'.$key.'">';
+                $links .= '<a href="#'.$key.'">';
                 if ($key == 'numeric')
                     $links .= '#';
                 else

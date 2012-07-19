@@ -10,7 +10,7 @@ class Downloads extends AModule
 
     public function draw() {
         
-        echo 'MASGAU is technically still Beta, so please add all problems found to the <a href="https://github.com/MASGAU/.NET/issues/new">Issues List</a>';
+        echo 'MASGAU is technically still Beta, so please add all problems found to the <a href="https://github.com/MASGAU/MASGAU/issues/new">Issues List</a>';
 
         
         
@@ -100,8 +100,8 @@ class Downloads extends AModule
     }
     
     public function headers() {
-        echo '<link media="Screen" href="css/pages.css" type="text/css" rel="stylesheet" />';
-        echo '<script type="text/javascript" src="javascript/pages.js"></script>';
+        echo '<link media="Screen" href="/css/pages.css" type="text/css" rel="stylesheet" />';
+        echo '<script type="text/javascript" src="/js/pages.js"></script>';
     }
 
     
@@ -110,7 +110,7 @@ class Downloads extends AModule
     }
     
     public static function CreateLink() {
-        return '<a href="?module=downloads">';
+        return '<a href="/downloads/">';
     }
 
 }

@@ -119,8 +119,8 @@ class Page extends AModule
     }
     
     public function headers() {
-        echo '<link media="Screen" href="css/pages.css" type="text/css" rel="stylesheet" />';
-        echo '<script type="text/javascript" src="javascript/pages.js"></script>';
+        echo '<link media="Screen" href="/css/pages.css" type="text/css" rel="stylesheet" />';
+        echo '<script type="text/javascript" src="/js/pages.js"></script>';
     }
 
     
@@ -130,9 +130,9 @@ class Page extends AModule
     
     public static function CreateLink($name, $target = null) {
         if($target==null)
-            return '<a href="?module=page&name='.urlencode($name).'">';
+            return '<a href="/page/'.urlencode($name).'/">';
         else
-            return '<a href="?module=page&name='.urlencode($name).'#'.urlencode($target).'">';        
+            return '<a href="/page/'.urlencode($name).'/#'.urlencode($target).'">';        
     }
 
 }

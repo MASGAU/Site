@@ -44,9 +44,9 @@ class CompatabilityTable {
     private static function DrawMediaIcon($media) {
         $return = '<div class="media_icon has_tooltip">';
         if($media->url==null) {
-            $return .= '<img src="images/media/' . $media->icon . '" alt="' . $media->title . '" title="' . $media->title . '" />';
+            $return .= '<img src="/images/media/' . $media->icon . '" alt="' . $media->title . '" title="' . $media->title . '" />';
         } else {
-            $return .= '<a href="'.$media->url.'" target="_blank"><img src="images/media/' . $media->icon . '" alt="' . $media->title . '" title="' . $media->title . '" /></a>';
+            $return .= '<a href="'.$media->url.'" target="_blank"><img src="/images/media/' . $media->icon . '" alt="' . $media->title . '" title="' . $media->title . '" /></a>';
         }
         $return .= '<div class="tooltip">'.$media->description.'</div>';
         $return .= '</div>';

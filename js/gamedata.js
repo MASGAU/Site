@@ -6,7 +6,7 @@ $(document).ready(function() {
         if(window.location.hash != current_hash) {
             current_hash = window.location.hash;
             if(current_hash==false) {
-                $('#game_list').load("ajax.php?module=game_data",function() {
+                $('#game_list').load("/ajax.php?module=game_data",function() {
                         $('.back_link').fadeOut(animation_timing);
                         $('#game_data').fadeOut(animation_timing, function() {
                             $('#game_list').fadeIn(animation_timing);
@@ -14,7 +14,7 @@ $(document).ready(function() {
                     });
             } else {
                 name = current_hash.substring(1);
-                $('#game_data').load("ajax.php?module=game_data&name="+name, function() {
+                $('#game_data').load("/ajax.php?module=game_data&name="+name, function() {
                         $('#game_list').fadeOut(animation_timing, function() {
                             $('#game_data').fadeIn(animation_timing);
                             $('.back_link').fadeIn(animation_timing);

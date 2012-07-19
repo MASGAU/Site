@@ -23,7 +23,6 @@ $file = null;
 if (isset($_GET['file'])) {
         $file = $_GET['file'];
 }
-
 $export->drawPage($exporter,$file);
 
 ?>

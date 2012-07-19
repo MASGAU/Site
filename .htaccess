@@ -1,0 +1,6 @@
+RewriteEngine On
+
+RewriteRule ^.*gamesaveinfo/.*$ - [L]
+RewriteRule ((updates/.*)|(images.php.*)|(ajax.php.*)|(css/.*)|(images/.*)|(thumbs/.*)|(js/.*)|(libs/.*))$  - [L]
+RewriteRule ^page/([^/]+)/.*$ /index.php?module=page&name=$1 [L]
+RewriteRule   ^([^/]+)/.*$  /index.php?module=$1   [L]

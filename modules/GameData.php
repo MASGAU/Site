@@ -15,9 +15,9 @@ class GameData extends AModule
     }
     
     public function headers() {
-        echo '<link media="Screen" href="css/gamedata.css" type="text/css" rel="stylesheet" />';
-        echo '<link media="Screen" href="css/support.css" type="text/css" rel="stylesheet" />';
-        echo '<script type="text/javascript" src="javascript/gamedata.js"></script>';
+        echo '<link media="Screen" href="/css/gamedata.css" type="text/css" rel="stylesheet" />';
+        echo '<link media="Screen" href="/css/support.css" type="text/css" rel="stylesheet" />';
+        echo '<script type="text/javascript" src="/jst/gamedata.js"></script>';
     }
         public function footer() {
     }
@@ -271,9 +271,9 @@ class GameData extends AModule
 
     public static function CreateLink($game = null) {
         if($game==null)
-        return '<a href="?module=game_data#">';
+        return '<a href="/game_data/#">';
         else
-        return '<a href="?module=game_data#'.urlencode($game).'">';
+        return '<a href="/game_data/#'.urlencode($game).'">';
     }
 
 }

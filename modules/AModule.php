@@ -13,18 +13,32 @@ abstract class AModule
     
     protected $gdb;
 
+    protected static $site_address;
+
     protected function __construct($db) {
         $this->db = $db;
         $this->gdb = Databases::$gamesaveinfo;
         $this->gdb->connect();
+        
+        global $_SERVER;
+        switch(substr($_SERVER['SERVER_NAME'],0,3)) {
+            case "192":
+            case "sag":
+                self::$site_address = "http://".$_SERVER['SERVER_NAME']."/~masgau/";
+                break;
+            default:
+                self::$site_address = "http://".$_SERVER['SERVER_NAME']."/";
+                break;
+        }
+        
     }
     
     protected static function CreateImageThumb($file,$width,$text = null) {
         $output = '';
             $output .= '<div class="clear_both"></div><div class="image_thumb yoxview">';
         
-        $output .= '<a href="images/'.$file.'">'
-                .'<img src="images.php?name='.urlencode($file).'&width='.urlencode($width).'"';
+        $output .= '<a href="/images/'.$file.'">'
+                .'<img src="/images.php?name='.urlencode($file).'&width='.urlencode($width).'"';
                 
         if($text!=null) {
             $output .= ' alt="'.$text.'"';
