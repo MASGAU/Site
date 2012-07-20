@@ -15,14 +15,14 @@ class MASGAUExport extends APIController {
         
         echo "Exporter not specified, available options:";
         echo "<ul>";
+        $this->exporters = $this->slink->Select("xml_versions","exporter",null,"exporter");
         foreach($this->exporters as $row) {
-
           echo '<li>';
-          echo '<a href="/updates/?exporter='.$row->name.'">'.$row->title.'</a>';
+          echo '<a href="/updates/?exporter='.$row->exporter.'">'.$row->exporter.'</a>';
             echo '<ul>';
-            $files = $this->slink->Select("xml_files",null,array("exporter"=>$row->name),"file");
+            $files = $this->slink->Select("xml_files",null,array("exporter"=>$row->exporter),"file");
             foreach($files as $file) {
-              echo '<li><a href="/updates/?exporter='.$row->name.'&file='.$file->file.'">'.$file->file.'</a></li>';
+              echo '<li><a href="/updates/?exporter='.$row->exporter.'&file='.$file->file.'">'.$file->file.'</a></li>';
             }
             echo '</ul>';
             echo '</li>';
