@@ -30,7 +30,7 @@ class MASGAUExport extends APIController {
         echo "</ul>";
     }
 
-    protected function export($exporter, $criteria = null) {
+    protected function export($exporter, $criteria = null, $comment = null, $date  = null) {
         if(is_null($criteria)) {
             include_once $exporter."UpdateList.php";
             $class = $exporter."UpdateList";
@@ -46,7 +46,10 @@ class MASGAUExport extends APIController {
             }
             $file = $files[0];
             
-            return parent::export($exporter,$file->criteria);
+            $update = $this->link->Select("update_history",null,null,"timestamp DESC");
+            $update = $update[0];
+            
+            return parent::export($exporter,$file->criteria,$file->comment,$update->timestamp);
         }
     }
 
