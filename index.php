@@ -35,7 +35,12 @@
         $module->headers();
     }
 ?>
-<script type="text/javascript">
+
+<?php
+global $test_mode;
+echo $test_mode;
+if(!$test_mode) {
+echo "<script type=\"text/javascript\">
 
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-28092952-1']);
@@ -48,8 +53,9 @@
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 
-</script>
-
+</script>";
+}
+?>
 </head>
 <body>
 <div class="left_side side">&nbsp;</div>

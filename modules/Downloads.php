@@ -20,7 +20,7 @@ class Downloads extends AModule
                                     array("edition"=>'installable',"stable"=>1),
                                     array("major"=>"DESC","minor"=>"DESC","revision"=>"DESC"));
         foreach($data as $row) {
-            echo '<h3><a href="'.$row->url.'">DOWNLOAD MASGAU V.'.$row->string.' INSTALLER FOR '.strtoupper($row->os).'</a></h3>';
+            echo '<h3><a href="'.$row->url.'" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'stable\', \''.$row->string.'\']);return true;">DOWNLOAD MASGAU V.'.$row->string.' INSTALLER FOR '.strtoupper($row->os).'</a></h3>';
         }
 /*        
         
@@ -56,7 +56,7 @@ class Downloads extends AModule
                                     array("edition"=>'portable',"stable"=>1),
                                     array("major"=>"DESC","minor"=>"DESC","revision"=>"DESC"));
         foreach($data as $row) {
-            echo '<h3><a href="'.$row->url.'">DOWNLOAD MASGAU V.'.$row->string.' PORTABLE VERSION FOR '.strtoupper($row->os).'</a></h3>';
+            echo '<h3><a href="'.$row->url.'" onlick="_gaq.push([\'_trackEvent\', \'portable\', \'stable\', \''.$row->string.'\']);return true;">DOWNLOAD MASGAU V.'.$row->string.' PORTABLE VERSION FOR '.strtoupper($row->os).'</a></h3>';
         }
         
         echo '<p>This version does not contain .NET 4.0, which must be installed on the computer in order for MASGAU to run.</p>'
@@ -77,7 +77,7 @@ class Downloads extends AModule
                                     
         if(sizeof($data)>0) {
             foreach($data as $row) {
-                echo '<h3><a href="'.$row->url.'">DOWNLOAD MASGAU V.'.$row->string.' <B>TEST</B> VERSION FOR '.strtoupper($row->os).'</a></h3>';
+                echo '<h3><a href="'.$row->url.'" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'unstable\', \''.$row->string.'\']);return true;">DOWNLOAD MASGAU V.'.$row->string.' <B>TEST</B> VERSION FOR '.strtoupper($row->os).'</a></h3>';
             }
 }            else {
         echo '<h3>CURRENTLY DOWN, NO TEST BUILDS</h3>';
