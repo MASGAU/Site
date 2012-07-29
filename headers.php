@@ -4,7 +4,7 @@
     require_once $folder.'/libs/geshi/geshi.php';
     include_once $folder.'/config.php';
     
-    global $test_mode = false;
+    global $test_mode;
     switch(substr($_SERVER["SERVER_NAME"],0,3)) {
         case "192":
         case "sag":
