@@ -28,7 +28,7 @@ abstract class AUpdateList {
         foreach ($result as $row) {
             $file = $this->xml->createElement("file");
             $file->appendChild($this->xml->createAttribute("name"))->
-                    appendChild($this->xml->createTextNode("data/".$row->file));
+                    appendChild($this->xml->createTextNode($row->file));
             $file->appendChild($this->xml->createAttribute("last_updated"))->
                     appendChild($this->xml->createTextNode(
                                     AExporter::formatDate($last_updated)));
