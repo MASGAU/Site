@@ -13,6 +13,19 @@ class GameSaveInfo20UpdateList extends AUpdateList {
         return "GameSaveInfo20";
     }
 
+    protected function createFileElement($row) {
+            $file = $this->xml->createElement("file");
+            $file->appendChild($this->xml->createAttribute("name"))->
+                    appendChild($this->xml->createTextNode($row->file));
+            $file->appendChild($this->xml->createAttribute("date"))->
+                    appendChild($this->xml->createTextNode(
+                                    AExporter::formatDate($this->last_updated)));
+            $file->appendChild($this->xml->createAttribute("url"))->
+                    appendChild($this->xml->createTextNode($this->curPageURL() . '&file=' . $row->file));
+            $this->root->appendChild($file);        
+    }
+
+
     protected function createProgramElement($row) {
         $file = parent::createProgramElement($row);
         

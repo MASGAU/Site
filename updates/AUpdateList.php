@@ -9,6 +9,8 @@ abstract class AUpdateList {
     
     protected abstract function exporterName();
     
+    protected $last_updated;
+    
     public function __construct($sitelink,$gamelink) {
         $this->gamelink = $gamelink;
         $this->sitelink = $sitelink;
@@ -19,41 +21,36 @@ abstract class AUpdateList {
         
         $this->addProgramElements($this->root);
                 
-        $last_updated = $this->gamelink->Select("update_history",null,null,"timestamp desc");
-        $last_updated = $last_updated[0];
-        $last_updated = $last_updated->timestamp;        
+        $this->last_updated = $this->gamelink->Select("update_history",null,null,"timestamp desc");
+        $this->last_updated = $this->last_updated[0];
+        $this->last_updated = $this->last_updated->timestamp;        
         
         $result = $this->sitelink->Select("xml_files",null,array("exporter"=>$this->exporterName()),"file");
                 
         foreach ($result as $row) {
-            $file = $this->xml->createElement("file");
-            $file->appendChild($this->xml->createAttribute("name"))->
-                    appendChild($this->xml->createTextNode($row->file));
-            $file->appendChild($this->xml->createAttribute("last_updated"))->
-                    appendChild($this->xml->createTextNode(
-                                    AExporter::formatDate($last_updated)));
-            $file->appendChild($this->xml->createAttribute("url"))->
-                    appendChild($this->xml->createTextNode($this->curPageURL() . '&file=' . $row->file));
-            $this->root->appendChild($file);
+            $this->createFileElement($row);
         }
     }
     
+    
     protected abstract function programCriteria();
     
+    protected abstract function createFileElement($row);
     protected function createProgramElement($row) {
-            $file = $this->xml->createElement("program");
-            $file->appendChild($this->xml->createAttribute("majorVersion"))->
-                    appendChild($this->xml->createTextNode($row->major));
-            $file->appendChild($this->xml->createAttribute("minorVersion"))->
-                    appendChild($this->xml->createTextNode($row->minor));
-            $file->appendChild($this->xml->createAttribute("revision"))->
-                    appendChild($this->xml->createTextNode($row->revision));
-            $file->appendChild($this->xml->createAttribute("url"))->
-                    appendChild($this->xml->createTextNode($row->url));
-            $file->appendChild($this->xml->createAttribute("date"))->
-                    appendChild($this->xml->createTextNode(AExporter::formatDate($row->release_date)));
-            return $file;
+        $file = $this->xml->createElement("program");
+        $file->appendChild($this->xml->createAttribute("majorVersion"))->
+                appendChild($this->xml->createTextNode($row->major));
+        $file->appendChild($this->xml->createAttribute("minorVersion"))->
+                appendChild($this->xml->createTextNode($row->minor));
+        $file->appendChild($this->xml->createAttribute("revision"))->
+                appendChild($this->xml->createTextNode($row->revision));
+        $file->appendChild($this->xml->createAttribute("url"))->
+                appendChild($this->xml->createTextNode($row->url));
+        $file->appendChild($this->xml->createAttribute("date"))->
+                appendChild($this->xml->createTextNode(AExporter::formatDate($row->release_date)));
+        return $file;
     }
+    
     
     protected function addProgramElements($root) {
         $result = $this->sitelink->Select("program_versions",null,$this->programCriteria(),array("major"=>"desc","minor"=>"desc","revision"=>"desc"));
