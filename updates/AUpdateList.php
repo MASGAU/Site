@@ -25,6 +25,10 @@ abstract class AUpdateList {
         $this->last_updated = $this->last_updated[0];
         $this->last_updated = $this->last_updated->timestamp;        
         
+        global $test_mode;
+        if($test_mode)
+            $this->last_updated = '2020-01-01';
+        
         $result = $this->sitelink->Select("xml_files",null,array("exporter"=>$this->exporterName()),"file");
                 
         foreach ($result as $row) {
@@ -65,11 +69,11 @@ abstract class AUpdateList {
         $pageURL = 'http';
         $pageURL .= "://";
         if ($_SERVER["SERVER_PORT"] != "80") {
-            $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+            $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"];// . $_SERVER["REQUEST_URI"];
         } else {
-            $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+            $pageURL .= $_SERVER["SERVER_NAME"];// . $_SERVER["REQUEST_URI"];
         }
-        return $pageURL;
+        return $pageURL.'/updates';
     }
 
     public function drawPage() {

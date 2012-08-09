@@ -102,6 +102,58 @@ class CompatabilityTable {
         return $compats;
     }
     
+    protected static function combineArrays() {
+        $arrays = func_get_args();
+        $return = array();
+        foreach($arrays as $array) {
+            foreach($array as $item) {
+                array_push($return,$item);
+            }
+        }
+        return $return;
+    }
+
+
+    function gatherLocationsFor($name, $version = null) {
+        $props = "os, platform, media, region";
+        $version_criteria = "ver.name='" . $name . "'";
+        if(!is_null($version)) {
+            $version_criteria = "ver.id = '".$version."'";            
+        }
+        
+        $paths = self::$db->RunStatement("SELECT 'path' as location_type, ".$props.", ev, path as regex FROM "
+            ." game_location_paths paths"
+            ." LEFT JOIN  game_locations loc ON loc.id=paths.id"
+            ." LEFT JOIN game_versions ver ON loc.game_version=ver.id"
+            ." WHERE ".$version_criteria);
+            
+        $registries = self::$db->RunStatement("SELECT 'registry' as location_type, ".$props.", `key` as regex FROM"
+            ." game_location_registry_keys reg"
+            ." LEFT JOIN game_locations loc ON loc.id=reg.id"
+            ." LEFT JOIN game_versions ver ON loc.game_version=ver.id"
+            ." WHERE ".$version_criteria);
+            
+        $parents = self::$db->RunStatement("SELECT 'parent' as location_type, ".$props.", name, parent_game_version FROM"
+            ." game_location_parents game"
+            ." LEFT JOIN game_locations loc ON loc.id=game.id"
+            ." LEFT JOIN game_versions ver ON loc.game_version=ver.id"
+            ." WHERE ".$version_criteria);
+
+        $shortcuts = self::$db->RunStatement("SELECT 'shortcut' as location_type, ".$props.", ev, path FROM"
+            ." game_location_shortcuts game"
+            ." LEFT JOIN game_locations loc ON loc.id=game.id"
+            ." LEFT JOIN game_versions ver ON loc.game_version=ver.id"
+            ." WHERE ".$version_criteria);
+            
+        $ps_codes = self::$db->RunStatement("SELECT 'ps_code' as location_type, ".$props." FROM"
+            ." game_playstation_codes code"
+            ." LEFT JOIN game_versions ver ON code.game_version=ver.id"
+            ." WHERE ".$version_criteria);
+                        
+        return self::combineArrays($paths,$registries,$parents,$shortcuts,$ps_codes);
+
+    }
+    
     function drawCompatRow($game_res, $make_link = true) {
         $new_row = '<tr class="compatibility"><th>';
         $new_row .= '<a href="http://gamesave.info/#'.$game_res->name.'">'. $game_res->title . '</a>';
@@ -112,14 +164,12 @@ class CompatabilityTable {
             $compats[$platform->name] = array();
         }
 
+        // Here we calculate the automatic compatibility entries
 
-// Here we calculate the automatic compatibility entries
-        $locations = self::$db->RunStatement("SELECT * FROM game_versions ver"
-            ." LEFT JOIN game_locations loc ON loc.game_version=ver.id"
-            ." LEFT JOIN game_location_paths paths ON loc.id=paths.id"
-            ." LEFT JOIN game_location_parents parents ON loc.id=parents.id"
-            ." WHERE ver.name='" . $game_res->name . "'");
-                
+
+        $locations = $this->gatherLocationsFor($game_res->name);
+//                            self::superVarDump($locations);
+
         $compats = $this->processLocations($compats,$locations);
 
         $data = self::$db->Select("compatibility_override",null,
@@ -140,13 +190,16 @@ class CompatabilityTable {
                 $medias = array();
                 foreach(self::$medias as $media) {
                     foreach ($compats[$platform->name] as $compat) {
-                       // print_r($compat);
+                        
+                        
                         if ($media->name==$compat[0]) {
                            $medias = $this->addUnique($medias,self::DrawMediaIcon($media));
                             $found = true;
                         } else if($compat[0]==null&&$platform->name == "playstation") {
                             $medias = $this->addUnique($medias, $compat[2].' ('.$compat[1].')<br/>');
                         }
+                        
+                        
                     }
                 }
                 foreach($medias as $media) {
@@ -155,8 +208,11 @@ class CompatabilityTable {
             }
             $new_row .= '</td>';
         }
+        
         if(!$found) {
-            return "";
+//            return "";
+            self::superVarDump($game_res);
+            self::superVarDump($locations);
             throw new Exception('No criteria apply to this game:<a href="http://gamesave.info/#'.$game_res->name.'">'.$game_res->name.'</a>');   
         }
 
@@ -197,37 +253,56 @@ class CompatabilityTable {
     
     function processLocations($array,$locations) {
         foreach($locations as $location) {
-            if($location->parent_game_version!=null) {
-                $parent = self::$db->RunStatement("SELECT * FROM game_versions ver"
-                    ." LEFT JOIN game_locations loc ON loc.game_version=ver.id"
-                    ." LEFT JOIN game_location_paths paths ON loc.id=paths.id"
-                    ." LEFT JOIN game_location_parents parents ON loc.id=parents.id"
-                    ." WHERE ver.id='" . $location->parent_game_version . "'");
-                    $array = $this->processLocations($array,$parent);
+            
+            if($location->location_type=="parent"&&$location->parent_game_version!=null) {
+                $parent = $this->gatherLocationsFor($location->name,$location->parent_game_version);
+                $array = $this->processLocations($array,$parent);
                 continue;
             }
             
             foreach(self::$decoder as $criteria) {
-                //print_r($criteria);
-                $props = array("os","platform","media","ev");
+                                
+                $props = array("location_type","os","platform","media");
+                switch($criteria->location_type) {
+                    case "path":
+                        array_push($props,"ev");  
+                        break;
+                    case "registry":
+                    case "ps_code":
+                    case null:
+                        break;
+                    default:
+                        throw new Exception("Don't know how to process criteria for ".$criteria->location_type);
+                }
+                
                 foreach($props as $prop) {
                     if($criteria->$prop!=null && $criteria->$prop != $location->$prop) {
                         continue 2;   
                     }
                 }
+                
                 if($criteria->regex!=null) {
-                    if(preg_match(';'.$criteria->regex.';',$location->path)==0)
+                    if(preg_match(';'.$criteria->regex.';',$location->regex)==0)
                     continue;
                 }
+                
                 $array = $this->addCompat($array,$criteria->compat_platform,$criteria->compat_media,$location->region,$criteria->os);
                 if($criteria->stop)
                     break;
+
+                
             }
         }
         return $array;
     }
     
-    
+    protected static function SuperVarDump($item) {
+        echo '<pre>';
+        
+        var_dump($item);
+        echo '</pre>';
+    }
+
     
     function addUnique($array,$thing) {
         if(!in_array($thing,$array)) {

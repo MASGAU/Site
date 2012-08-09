@@ -18,11 +18,11 @@ class MASGAUExport extends APIController {
         $this->exporters = $this->slink->Select("xml_versions","exporter",null,"exporter");
         foreach($this->exporters as $row) {
           echo '<li>';
-          echo '<a href="/updates/?exporter='.$row->exporter.'">'.$row->exporter.'</a>';
+          echo '<a href="/updates/'.$row->exporter.'/">'.$row->exporter.'</a>';
             echo '<ul>';
             $files = $this->slink->Select("xml_files",null,array("exporter"=>$row->exporter),"file");
             foreach($files as $file) {
-              echo '<li><a href="/updates/?exporter='.$row->exporter.'&file='.$file->file.'">'.$file->file.'</a></li>';
+              echo '<li><a href="/updates/'.$row->exporter.'/'.$file->file.'">'.$file->file.'</a></li>';
             }
             echo '</ul>';
             echo '</li>';
@@ -45,6 +45,8 @@ class MASGAUExport extends APIController {
                 throw new Exception("NO VALID FILE SPECIFIED: ".$criteria);
             }
             $file = $files[0];
+            
+            header("Content-Disposition: inline; filename=\"".$criteria."\"");
             
             $update = $this->link->Select("update_history",null,null,"timestamp DESC");
             $update = $update[0];

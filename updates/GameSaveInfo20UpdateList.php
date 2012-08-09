@@ -21,7 +21,7 @@ class GameSaveInfo20UpdateList extends AUpdateList {
                     appendChild($this->xml->createTextNode(
                                     AExporter::formatDate($this->last_updated)));
             $file->appendChild($this->xml->createAttribute("url"))->
-                    appendChild($this->xml->createTextNode($this->curPageURL() . '&file=' . $row->file));
+                    appendChild($this->xml->createTextNode($this->curPageURL() . '/GameSaveInfo20/' . $row->file));
             $this->root->appendChild($file);        
     }
 
@@ -29,8 +29,6 @@ class GameSaveInfo20UpdateList extends AUpdateList {
     protected function createProgramElement($row) {
         $file = parent::createProgramElement($row);
         
-        $file->appendChild($this->xml->createAttribute("edition"))->
-                appendChild($this->xml->createTextNode($row->edition));
         $file->appendChild($this->xml->createAttribute("os"))->
                 appendChild($this->xml->createTextNode($row->os));
                                         

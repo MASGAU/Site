@@ -21,7 +21,7 @@ class MASGAU11UpdateList extends AUpdateList {
                     appendChild($this->xml->createTextNode(
                                     AExporter::formatDate($this->last_updated)));
             $file->appendChild($this->xml->createAttribute("url"))->
-                    appendChild($this->xml->createTextNode($this->curPageURL() . '&file=' . $row->file));
+                    appendChild($this->xml->createTextNode($this->curPageURL() . '/MASGAU11/' . $row->file));
             $this->root->appendChild($file);        
     }
 
