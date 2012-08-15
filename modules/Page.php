@@ -105,16 +105,14 @@ class Page extends AModule
         if(isset($_GET["name"])) {
             $this->name = $_GET["name"];
 
-            $data = $this->db->Select("site_pages",null,array("name"=>$this->name),null);
+            require_once('pages/'.$this->name.'.php');
+
+//            $data = $this->db->Select("site_pages",null,array("name"=>$this->name),null);
             
             
-            if(sizeof($data)==1) {
-                $row = $data[0];
-                $this->body = $row->content;
-                $this->footer = $row->footer;
-                return " - ".$row->title;
-            }
-            
+            $this->body = $content;
+            $this->footer = $footer;
+            return " - ".$title;            
         }
     }
     

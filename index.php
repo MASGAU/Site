@@ -92,10 +92,41 @@ echo "<script type=\"text/javascript\">
 <div class="fb-like" data-href="http://masgau.org/" data-send="false" data-layout="box_count" data-width="100" data-show-faces="false"></div></div>
 
 <?php 
-    $menus = $db->Select("site_menus",null,null,array("order"));
+    $menus = array(
+        "For The Users"=>array(
+            array("Download MASGAU!","downloads",null),
+            array("Using MASGAU (Screenshots!)","page","using"),
+            array("Current Game Support","support",null),
+            array("Automatically Backup Your Saves On The Net","page","cloud"),
+            ),
+        "For The Geeks"=>array(
+            array("How To Contribute","page","contribute"),
+//            array("How MASGAU Works","page","how"),
+            array("How To Add New Games","page","xml_spec"),
+  //          array("How To Use The Analyzer","page","analyzer"),
+            array("Game Database","hyperlink","http://gamesave.info/"),
+            array("Changelog","hyperlink","https://github.com/MASGAU/MASGAU/blob/master/Docs/changelog.txt"),
+            array("Data Changelog","hyperlink","https://github.com/GameSaveInfo/Data/blob/master/changelog.txt"),
+            array("MASGAU on GitHub","hyperlink","https://github.com/MASGAU/"),
+            ),
+        "For Some Help"=>array(
+            array("Forums","hyperlink","http://forums.masgau.org/"),
+            array("Report A Problem!","hyperlink","https://github.com/MASGAU/MASGAU/issues/new"),
+            array("MASGAU On Twitter","hyperlink","http://twitter.com/MASGAU/"),
+            array("MASGAU On Facebook","hyperlink","http://www.facebook.com/masgau"),
+            array("MASGAU On Google+","hyperlink","http://plus.google.com/115220090159606871198"),
+            array("My Blog","hyperlink","http://sanmadjack.blogspot.com/"),
+            ),
+        "For Fun"=>array(
+            array("MASGAU on alternativeTo","hyperlink","http://alternativeto.net/software/masgau/"),
+            array("Contributor Hall of Fame","contributors",null),
+            )
+        );
+    
+    
     $i = 1;
-    foreach($menus as $row) {
-        echo '<div class="menu_title" id="menu_title_'.$i.'">'.$row->title.'</div>';
+    foreach(array_keys($menus) as $row) {
+        echo '<div class="menu_title" id="menu_title_'.$i.'">'.$row.'</div>';
         $i++;
     }
 ?>
@@ -109,9 +140,8 @@ echo "<script type=\"text/javascript\">
         echo '<div class="menu" id="menu_'.$i.'">';
         echo '<div class="items">';
         
-        $items = $db->Select("site_menu_items",null,array("menu"=>$row->id),array("order"));
-        foreach($items as $item) {
-            echo AModule::CreateLinkForModule($item->type,$item->option).$item->title.'</a><br />';
+        foreach($row as $item) {
+            echo AModule::CreateLinkForModule($item[1],$item[2]).$item[0].'</a><br />';
         }
         
         echo '</div></div>';
