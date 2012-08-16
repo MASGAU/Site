@@ -2,8 +2,8 @@
 require_once 'AUpdateList.php';
 class MASGAU11UpdateList extends AUpdateList {
     
-    public function __construct($sitelink,$gamelink) {
-        parent::__construct($sitelink,$gamelink);
+    public function __construct($gamelink) {
+        parent::__construct($gamelink);
     }
     protected function programCriteria() {
         return array("edition"=>"installable",
@@ -13,10 +13,20 @@ class MASGAU11UpdateList extends AUpdateList {
     protected function exporterName() {
         return "MASGAU11";
     }
-    protected function createFileElement($row) {
+    
+     public function getFiles() {
+         return array(
+          "system.xml"=>"",
+          "deprecated.xml"=>"",
+          "games.xml"=>""
+          );
+     }
+     
+     
+    protected function createFileElement($name, $info) {
             $file = $this->xml->createElement("file");
             $file->appendChild($this->xml->createAttribute("name"))->
-                    appendChild($this->xml->createTextNode($row->file));
+                    appendChild($this->xml->createTextNode($name));
             $file->appendChild($this->xml->createAttribute("last_updated"))->
                     appendChild($this->xml->createTextNode(
                                     AExporter::formatDate($this->last_updated)));

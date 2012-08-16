@@ -2,27 +2,35 @@
 include_once '../gamesaveinfo/api/APIController.php';
 
 class MASGAUExport extends APIController {
-    protected $slink;
     
-    public function __construct($sitelink, $gamelink) {
+    public function __construct($gamelink) {
         parent::__construct($gamelink);
-        $this->slink = $sitelink;
         
     }
+    private $xml_versions = array(
+        "MASGAU11"=>array(),
+        "GameSaveInfo20"=>array()
+        );
+
 
     protected function drawExporterList() {
         echo '<h1>MASGAU Auto-Update</h2>';
         
         echo "Exporter not specified, available options:";
         echo "<ul>";
-        $this->exporters = $this->slink->Select("xml_versions","exporter",null,"exporter");
-        foreach($this->exporters as $row) {
+        
+        
+        foreach(array_keys($this->xml_versions) as $exporter) {
           echo '<li>';
-          echo '<a href="/updates/'.$row->exporter.'/">'.$row->exporter.'</a>';
+          echo '<a href="/updates/'.$exporter.'/">'.$exporter.'</a>';
+          $class = $exporter.'UpdateList';
+          
+            include_once $class.'.php';
+            $exp = new $class(null,null);
             echo '<ul>';
-            $files = $this->slink->Select("xml_files",null,array("exporter"=>$row->exporter),"file");
-            foreach($files as $file) {
-              echo '<li><a href="/updates/'.$row->exporter.'/'.$file->file.'">'.$file->file.'</a></li>';
+            $files =  $exp->getFiles();
+            foreach(array_keys($files) as $file) {
+              echo '<li><a href="/updates/'.$exporter.'/'.$file.'">'.$file.'</a></li>';
             }
             echo '</ul>';
             echo '</li>';
@@ -34,24 +42,26 @@ class MASGAUExport extends APIController {
         if(is_null($criteria)) {
             include_once $exporter."UpdateList.php";
             $class = $exporter."UpdateList";
-            $updates = new $class($this->slink,$this->link);
+            $updates = new $class($this->link);
             $updates->drawPage();            
         } else {
-            $files = $this->slink->Select("xml_files",null,
-                        array("exporter"=>$exporter,
-                                "file"=>$criteria),
-                        "file");
+          $class = $exporter.'UpdateList';          
+            include_once $class.'.php';
+            $exp = new $class(null,null);
+            $files =  $exp->getFiles();
+            
             if(sizeof($files)==0) {
                 throw new Exception("NO VALID FILE SPECIFIED: ".$criteria);
             }
-            $file = $files[0];
+            
+            $file = $files[$criteria];
             
             header("Content-Disposition: inline; filename=\"".$criteria."\"");
             
             $update = $this->link->Select("update_history",null,null,"timestamp DESC");
             $update = $update[0];
             
-            return parent::export($exporter,$file->criteria,$file->comment,$update->timestamp);
+            return parent::export($exporter,$file["criteria"],$file["comment"],$update->timestamp);
         }
     }
 

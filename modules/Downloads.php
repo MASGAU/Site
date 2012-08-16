@@ -14,53 +14,29 @@ class Downloads extends AModule
 
         
         
-        echo '<h2>Download Installer</h2>';
+        echo '<h2>Download Installer (Desktop AND Portable!)</h2>';
         echo '<p>You can download the latest version from the <a href="https://github.com/MASGAU/">GitHub page</a>, or from here:</p>';
-        $data = $this->db->Select("program_versions",null,
-                                    array("edition"=>'installable',"stable"=>1),
-                                    array("major"=>"DESC","minor"=>"DESC","revision"=>"DESC"));
-        foreach($data as $row) {
-            echo '<h3><a href="'.$row->url.'" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'stable\', \''.$row->string.'\']);return true;">DOWNLOAD MASGAU V.'.$row->string.' INSTALLER FOR '.strtoupper($row->os).'</a></h3>';
-        }
-/*        
+        echo '<h3><a href="https://github.com/downloads/MASGAU/MASGAU/MASGAU-0.99.0-Beta-Setup.exe" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'stable\', \'0.99.0\']);return true;">DOWNLOAD MASGAU V.0.99 BETA FOR WINDOWS</a></h3>';
         
         
+        echo '
         <p>Release highlights:
         <ul>
-        <li>Added client code for the new automatically generating update server</li>
-        <li>Monitor being able to synchronize all your saves with a folder, such as with DropBox, allowing you to keep your saves the same on separate systems without having to manually restore save archives</li>
-        <li>Sorting files into separate archives (Saves, Settings, etc.)</li>
-        <li>New restore procedure</li>
-        <li>New task program</li>
-        <li>Better support for dealing with DropBox and other syncing programs</li>
-        <li>New detection backend</li>
-        <li>Better Windows 7 taskbar support (Progress Bars and Jump Lists)</li>
-        <li>New WPF-based interface</li>
-        <li>New server-client update system for more rapid game data deployments</li>
-        <li>Another year's worth of little changes and fixes, see the Changelog for a complete list</li>
+        <li>All-new interface!</li>
+        <li>Portable AND Desktop version in one installer! Just choose which kind of install you want!</li>
+        <li>Support for <a href="http://gamesave.info/">GameSave.Info</a> data!</li>
+        <li>The ability to add cusotm games, and a new automated analyzer system!</li>
+        <li>Half a  year\'s worth of little changes and fixes, see the Changelog for a complete list</li>
+        </ul>
         </p>
-        */
+        ';
         
-        
-        echo '<p>0.8 and later use a different install system then the earlier versions, so if you installed ANY version prior to 0.8, it would be very wise to manually uninstall it before installing 0.8 or later. Later than 0.8 will no longer require uninstallation before upgrading. And I know I said this before, but I didn\'t expect to fall out of love with NSIS.</p>'
-        
+        echo ''
         .'<p>MASGAU REQUIRES <a href="http://www.microsoft.com/NET/">Microsoft\'s .NET framework</a> to be installed. Setup will  download and install it automatically if it isn\'t.</p>'
         
         .'<p>No guarantees that this won\'t destroy your computer and all that.</p>'
         
-        .'<h2>Download Portable Version</h2>'
-        
-        .'<p>This version is just a zip file, extract it wherever, then go in and double-click MASGAU.exe or whatever you want to run. All config files are contained within the program\'s folder.</p>';
-        
-        $data = $this->db->Select("program_versions",null,
-                                    array("edition"=>'portable',"stable"=>1),
-                                    array("major"=>"DESC","minor"=>"DESC","revision"=>"DESC"));
-        foreach($data as $row) {
-            echo '<h3><a href="'.$row->url.'" onlick="_gaq.push([\'_trackEvent\', \'portable\', \'stable\', \''.$row->string.'\']);return true;">DOWNLOAD MASGAU V.'.$row->string.' PORTABLE VERSION FOR '.strtoupper($row->os).'</a></h3>';
-        }
-        
-        echo '<p>This version does not contain .NET 4.0, which must be installed on the computer in order for MASGAU to run.</p>'
-        
+                
         .'<h2>Download Older Versions</h2>'
         .'<p>All the previous releases of MASGAU are available here:</p>'
         
@@ -70,22 +46,10 @@ class Downloads extends AModule
         
         .'<p>This link always points to the latest test build:</p>';
         
-        $data = $this->db->Select("program_versions",null,
-                                    array("edition"=>'installable',"stable"=>0),
-                                    array("major"=>"DESC","minor"=>"DESC","revision"=>"DESC"));
-                                    
-                                    
-        if(sizeof($data)>0) {
-            foreach($data as $row) {
-                echo '<h3><a href="'.$row->url.'" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'unstable\', \''.$row->string.'\']);return true;">DOWNLOAD MASGAU V.'.$row->string.' <B>TEST</B> VERSION FOR '.strtoupper($row->os).'</a></h3>';
-            }
-}            else {
-        echo '<h3>CURRENTLY DOWN, NO TEST BUILDS</h3>';
-            }
+        echo '<h3><a href="https://docs.google.com/open?id=0By2Mfv6zO9SkZXB2R01vVDNXSE0" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'unstable\', \'TEST\']);return true;">DOWNLOAD MASGAU <B>TEST</B> VERSION FOR WINDOWS</a></h3>';
         echo '<p>Features currently in testing:'
         .'<ul>'
-        .'<li>Interface re-write</li>'
-        .'<li>New XML data format for <a href="http://gamesave.info/">GameSave.Info</a> compatability</li>'
+        .'<li>Nothing! Haha!</li>'
         .'</ul>'
         .'</p>'
         

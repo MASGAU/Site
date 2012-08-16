@@ -16,10 +16,6 @@
             break;
     }
     
-
-    global $db;
-    $db = Databases::$masgau;
-    $db->connect();
     
     global $gdb;
     $gdb = Databases::$gamesaveinfo;
