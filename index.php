@@ -7,7 +7,7 @@
     include_once 'headers.php';
     if(!isset($module)) {
         $_GET['name'] = 'home';
-        $module = AModule::LoadModule('page',$db);
+        $module = AModule::LoadModule('page');
     }
     if(isset($module)) {
         $title .= $module->title();
@@ -181,4 +181,3 @@ if(isset($module)) {
 </body>
 </html>
 
-<?php $db->close(); ?>

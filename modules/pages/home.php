@@ -33,7 +33,7 @@ By submitting game information! MASGAU includes an <page name="using" target="an
 <td>
 <h3>What Does It Look Like?</h3>
 <page name="using">
-<img src="images.php?name=using%2Fbackup.jpg&width=200" alt="Like This!" />
+<img src="images.php?name=using%2Fmainwindow.jpg&width=200" alt="Like This!" />
 <br />Like this! Click to see more pictures!
 </page>
 </td>
