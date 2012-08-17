@@ -1,132 +1,418 @@
 <?php
 $title = 'How To Use';
-$content = '<p>I tried to make MASGAU as automated as possible, so with any luck this page won\'t really be necessary.</p>
-
-<thumb src="using/startmenu.jpg" width="200" alt="MASGAU In My Start Menu" /><h2>Modes</h2>
+$content = '
 
 
-<p>So that you don\'t have to be an admin to use it, MASGAU has 2 different modes it can run in: Single User Mode and All Users Mode. </p>
+<h2>Modes</h2>
 
+
+<p>So that you don\'t have to be an admin to use it, MASGAU has 2 different modes it can run in: Single User Mode and All Users Mode. Both of these modes have icons in the Start Menu, and you can switch between them using the button in the lower-left corner of the main window.</p>
+<table><tr><td>
 <h3>Single User Mode</h3>
 
-<p>This mode can be used by any user. It only scans the current user\'s folders and publicly readable system-wide folders. Depending on the specific setup, Single User Mode may or may not be able to restore all saves. If a permission problem occurs, MASGAU will prompt with a choice of elevating MASGAU with admin privileges to complete a restore. This mode is configured per-user.</p>
-
+<p>This mode can be used by any user. It only scans the current user\'s folders and publicly readable system-wide folders. 
+Depending on the specific setup, Single User Mode may or may not be able to restore all saves. 
+If a permission problem occurs, MASGAU will prompt with a choice of elevating MASGAU with admin privileges to complete a restore.</p>
+</td><td width="50%">
 <h3>All Users Mode</h3>
 
-<p>This mode can only be used by admins or a user with admin credentials. It scans all possible locations for every user on the system. Since it requires elevation, this mode can restore any save to any location. This mode also allows access to the Schedule tab, as even reading the scheduled task requires admin privileges. This mode is globally configured for all users. A scheduled task will use this mode\'s config for backup path, steam override, and alternate install paths.</p>
+<p>This mode can only be used by admins or a user with admin credentials. 
+It scans all possible locations for every user on the system. 
+Since it requires elevation, this mode can restore any save to any location.
+</p>
+</td></tr><tr><td colspan="2">
+<p>Both of these modes will use the same settings, which are stored per-user.</p>
+</td></tr></table>
 
-<thumb src="using/settings.jpg" width="200" alt="The Settings Tab"/>
-<h2>Settings</h2>
-<p>I\'ve tried to keep the settings to a minimum, and only one of them is actually necessary.</p>
 
-<h3>Auto-check For Updates</h3>
-<p>New for 0.8! MASGAU can check for updated game information and program versions. Checking this box will make MASGAU automatically check for these updates when you start the program. This setting also applies to the Monitor.</p>
+<center>
+<h2>The Main Window</h2>
+This is what the main window looks like. Hover the mouse over the various parts for explanations!
+<br/>
+<div class="hoverable_image" style="width:750px;">
+<img src="../../images/using/mainwindow.jpg"/>
 
-<h3>Ignore Dates During Backup</h3>
-<p>By default MASGAU will only archive a file if its modification time is more recent then the last backup of the game. Use this checkbox to override this behavior.</p>
+<div style="left:0px;top:4px;width:55px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Opens a menu containing items to:
+<ul>
+<li>View The About Screen</li>
+<li>Quit The Program</li>
+</ul>
+</div>
+</div>
 
-<h3>Check For Updates</h3>
-<p>New for 0.8! This button will force MASGAU to immediately check for updates.</p>
+<div style="left:172px;top:4px;width:55px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Switches to the settings tab (see further down for an explanation of that)
+</div>
+</div>
 
-<h3>Backup Path</h3>
-<p>This is where to put the archives of the game saves. You should choose a folder on a non-system drive if possible, so that if your system drive dies you still have your saves.</p>
+<!-- Window controls -->
+<div style="left:678px;top:4px;width:24px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Minimizes the window
+</div>
+</div>
 
-<h3>Steam Path</h3>
-<p>MASGAU checks your computer\'s registry to find where Steam is installed. If you installed Steam you should never have to touch this setting. If you\'re like my good buddy Mikey, you might have Steam installed on an external drive, and it wasn\'t necessarily on the system you\'re currently on. You can point MASGAU to this location here, and it will remember it on that computer henceforth. The reset button will tell MASGAU to re-attempt detecting Steam on the system, and if not found MASGAU will default to Not Detected.</p>
+<div style="left:702px;top:4px;width:24px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Toggles fullscreen mode
+</div>
+</div>
 
-<h3>E-Mail Address</h3>
-<p>MASGAU can send in reports on errors and new games (at your request, of course), but sometimes I\'ll need to contact you for more info to help fix the problem or add the game. You can set the e-mail address that I will see here.</p>
+<div style="left:726px;top:4px;width:24px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Send the window to the notification tray<br/>
+Does NOT close MASGAU, to do that use the top-left menu<br/>
+or right-click the notificaiton icon and click "Exit"
+</div>
+</div>
 
-<h3><a name="alt_install_paths">Alternate Install Paths</a></h3>
-<p>Some people don\'t install their game where they ought. For games that store their saves and settings in the user\'s folder this is not a problem, but for those that store their saves and settings in the install folder, this becomes an issue. To help with this, you can add additional paths that will be searched when a game config specifies %INSTALLLOCATION%.  For this to work you must install the games while only changing the Program Files folder to the new location. For example, American McGee\'s Alice installs to:
-<code lang="text">
-   C:\Program Files\EA GAMES\American McGee\'s Alice
-</code></p>'.
-'<p>Now let\'s say you keep your games in F:\Games. You would add F:\Games to the Alternate Install Paths and make sure that Alice installs to:
-<code lang="text">
-   F:\Games\EA GAMES\American McGee\'s Alice
-</code></p>
-<p>MASGAU will automatically eliminate folders starting at the beginning of the root to check variations of the install location. For example, the above will also try:
-<code lang="text">
-   F:\Games\American McGee\'s Alice
-</code></p>
-<p>Of course if there is a registry entry pointing to the game, this is a moot point.</p>
+<!-- Game section -->
+<div style="left:0px;top:28px;width:55px;height:74px;" class="has_tooltip">
+<div class="tooltip">
+Re-scans your computer for games and save archives.<br/>
+Save archives are only detected in the backup folder.
+</div>
+</div>
 
-<h3>Make Extra Backups</h3>
-<p>Click this button and every so often MASGAU will switch to a new archive when backing up, leaving an archive containing saves only up to that time.</p>
+<div style="left:55px;top:28px;width:65px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Opens a dialog to add a custom game to MASGAU (see further down for an explanation of that)
+</div>
+</div>
 
-<thumb src="using/backup.jpg" width="200" alt="The Backup Tab"/>
-<h2>Backing Up</h2>
-<p>To back up all the detected games, just click <i>Back Everything Up</i>. To back up a single game, select it\'s name from the list and click <i>Back This Up</i>. To back up multiple selected games, just select the games you want then click <i>Back These Up</i>. To exercise futility, click <i>Back Nothing up</i>. <i>Redetect Games</i> uses my patent-pending "Really Obvious Naming™" technology. If you hover the mouse over a detected game, a ToolTip will display containing all the detected roots for the game, as well as any comments pertinent to the game.</p>
+<div style="left:55px;top:52px;width:65px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+If a custom game is selected in the game list, this button will let you delete it.<br/>
+You cannot delete game data that came with MASGAU, or was downloaded in an update.
+</div>
+</div>
 
-<p>The checkbox in the backup column controls whether that game is backed up when clicking "Back Everything Up", as well as if the game is watched by the Monitor. When running in All Users mode, it also controls the game being backed up by the scheduled task backup.</p>
+<div style="left:55px;top:76px;width:65px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Generates reports on custom games to send back to me so that I can add it to MASGAU\'s official game data.
+</div>
+</div>
 
-<thumb src="using/backupcontextmenu.jpg" width="200" alt="Backup Tab\'s Context Menu"/>
-<h3>Context Menu</h3>
-<p>New for 0.4! You can right-click in the detected list to reveal a context menu providing per-game functions and options.</p>
 
-<thumb src="using/manualbackup.jpg" width="200" alt="The Custom Backup Window"/>
-<h4>Create Custom Archive</h4>
-<p>MASGAU can create an archive using only the files you specify. Perfect for sending a save or two to a friend, or uploading onto a save sharing site!</p>
-<h4>Back This/These Up</h4>
-<p>A duplication of the button below the backup list.</p>
-<h4>Purge</h4>
-<p>Ever have a game leave saves behind after it\'s uninstalled? Then purge is for you! This will try to wipe whatever was detected from your hard drive. If you don\'t have the right permissions it\'ll try anyway and let you know if it was successful or not. This option is obviously the most dangerous thing in MASGAU, so use it with caution. I accept no responsibility if you accidentally delete your 60-hour Mass Effect save, but you should feel bad anyway for playing it for so long.</p>
-<h4>Enable Backup</h4>
-<p>Provides a way to enable/disable multiple game backups. Or one at a time if you feel like wasting time.</p>
+<!-- Back up section -->
 
-<thumb src="using/backupprogress.jpg" width="200" alt="A Backup In Progress"/>
-<h3>Backup Progress</h3>
-<p>While backing up, a progress bar appears at the bottom along with a Stop button. The Stop button that will terminate the backup job after the current file has been archived. Please don\'t pid-kill MASGAU while it\'s backing up, it can leave a mess.</p>
+<div style="left:125px;top:28px;width:70px;height:74px;" class="has_tooltip">
+<div class="tooltip">
+Back up all of the detected games to the backup folder
+</div>
+</div>
 
-<thumb src="using/restore.jpg" width="200" alt="The Restore Tab"/>
 
-<h2>Restoring</h2>
-<p>MASGAU makes 2 kinds of archives: user and global. For user the name of the user is recorded in the archive\'s file name, in the form of GameName«UserName.gb7. Global are only named after the game, as in GameName.gb7. All detected restores will appear in a list in the <i>Restore</i> tab. To restore an archive, find the game in the list. Then click the plus sign next to the game to show all the archives related to the game. There will never be more than one <i>Global</i> archive, but it can contain the saves from several users depending on how the game saves. Just double click a <i>Global</i> or one of the users and it will attempt to restore it. If you double-click a user, it will ask you what user you want to restore it to. Most restores require that the game is detected by the backup system, so that MASGAU can figure out where the saves need to go.</p>
+<div style="left:195px;top:28px;width:150px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Backs up only the games selected in the games list
+</div>
+</div>
 
-<p>If you have a .gb7 file, such as one a friend e-mailed to you, you should be able to just double-click it and it will be restored to your system.</p>
+<div style="left:195px;top:52px;width:150px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Lets you choose specific files from a specific location for a specific game,<br/>
+and back that up to a locaiton and file name of your choice.<br/>
+Only enabled when one game is selected.
+</div>
+</div>
 
-<p>New for 0.8! The Restore tab now has a "Restore Other Save(s)" button, allowing you to browse to one or more saves and restore it/them.</p>
+<div style="left:195px;top:76px;width:150px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Allows you to change or open the backup folder
+</div>
+</div>
 
-<p>New for 0.9! Saves are also sorted out by platform and region, so that saves that are not compatible with another platform or region will not be restored to the wrong location. Saves are also sorted into types, so that Settings, Saves, and other various types of files will be separated into different archives.</p>
+<!-- Restore section -->
 
-<thumb src="using/schedule.jpg" width="200" alt="The Schedule Tab"/>
-<h2>Scheduling</h2>
-<p>This tab will only appear under All Users Mode. Here you can set a schedule to automatically run backups. In order to be able to see all the saves on the system, the task requires the username and password of an admin user. It will automatically enter the name of the admin that it\'s running as, but you must provide a password to add or change the task. This sadly does not work on Windows XP Home.</p>
+<div style="left:350px;top:28px;width:70px;height:74px;" class="has_tooltip">
+<div class="tooltip">
+Restore the archives selected in the archives list<br/>
+See further down for an example of the restore window
+</div>
+</div>
 
-<thumb src="using/about.jpg" width="200" alt="The About Tab"/>
-<h2>About</h2>
-<p>This tab shows the current version, and a complete list of all the contributors, along with a count and tooltip-list of all the games they\'ve contributed information on. Also has a link to the MASGAU web page at the bottom.</p>
 
-<thumb src="using/masgaumonitor.jpg" width="200" alt="Desktop Running Monitor"/>
-<h2>MASGAU Monitor</h2>
-<p>New for 0.4! MASGAU Monitor is a tray application that watches detected save game roots for changes. When one is reported, the file is grabbed as soon as the game releases it and archived. Together with the "Extra Backups" option this can be used to create multiple backups of savegames in real-time. Handy if your save gets corrupted. <p>
+<div style="left:420px;top:28px;width:100px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Opens a file browser so you can select an archive to restore<br/>
+See further down for an example of the restore window
+</div>
+</div>
 
-<thumb src="using/monitorcontext.jpg" width="200" alt="The Monitor\'s Context Menu"/>
-<p>Right-clicking the Monitor icon opens a context menu providing several options. <i>Rescan Games</i> will make Monitor re-scan the system for games, as well as refresh any settings that may have been changed in MASGAU\'s other modules. Clicking <i>Exit</i> will shut down the Monitor.</p>
+<!-- Other section -->
 
-<thumb src="using/monitorgameslist.jpg" width="200" alt="The Monitor\'s Game List"/>
-<p>Clicking <i>Settings...</i> in the context menu will open the Monitor-specific settings window. The first tab is a list of all the detected games, along with checkboxes to control monitor\'s behavior. The Backup column controls whether Monitor will watch that game for saves to be archived (this setting is shared with the Task and Main module). The sync column controls MASGAU\'s newest feature:</p>
+<div style="left:520px;top:28px;width:70px;height:74px;" class="has_tooltip">
+<div class="tooltip">
+Deletes the detected game data for the games selected in the games list<br/>
+This is obviously very dangerous. Careful.
+</div>
+</div>
 
-<h3>Synchronization</h3>
-<thumb src="using/monitorsettings.jpg" width="200" alt="The Monitor\'s Settings Tab"/>
-<p>New for 0.9! MASGAU Monitor can also has a synchronization function that maintains an identical folder structure of all the sync-enabled game saves. Just enable the games you want to sync the saves for, pick the sync path, and MASGAU will copy all those games saves into that folder (sorted into subfolders by game of course). If anything changes in either the save folder OR the sync folder, MASGAU will make the same change happen to the other folder. With this, you can put your sync folder in something like a dropbox folder, then do the same on another computer, keeping your saves in sync between computers.</p>
+<div style="left:590px;top:28px;width:70px;height:74px;" class="has_tooltip">
+<div class="tooltip">
+Downloads the latest game data or program version from MASGAU\'s servers
+</div>
+</div>
 
-<thumb src="using/analyzer.jpg" width="200" alt="The Analyzer"/>
-<h2><a name="analyzer">Analyzer</a></h2>
-<p>Analyzer is a tool for gathering information about unsupported games so I can add them to MASGAU. Use is simple (sort of):
-<thumb src="using/analyzerscanning.jpg" width="200" alt="Analyzer Scanning A Game"/>
-<ol>
-<li>Type in the name of the game.
-<li>Use the buttons to specify where the game is installed.
-<li>Use the buttons to specify where the game keeps its saves.
-<li>Click the Scan button.
-<li>Wait for the scan to finish.
-<thumb src="using/analyzerreport.jpg" width="200" alt="An Analyzer Report"/>
-<li>(Optional) Edit the report
-<li>Click the E-Mail button to send me the report.
-<li>Do something else.
-</ul></p>
-<p>Note: Submitted reports are uploaded to the GitHub server, and can be browsed at <a href="https://github.com/MASGAU/MASGAU/tree/data/Reports">https://github.com/MASGAU/MASGAU/tree/data/Reports</a></p>';
+<div style="left:660px;top:28px;width:70px;height:74px;" class="has_tooltip">
+<div class="tooltip">
+Sends me an e-mail with whatever you want to tell me :)
+</div>
+</div>
+
+<div style="left:0px;top:118px;width:470px;height:350px;" class="has_tooltip">
+<div class="tooltip">
+A list of games detected on your computer.<br/>
+This is where you can select specific games
+</div>
+</div>
+
+<div style="left:470px;top:118px;width:100px;height:350px;" class="has_tooltip">
+<div class="tooltip">
+Enables/disables monitoring for each individual game<br/>
+See further down for an explanation of monitoring
+</div>
+</div>
+
+<div style="left:570px;top:118px;width:180px;height:350px;" class="has_tooltip">
+<div class="tooltip">
+A list of detected archives for the games selected in the games list<br/>
+If no games are selected, or there are no archives for the games selected,<br/>
+then this list will not be visible
+</div>
+</div>
+
+<div style="left:3px;top:473px;width:24px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Indicates wether MASGAU is running in:
+    <ul>
+    <li>Single User Mode (the icon with one person)</li>
+    <li>All Users Mode (the icon with two people)</li>
+    </ul>
+Clicking will switch between these modes
+</div>
+</div>
+
+<div style="left:27px;top:473px;width:224px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Tells how many games were detected (obviously)
+</div>
+</div>
+
+<div style="left:580px;top:473px;width:124px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Tells how many games have monitoring enabled<br/>
+See further down for an explanation of monitoring
+</div>
+</div>
+
+
+<div style="left:708px;top:473px;width:24px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Indicates wether Steam has beend detected<br/>
+Clicking opens a folder browser to manually set the Steam path
+</div>
+</div>
+
+<div style="left:733px;top:482px;width:14px;height:14px;" class="has_tooltip">
+<div class="tooltip">
+Resizes the window
+</div>
+</div>
+
+
+</div>
+<h3>Dragging a MASGAU archive (files that end with .gb7)<br/>onto any part of the window will open a restore dialog for that archive</h3>
+</center>
+
+
+
+
+<h2>The Settings Tab</h2>
+<center>
+<div class="hoverable_image" style="width:750px;">
+<img src="../../images/using/settingstab.jpg"/>
+
+<div style="left:55px;top:4px;width:105px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Switches back to the main tab, the one with the backup and restore buttons and stuff
+</div>
+</div>
+
+<div style="left:0px;top:28px;width:135px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Allows you to change or open the backup folder<br/>
+And yes, it is the same as the button on the other tab
+</div>
+</div>
+
+<div style="left:0px;top:52px;width:135px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Adds and remove Alternate Save Folders<br/>
+These are used to specify non-standard locations for your games,<br/>
+like fi you keep your games in C:\Games or something
+</div>
+</div>
+
+<div style="left:135px;top:28px;width:145px;height:74px;" class="has_tooltip">
+<div class="tooltip">
+If this is enabled, when MASGAU adds new files to an archive it will check how long it has been since the creation of that archive.<br/>
+If the time is greater than what is specified here, MASGAU makes a copy of the archive before adding to it.<br/>
+If the number of extra copies grows larger than the max specified here, the oldest archive(s) will be deleted.
+</div>
+</div>
+
+
+<div style="left:290px;top:32px;width:205px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Sets the e-mail address used as the from address when sending error or game reports
+</div>
+</div>
+
+
+<div style="left:290px;top:56px;width:205px;height:20px;" class="has_tooltip">
+<div class="tooltip">
+By default MASGAU only archives new files with a newer modified date than the archive.<br/>
+If this is checked, MASGAU will always back up every file it finds.<br/>
+</div>
+</div>
+
+
+<div style="left:290px;top:76px;width:205px;height:24px;" class="has_tooltip">
+<div class="tooltip">
+Enables or disables MASGAU starting when you log on to your computer.<br/>
+</div>
+</div>
+
+
+</div>
+</center>
+
+<h2>The Restore Window</h2>
+
+<center>
+<p>This window appears when you double-click an archive,<br/>
+or drag an archive onto the main window, or when you select an archive to restore in the main window.</p>
+<div class="hoverable_image" style="width:506px;">
+<img src="../../images/using/restorewindow.jpg"/>
+
+<div style="left:20px;top:30px;width:400px;height:20px;" class="has_tooltip">
+<div class="tooltip">
+This displays or lets the user choose (depending on how many are found) the location that MASGAU is going to restore the save to
+</div>
+</div>
+
+<div style="left:20px;top:80px;width:400px;height:20px;" class="has_tooltip">
+<div class="tooltip">
+Displays or lets the user choose which user to restore the save to
+</div>
+</div>
+
+
+<div style="left:40px;top:117px;width:100px;height:30px;" class="has_tooltip">
+<div class="tooltip">
+The restore normally opens in single-user mode, so if a user is needed then only one will be shown.<br/>
+Clicking this button will restart the restore in all-users mode, so you can restore to a different user.
+</div>
+</div>
+
+<div style="left:140px;top:117px;width:120px;height:30px;" class="has_tooltip">
+<div class="tooltip">
+Allows the specifying of a different restore location than the ones detected by MASGAU
+</div>
+</div>
+
+<div style="left:260px;top:117px;width:95px;height:30px;" class="has_tooltip">
+<div class="tooltip">
+Allows the choosing of specific files in the archive to restore
+</div>
+</div>
+
+<div style="left:355px;top:117px;width:75px;height:30px;" class="has_tooltip">
+<div class="tooltip">
+Begins the restore process
+</div>
+</div>
+
+<div style="left:430px;top:117px;width:70px;height:30px;" class="has_tooltip">
+<div class="tooltip">
+Cancels the restore.<br/>
+If restoring multiple files, this will cancel restoring all of them.
+</div>
+</div>
+
+</div>
+</center>
+
+<h2>Adding A Custom Game</h2>
+
+<center>
+<div class="hoverable_image" style="width:750px;">
+<img src="../../images/using/addgame.jpg" width="750"/>
+
+<div style="left:135px;top:84px;width:505px;height:324px;" class="has_tooltip">
+<div class="tooltip">
+Do I seriously need to explain this?<br/>
+The little question mark icons explain what to type for the file names.
+</div>
+</div>
+
+
+</div>
+<p>After a game is added, MASGAU will ask if it\'s okay to submit a report on that game.
+If allowed, MASGAU will scan the computer for information related to the game and create a text report.
+It will display this report for editing, which is perfectly acceptable, and give the options of saving the report for later e-mailing to <a href="mailto:submissions@gamesave.info">submissions@GameSave.Info</a> or sending the report to that address automatically.
+
+Note: Submitted reports are uploaded to the GitHub server, and can be browsed at <a href="https://github.com/GameSaveInfo/Reports">GameSave.Info\'s GitHub Report Repository</a></p>
+</center>
+
+
+
+<h2>Monitoring</h2>
+<center>
+<p>If monitoring is enabled for a game, MASGAU (as long as it\'s running) will watch that game for any new files and automatically archive them.
+This means that all your saves will be automatically archived without you having to go through all the hard gruelling work of pushing a backup button!
+</p>
+<div class="hoverable_image" style="width:750px;">
+<img src="../../images/using/monitor.jpg" width="750"/>
+
+<div style="left:30px;top:100px;width:350px;height:220px;" class="has_tooltip">
+<div class="tooltip">
+This is the main window. While important, it\'s not the monitor icon.<br/>
+That\'s in the lower right of this picture, it\'s colored red.
+</div>
+</div>
+
+
+<div style="left:190px;top:400px;width:30px;height:20px;" class="has_tooltip">
+<div class="tooltip">
+Okay, close, but this isn\'t it either.<br/>
+Keep going right.
+</div>
+</div>
+
+
+<div style="left:660px;top:400px;width:20px;height:20px;" class="has_tooltip">
+<div class="tooltip">
+This icon, right here? That\'s the monitor icon.
+</div>
+</div>
+
+
+</div>
+<p>
+There\'s a red icon in the notification tray that doesn\'t really do anything itself, but if you click it the main window will dissapear, even the task bar icon,
+almost as if it\'s living inside the tiny red icon! Click it again and the window will appear again! 
+So if you decide to leave MASGAU running to monitor your games, you can make it be practically invisible!
+The icon will pop up tiny message baloons if MASGAU has anything important to tell you.
+If you have MASGAU living in the icon when you exit it, or log off your computer, when it starts up again it will still be living in the icon.
+</p></center>
+
+
+';
 $footer = "";
 ?>

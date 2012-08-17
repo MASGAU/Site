@@ -14,13 +14,15 @@ class Downloads extends AModule
 
         echo '<table><tr><td>';
         
+        include_once 'updates/AUpdateList.php';
+        $version = AUpdateList::$latest_program_version;
+        $version_string = "v.".$version['major'].".".$version['minor'].".".$version['revision'];
         
-        echo '<h2><a href="https://github.com/downloads/MASGAU/MASGAU/MASGAU-0.99.0-Beta-Setup.exe" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'stable\', \'0.99.0\']);return true;">';
+        
+        echo '<h2><a href="'.$version['url'].'" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'stable\', \''.$version_string.'\']);return true;">';
     //    echo '<p>You can download the latest version from the <a href="https://github.com/MASGAU/">GitHub page</a>, or from here:</p>';
-        echo 'Download v.0.99 Beta Installer for Windows<br />(Desktop AND Portable!)</a></h2>'
-        
-                .'<p>MASGAU REQUIRES <a href="http://www.microsoft.com/NET/">Microsoft\'s .NET framework</a> to be installed. Setup will  download and install it automatically if it isn\'t.</p>'
-;
+        echo 'Download '.$version_string.' Beta Installer for Windows<br />(Desktop AND Portable!)</a></h2>'        
+        .'<p>MASGAU REQUIRES <a href="http://www.microsoft.com/NET/">Microsoft\'s .NET framework</a> to be installed. Setup will  download and install it automatically if it isn\'t.</p>';
         
         echo '</td><td>';
         echo '
@@ -41,11 +43,10 @@ class Downloads extends AModule
         
         . '</td></tr><tr><td>'
                 
-        .'<h2>Download Test Build</h2>';
+        .'<h2><a href="https://docs.google.com/open?id=0By2Mfv6zO9SkZXB2R01vVDNXSE0" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'unstable\', \'TEST\']);return true;">';
         
-//        .'<p>This link always points to the latest test build:</p>';
         
-        echo '<h3><a href="https://docs.google.com/open?id=0By2Mfv6zO9SkZXB2R01vVDNXSE0" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'unstable\', \'TEST\']);return true;">DOWNLOAD MASGAU <B>TEST</B> VERSION FOR WINDOWS</a></h3>';
+        echo 'Download <B>UNSTABLE TEST</B><br/>version for Windows</a></h2>';
         
         echo '</td><td>';
         echo '<p>Features currently in testing:'
@@ -56,16 +57,10 @@ class Downloads extends AModule
 
         .'</td></tr><tr><td>'
                 
-        .'<h2>Download Older Versions</h2>'
-//        .'<p>All the previous releases of MASGAU are available here:</p>'
-        
-        .'<h3><a href="https://github.com/MASGAU/MASGAU/downloads">https://github.com/MASGAU/MASGAU/downloads</a></h3>'
+        .'<h2><a href="https://github.com/MASGAU/MASGAU/downloads">Download Older Versions</a></h2>'
         
         .'</td><td>'
-        .'<h2>Source Code (GitHub)</h2>'
-      //  .'<p>The source code for MASGAU is available through GitHub</p>'
-        
-        .'<h3><a href="https://github.com/MASGAU/">https://github.com/MASGAU/</a></h3>';
+        .'<h2><a href="https://github.com/MASGAU/">Source Code (GitHub)</a></h2>';
         
         echo '</td></tr></table>';
 

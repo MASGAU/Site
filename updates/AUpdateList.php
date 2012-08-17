@@ -1,8 +1,8 @@
 <?php
-require_once '../gamesaveinfo/api/exporters/AExporter.php';
+@include_once '../gamesaveinfo/api/exporters/AExporter.php';
 abstract class AUpdateList {
     
-    protected static $latest_program_version = array(
+    public static $latest_program_version = array(
         "major"=>1,
         "minor"=>0,
         "revision"=>0,
