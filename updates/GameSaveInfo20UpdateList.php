@@ -14,7 +14,7 @@ class GameSaveInfo20UpdateList extends AUpdateList {
     }
 
      public function getFiles() {
-      return array(
+      $files = array(
           "system.xml"=>array(
               "criteria"=>"system",
               "comment"=>"Contains profiles for backing up system-related files"
@@ -23,11 +23,22 @@ class GameSaveInfo20UpdateList extends AUpdateList {
               "criteria"=>"deprecated",
               "comment"=>"This file contains game data that was originally mislabeled, or for some other reason incorrect to the point that backup support had to be removed. The main purpose of these is to allow deprecated games to be able to still restore."
               ),
-          "games.xml"=>array(
-              "criteria"=>"!system",
-              "comment"=>"This file contains games, mods and expansions"
+          "numeric.xml"=>array(
+              "criteria"=>"!system/0*/1*/2*/3*/4*/5*/6*/7*/8*/9*",
+              "comment"=>"This file contains games, mods and expansions that start with a number"
               )
           );   
+          
+          foreach (range('a', 'z') as $letter) {
+              $files[$letter.".xml"] = array(
+              "criteria"=>"!system/".$letter."*/".strtoupper($letter)."*",
+              "comment"=>"This file contains games, mods and expansions that start with the letter ".strtoupper($letter)
+              );
+                            
+            }
+          
+          
+          return $files;
      }
 
 
