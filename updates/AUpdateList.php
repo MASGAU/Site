@@ -4,8 +4,8 @@ abstract class AUpdateList {
     
     public static $latest_program_version = array(
         "name"=>"MASGAU 1.0",
-        "major"=>1,
-        "minor"=>0,
+        "major"=>0,
+        "minor"=>5,
         "revision"=>0,
         "url"=>"https://github.com/downloads/MASGAU/MASGAU/MASGAU-1.0.0-Release-Setup.exe",
         "os"=>"windows",
