@@ -29,7 +29,7 @@ Since it requires elevation, this mode can restore any save to any location.
 <h2>The Main Window</h2>
 This is what the main window looks like. Hover the mouse over the various parts for explanations!
 <br/>
-<div class="hoverable_image" style="width:750px;">
+<div class="hoverable_image" style="width:800px;">
 <img src="../../images/using/mainwindow.jpg"/>
 
 <div style="left:0px;top:4px;width:55px;height:24px;" class="has_tooltip">
@@ -49,19 +49,19 @@ Switches to the settings tab (see further down for an explanation of that)
 </div>
 
 <!-- Window controls -->
-<div style="left:678px;top:4px;width:24px;height:24px;" class="has_tooltip">
+<div style="right:48px;top:4px;width:24px;height:24px;" class="has_tooltip">
 <div class="tooltip">
 Minimizes the window
 </div>
 </div>
 
-<div style="left:702px;top:4px;width:24px;height:24px;" class="has_tooltip">
+<div style="right:24px;top:4px;width:24px;height:24px;" class="has_tooltip">
 <div class="tooltip">
 Toggles fullscreen mode
 </div>
 </div>
 
-<div style="left:726px;top:4px;width:24px;height:24px;" class="has_tooltip">
+<div style="right:0px;top:4px;width:24px;height:24px;" class="has_tooltip">
 <div class="tooltip">
 Send the window to the notification tray<br/>
 Does NOT close MASGAU, to do that use the top-left menu<br/>
@@ -106,7 +106,7 @@ Back up all of the detected games to the backup folder
 </div>
 
 
-<div style="left:195px;top:28px;width:150px;height:24px;" class="has_tooltip">
+<div style="left:195px;top:28px;width:160px;height:24px;" class="has_tooltip">
 <div class="tooltip">
 Backs up only the games selected in the games list
 </div>
@@ -128,7 +128,7 @@ Allows you to change or open the backup folder
 
 <!-- Restore section -->
 
-<div style="left:350px;top:28px;width:70px;height:74px;" class="has_tooltip">
+<div style="left:370px;top:28px;width:100px;height:74px;" class="has_tooltip">
 <div class="tooltip">
 Restore the archives selected in the archives list<br/>
 See further down for an example of the restore window
@@ -136,7 +136,7 @@ See further down for an example of the restore window
 </div>
 
 
-<div style="left:420px;top:28px;width:100px;height:24px;" class="has_tooltip">
+<div style="left:470px;top:28px;width:100px;height:24px;" class="has_tooltip">
 <div class="tooltip">
 Opens a file browser so you can select an archive to restore<br/>
 See further down for an example of the restore window
@@ -145,40 +145,46 @@ See further down for an example of the restore window
 
 <!-- Other section -->
 
-<div style="left:520px;top:28px;width:70px;height:74px;" class="has_tooltip">
+<div style="left:590px;top:28px;width:40px;height:74px;" class="has_tooltip">
 <div class="tooltip">
 Deletes the detected game data for the games selected in the games list<br/>
 This is obviously very dangerous. Careful.
 </div>
 </div>
 
-<div style="left:590px;top:28px;width:70px;height:74px;" class="has_tooltip">
+<div style="left:630px;top:28px;width:60px;height:74px;" class="has_tooltip">
 <div class="tooltip">
-Downloads the latest game data or program version from MASGAU\'s servers
+Checks if there is an update for the game data, or for MASGAU itself.<br/>
+MASGAU will automatically check for updates on startup, and if there are some found,<br/>
+this button will change its label to reflect what updates are available.
 </div>
 </div>
 
-<div style="left:660px;top:28px;width:70px;height:74px;" class="has_tooltip">
+<div style="left:690px;top:28px;width:70px;height:74px;" class="has_tooltip">
 <div class="tooltip">
 Sends me an e-mail with whatever you want to tell me :)
 </div>
 </div>
 
-<div style="left:0px;top:118px;width:470px;height:350px;" class="has_tooltip">
+
+<!-- main section! -->
+
+<div style="left:0px;top:118px;width:520px;height:350px;" class="has_tooltip">
 <div class="tooltip">
 A list of games detected on your computer.<br/>
 This is where you can select specific games
 </div>
 </div>
 
-<div style="left:470px;top:118px;width:100px;height:350px;" class="has_tooltip">
+<div style="right:220px;top:118px;width:50px;height:350px;" class="has_tooltip">
 <div class="tooltip">
 Enables/disables monitoring for each individual game<br/>
 See further down for an explanation of monitoring
 </div>
 </div>
 
-<div style="left:570px;top:118px;width:180px;height:350px;" class="has_tooltip">
+
+<div style="right:0px;top:118px;width:200px;height:350px;" class="has_tooltip">
 <div class="tooltip">
 A list of detected archives for the games selected in the games list<br/>
 If no games are selected, or there are no archives for the games selected,<br/>
@@ -203,7 +209,7 @@ Tells how many games were detected (obviously)
 </div>
 </div>
 
-<div style="left:580px;top:473px;width:124px;height:24px;" class="has_tooltip">
+<div style="right:41px;bottom:4px;width:124px;height:24px;" class="has_tooltip">
 <div class="tooltip">
 Tells how many games have monitoring enabled<br/>
 See further down for an explanation of monitoring
@@ -211,14 +217,14 @@ See further down for an explanation of monitoring
 </div>
 
 
-<div style="left:708px;top:473px;width:24px;height:24px;" class="has_tooltip">
+<div style="right:17px;bottom:4px;width:24px;height:24px;" class="has_tooltip">
 <div class="tooltip">
-Indicates wether Steam has beend detected<br/>
+Indicates wether Steam has been detected<br/>
 Clicking opens a folder browser to manually set the Steam path
 </div>
 </div>
 
-<div style="left:733px;top:482px;width:14px;height:14px;" class="has_tooltip">
+<div style="right:0px;bottom:4px;width:14px;height:14px;" class="has_tooltip">
 <div class="tooltip">
 Resizes the window
 </div>
@@ -258,7 +264,7 @@ like fi you keep your games in C:\Games or something
 </div>
 </div>
 
-<div style="left:135px;top:28px;width:145px;height:74px;" class="has_tooltip">
+<div style="left:135px;top:28px;width:155px;height:74px;" class="has_tooltip">
 <div class="tooltip">
 If this is enabled, when MASGAU adds new files to an archive it will check how long it has been since the creation of that archive.<br/>
 If the time is greater than what is specified here, MASGAU makes a copy of the archive before adding to it.<br/>
@@ -300,45 +306,45 @@ or drag an archive onto the main window, or when you select an archive to restor
 <div class="hoverable_image" style="width:506px;">
 <img src="../../images/using/restorewindow.jpg"/>
 
-<div style="left:20px;top:30px;width:400px;height:20px;" class="has_tooltip">
+<div style="left:20px;top:30px;width:450px;height:20px;" class="has_tooltip">
 <div class="tooltip">
 This displays or lets the user choose (depending on how many are found) the location that MASGAU is going to restore the save to
 </div>
 </div>
 
-<div style="left:20px;top:80px;width:400px;height:20px;" class="has_tooltip">
+<div style="left:20px;top:90px;width:450px;height:20px;" class="has_tooltip">
 <div class="tooltip">
 Displays or lets the user choose which user to restore the save to
 </div>
 </div>
 
 
-<div style="left:40px;top:117px;width:100px;height:30px;" class="has_tooltip">
+<div style="bottom:6px;right:380px;width:100px;height:30px;" class="has_tooltip">
 <div class="tooltip">
 The restore normally opens in single-user mode, so if a user is needed then only one will be shown.<br/>
 Clicking this button will restart the restore in all-users mode, so you can restore to a different user.
 </div>
 </div>
 
-<div style="left:140px;top:117px;width:120px;height:30px;" class="has_tooltip">
+<div style="bottom:6px;right:256px;width:120px;height:30px;" class="has_tooltip">
 <div class="tooltip">
 Allows the specifying of a different restore location than the ones detected by MASGAU
 </div>
 </div>
 
-<div style="left:260px;top:117px;width:95px;height:30px;" class="has_tooltip">
+<div style="bottom:6px;right:158px;width:95px;height:30px;" class="has_tooltip">
 <div class="tooltip">
 Allows the choosing of specific files in the archive to restore
 </div>
 </div>
 
-<div style="left:355px;top:117px;width:75px;height:30px;" class="has_tooltip">
+<div style="bottom:6px;right:80px;width:75px;height:30px;" class="has_tooltip">
 <div class="tooltip">
 Begins the restore process
 </div>
 </div>
 
-<div style="left:430px;top:117px;width:70px;height:30px;" class="has_tooltip">
+<div style="bottom:6px;right:6px;width:70px;height:30px;" class="has_tooltip">
 <div class="tooltip">
 Cancels the restore.<br/>
 If restoring multiple files, this will cancel restoring all of them.

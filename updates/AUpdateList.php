@@ -3,18 +3,18 @@
 abstract class AUpdateList {
     
     public static $latest_program_version = array(
-        "major"=>1,
-        "minor"=>0,
+        "name"=>"MASGAU 1.0",
+        "major"=>0,
+        "minor"=>5,
         "revision"=>0,
-        "url"=>"https://github.com/downloads/MASGAU/MASGAU/MASGAU-0.99.0-Beta-Setup.exe",
-        "os"=>"Windows",
+        "url"=>"https://github.com/downloads/MASGAU/MASGAU/MASGAU-1.0.0-Release-Setup.exe",
+        "os"=>"windows",
         "release_date"=>"2012-08-16T21:13:29"
         );
     
     protected $xml;
     protected $root;
     private $gamelink;
-    
     protected abstract function exporterName();
     
     protected $last_updated;
@@ -53,20 +53,7 @@ abstract class AUpdateList {
     protected abstract function programCriteria();
     
     protected abstract function createFileElement($row, $info);
-    protected function createProgramElement() {
-        $file = $this->xml->createElement("program");
-        $file->appendChild($this->xml->createAttribute("majorVersion"))->
-                appendChild($this->xml->createTextNode(self::$latest_program_version["major"]));
-        $file->appendChild($this->xml->createAttribute("minorVersion"))->
-                appendChild($this->xml->createTextNode(self::$latest_program_version["minor"]));
-        $file->appendChild($this->xml->createAttribute("revision"))->
-                appendChild($this->xml->createTextNode(self::$latest_program_version["revision"]));
-        $file->appendChild($this->xml->createAttribute("url"))->
-                appendChild($this->xml->createTextNode(self::$latest_program_version["url"]));
-        $file->appendChild($this->xml->createAttribute("date"))->
-                appendChild($this->xml->createTextNode(self::$latest_program_version["release_date"]));
-        return $file;
-    }
+    protected abstract function createProgramElement();
     
     
     protected function addProgramElements($root) {
@@ -86,6 +73,21 @@ abstract class AUpdateList {
 
     public function drawPage() {
         header("Content-Type:text/xml; charset=UTF-8'");
+        
+        $folder =  dirname(__FILE__);
+        $schema = $folder . '/schemas/' . get_class($this).'.xsd';
+        
+        if (!file_exists($schema)) {
+            throw new Exception("Can't find schema file ".$schema);
+        }
+        
+        if (!$this->xml->schemaValidate($schema)) {
+            echo $text;
+            $this->error_occured = true;
+            throw new Exception("XML DID NOT PASS VALIDATION: " . $schema);
+        }
+
+
         $output = $this->xml->saveXML();
         echo $output;
     }
