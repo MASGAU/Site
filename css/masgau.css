@@ -137,6 +137,14 @@ div.footer {
     margin:20px;
     font-size:10px;
 }
+div.social_footer {
+    position:relative;
+    color:black;
+    top:-120px;
+    margin:20px;
+    font-size:10px;
+    
+    }
 div.social {
     display:none;
     position:absolute;
