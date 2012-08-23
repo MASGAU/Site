@@ -85,17 +85,25 @@ img.logo {
     top:-60px;
 }
 
-img.download {
+div.download {
     position:absolute;
-    top:60px;
-    left:600px;
+    top:40px;
+    left:640px;
     opacity:1;
+    color:red;
 }
-img.download_platform {
-    position:absolute;
-    top:60px;
-    left:898px;
-    opacity:1;
+div.download a {
+    font-size:14pt;
+    color:yellow;
+    text-shadow: -2px 0 red, 0 2px red, 2px 0 red, 0 -2px red;
+}
+div.download a:hover{
+    text-decoration:none;
+}
+div.download p {
+    position:relative;
+    top:-40px;
+    left:130px;
 }
         
 div.fadeout {

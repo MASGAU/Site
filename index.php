@@ -73,17 +73,32 @@ echo "<script type=\"text/javascript\">
 
 <a href="http://masgau.org/"><img src="/images/logo.png" class="logo" /></a>
 
-<?php echo Downloads::CreateLink(); 
+<div class="download">
+
+<?php 
 
 $agent = $_SERVER['HTTP_USER_AGENT'];
 
-echo $agent;
+
+include_once 'updates/AUpdateList.php';
+$version = AUpdateList::$latest_program_version;
+$version_string = "v.".$version['major'].".".$version['minor'].".".$version['revision'];
+
+
+echo '<a href="'.$version['url'].'" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'stable\', \''.$version_string.'\']);return true;">';
+
 ?>
 
 
-<img src="/images/download.png" class="download" />
-<img src="/images/download.png" class="download_platform" />
+<img src="/images/download.png" /><br/>
 
+<?php
+echo '<p>'.$version_string.' FOR WINDOWS</p>'   ;     
+
+//echo $agent;
+
+?>
+</div>
 
 </a>
 
