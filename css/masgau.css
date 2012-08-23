@@ -89,7 +89,13 @@ img.download {
     position:absolute;
     top:60px;
     left:600px;
-    opacity:0.5;
+    opacity:1;
+}
+img.download_platform {
+    position:absolute;
+    top:60px;
+    left:898px;
+    opacity:1;
 }
         
 div.fadeout {

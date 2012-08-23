@@ -4,7 +4,7 @@ $content = '<table class="home_page_feature">
 <tr>
 <td>
 <h3>What Is MASGAU?</h3>
-MASGAU is a program that can automatically backup AND restore your game saves! Imagine: never losing a save just because of something silly like a system crash* or the apocalypse*.
+MASGAU is a program that can backup AND restore your game saves! Imagine: never losing a save just because of something silly like a system crash* or the apocalypse*.
 </td>
 <td>
 <h3>How Do I Get It?</h3>

@@ -73,7 +73,19 @@ echo "<script type=\"text/javascript\">
 
 <a href="http://masgau.org/"><img src="/images/logo.png" class="logo" /></a>
 
-<?php echo Downloads::CreateLink(); ?><img src="/images/download.png" class="download" /></a>
+<?php echo Downloads::CreateLink(); 
+
+$agent = $_SERVER['HTTP_USER_AGENT'];
+
+echo $agent;
+?>
+
+
+<img src="/images/download.png" class="download" />
+<img src="/images/download.png" class="download_platform" />
+
+
+</a>
 
 
 
