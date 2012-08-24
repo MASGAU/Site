@@ -21,6 +21,9 @@
 <html>
 <head>
 <title><?php echo $title; ?></title>
+
+<meta name="description" content="A save game backup and resture utility. Creates easy-to-use archives that can be restored to any supported system." />
+
 <link media="Screen" href="/css/masgau.css" type="text/css" rel="stylesheet" />
 <link media="Screen" href="/libs/tooltip.css" type="text/css" rel="stylesheet" />
 <link media="Screen" href="/libs/jquery/css/dark-hive/jquery-ui-1.8.19.custom.css" type="text/css" rel="stylesheet" />

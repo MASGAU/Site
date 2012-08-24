@@ -1,5 +1,5 @@
 <?php
-$title = 'Home';
+$title = 'Save Game Backup Tool';
 $content = '<table class="home_page_feature">
 <tr>
 <td>
