@@ -15,3 +15,16 @@ table.home_page_feature ul{
     text-align:left;
     margin-left:40px;
 }
+
+
+.hoverable_image {
+    position:relative;
+    width:auto;
+}
+
+
+.hoverable_image div {
+    position:absolute;
+ /*   border: solid 1px red;
+    background: rgba(255,0,0,0.5);*/
+}

@@ -13,3 +13,17 @@ tr.compatibility_header {
 div#game_data {
     margin-top:50px;
 }
+
+table {
+    border-radius: 10px;
+}
+th {
+    border-color:rgba(0,0,0,0);
+    border-width:1px;
+    background-color:rgba(46, 52, 54, 0.5); 
+}
+td { 
+    background-color:rgba(238, 238, 236, 0.5); 
+    border-color:rgba(46, 52, 54, 0.5); 
+    border-width:1px;
+}

@@ -7,7 +7,7 @@
     include_once 'headers.php';
     if(!isset($module)) {
         $_GET['name'] = 'home';
-        $module = AModule::LoadModule('page',$db);
+        $module = AModule::LoadModule('page');
     }
     if(isset($module)) {
         $title .= $module->title();
@@ -21,6 +21,9 @@
 <html>
 <head>
 <title><?php echo $title; ?></title>
+
+<meta name="description" content="A save game backup and resture utility. Creates easy-to-use archives that can be restored to any supported system." />
+
 <link media="Screen" href="/css/masgau.css" type="text/css" rel="stylesheet" />
 <link media="Screen" href="/libs/tooltip.css" type="text/css" rel="stylesheet" />
 <link media="Screen" href="/libs/jquery/css/dark-hive/jquery-ui-1.8.19.custom.css" type="text/css" rel="stylesheet" />
@@ -73,23 +76,36 @@ echo "<script type=\"text/javascript\">
 
 <a href="http://masgau.org/"><img src="/images/logo.png" class="logo" /></a>
 
-<?php echo Downloads::CreateLink(); ?><img src="/images/download.png" class="download" /></a>
+<div class="download">
+
+<?php 
+
+$agent = $_SERVER['HTTP_USER_AGENT'];
 
 
-<div class="social">
-<!-- Place this tag where you want the +1 button to render -->
-<g:plusone size="tall"></g:plusone>
+include_once 'updates/AUpdateList.php';
+$version = AUpdateList::$latest_program_version;
+$version_string = "v.".$version['major'].".".$version['minor'].".".$version['revision'];
 
-<!-- Place this render call where appropriate -->
-<script type="text/javascript">
-  (function() {
-    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-    po.src = 'https://apis.google.com/js/plusone.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-  })();
-</script>
 
-<div class="fb-like" data-href="http://masgau.org/" data-send="false" data-layout="box_count" data-width="100" data-show-faces="false"></div></div>
+echo '<a href="'.$version['url'].'" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'stable\', \''.$version_string.'\']);return true;">';
+
+?>
+
+
+<img src="/images/download.png" /><br/>
+
+<?php
+echo '<p>'.$version_string.' FOR WINDOWS</p>'   ;     
+
+//echo $agent;
+
+?>
+</div>
+
+</a>
+
+
 
 <?php 
     $menus = array(
@@ -176,9 +192,41 @@ if(isset($module)) {
 ?>
 </div>
 
+<div class="social_footer">
+<div style="float:right;margin-right:10px;">
+<span id="a2itemwidget"></span>
+<script src="http://api.alternativeto.net/software/masgau/widgetjs/blue" type="text/javascript"></script>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=183744235777";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+</div>
+<div style="float:right;margin-right:10px;">
+<div class="fb-like" data-href="https://www.facebook.com/masgau" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true"></div>
+</div>
+
+<div style="float:right;margin-right:10px;">
+<!-- Place this tag where you want the +1 button to render. -->
+<div class="g-plusone" data-size="tall" data-href="https://plus.google.com/b/115220090159606871198/115220090159606871198"></div>
+
+<!-- Place this tag after the last +1 button tag. -->
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+</div>
+
+</div>
+
 </div>
 
 </body>
 </html>
 
-<?php $db->close(); ?>

@@ -27,7 +27,7 @@
     
     if(isset($module)) {
         include_once 'modules/AModule.php';
-        $module = AModule::LoadModule($module, $db);
+        $module = AModule::LoadModule($module);
     }
 
 ?>
