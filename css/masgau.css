@@ -38,19 +38,7 @@ h1, h2, h3, h4 {
     width:100%;
 }
     
-table {
-    border-radius: 10px;
-}
-th {
-    border-color:rgba(0,0,0,0);
-    border-width:1px;
-    background-color:rgba(46, 52, 54, 0.5); 
-}
-td { 
-    background-color:rgba(238, 238, 236, 0.5); 
-    border-color:rgba(46, 52, 54, 0.5); 
-    border-width:1px;
-}
+
 
 div.body_box {
     position:relative;
@@ -97,11 +85,25 @@ img.logo {
     top:-60px;
 }
 
-img.download {
+div.download {
     position:absolute;
-    top:60px;
-    left:600px;
-    opacity:0.5;
+    top:40px;
+    left:640px;
+    opacity:1;
+    color:red;
+}
+div.download a {
+    font-size:14pt;
+    color:yellow;
+    text-shadow: -2px 0 red, 0 2px red, 2px 0 red, 0 -2px red;
+}
+div.download a:hover{
+    text-decoration:none;
+}
+div.download p {
+    position:relative;
+    top:-40px;
+    left:130px;
 }
         
 div.fadeout {
@@ -149,6 +151,14 @@ div.footer {
     margin:20px;
     font-size:10px;
 }
+div.social_footer {
+    position:relative;
+    color:black;
+    top:-120px;
+    margin:20px;
+    font-size:10px;
+    
+    }
 div.social {
     display:none;
     position:absolute;

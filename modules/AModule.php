@@ -3,7 +3,6 @@ abstract class AModule
 {
     // property declaration
     public $var = 'a default value';
-    protected $db = null;
     
     abstract public function title();
     abstract public function draw();
@@ -15,8 +14,7 @@ abstract class AModule
 
     protected static $site_address;
 
-    protected function __construct($db) {
-        $this->db = $db;
+    protected function __construct() {
         $this->gdb = Databases::$gamesaveinfo;
         $this->gdb->connect();
         
@@ -84,27 +82,27 @@ abstract class AModule
         }
     }
     
-    public static function LoadModule($name, $con) {
+    public static function LoadModule($name) {
         switch ($name) {
             case "page":
                 include_once 'modules/Page.php';
-                $module = new Page($con);
+                $module = new Page();
                 break;
             case "support":
                 include_once 'modules/Support.php';
-                $module = new Support($con);
+                $module = new Support();
                 break;
             case "game_data":
                 include_once 'modules/GameData.php';
-                $module = new GameData($con);
+                $module = new GameData();
                 break;
             case "contributors":
                 include_once 'modules/Contributors.php';
-                $module = new Contributors($con);
+                $module = new Contributors();
                 break;
             case "downloads":
                 include_once 'modules/Downloads.php';
-                $module = new Downloads($con);
+                $module = new Downloads();
                 break;
             default:
                 throw new Exception("Module ".$module." is not found");

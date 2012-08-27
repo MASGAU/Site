@@ -1,10 +1,10 @@
 <?php
-$title = 'Home';
+$title = 'Save Game Backup Tool';
 $content = '<table class="home_page_feature">
 <tr>
 <td>
 <h3>What Is MASGAU?</h3>
-MASGAU is a program that can automatically backup AND restore your game saves! Imagine: never losing a save just because of something silly like a system crash* or the apocalypse*.
+MASGAU is a program that can backup AND restore your game saves! Imagine: never losing a save just because of something silly like a system crash* or the apocalypse*.
 </td>
 <td>
 <h3>How Do I Get It?</h3>
@@ -33,7 +33,7 @@ By submitting game information! MASGAU includes an <page name="using" target="an
 <td>
 <h3>What Does It Look Like?</h3>
 <page name="using">
-<img src="images.php?name=using%2Fbackup.jpg&width=200" alt="Like This!" />
+<img src="images.php?name=using%2Fmainwindow.jpg&width=200" alt="Like This!" />
 <br />Like this! Click to see more pictures!
 </page>
 </td>

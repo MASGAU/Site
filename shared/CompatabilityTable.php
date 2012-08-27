@@ -7,7 +7,7 @@ class CompatabilityTable {
     private static $consoles = "'PS1','PS2','PS3','PSP','PSVITA'";
     private static $universal_roots = array("userdocuments");
     private static $platforms, $medias, $dbr;
-    public $max_games = 50;
+    public $max_games = 25;
     private $state = 'current';
     
     public static function init($db) {
