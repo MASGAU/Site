@@ -51,7 +51,7 @@ class Downloads extends AModule
         echo '</td><td>';
         echo '<p>Features currently in testing:'
         .'<ul>'
-        .'<li>Nothing! Haha!</li>'
+        .'<li>A new custom list view to overcome the shortcomings of the stock list view</li>'
         .'</ul>'
         .'</p>'
 
