@@ -43,7 +43,7 @@ class Downloads extends AModule
         
         . '</td></tr><tr><td>'
                 
-        .'<h2><a href="https://docs.google.com/open?id=0By2Mfv6zO9SkZXB2R01vVDNXSE0" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'unstable\', \'TEST\']);return true;">';
+        .'<h2><a href="https://docs.google.com/open?id=0By2Mfv6zO9SkVGktb1NCWnJqMkU" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'unstable\', \'TEST\']);return true;">';
         
         
         echo 'Download <B>UNSTABLE TEST</B><br/>version for Windows</a></h2>';
