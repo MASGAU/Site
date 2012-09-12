@@ -8,6 +8,18 @@ class Downloads extends AModule
     public function footer() {
     }
 
+
+    private $release_features = array(
+        "All-new interface!",
+        "Portable AND Desktop version in one installer! Just choose which kind of install you want!",
+        'Support for <a href="http://gamesave.info/">GameSave.Info</a> data!',
+        "The ability to add custom games, and a new automated analyzer system!",
+        "Half a  year's worth of little changes and fixes, see the Changelog for a complete list"
+        );
+    private $test_features = array(
+        "Nothing in particular"
+        );
+
     public function draw() {
         
         echo '<br/><center>MASGAU is awesome, but it\'s not perfect, so please add all problems found to the <a href="https://github.com/MASGAU/MASGAU/issues/new">Issues List</a></center>';
@@ -27,13 +39,12 @@ class Downloads extends AModule
         echo '</td><td>';
         echo '
         <p>Release highlights:
-        <ul>
-        <li>All-new interface!</li>
-        <li>Portable AND Desktop version in one installer! Just choose which kind of install you want!</li>
-        <li>Support for <a href="http://gamesave.info/">GameSave.Info</a> data!</li>
-        <li>The ability to add custom games, and a new automated analyzer system!</li>
-        <li>Half a  year\'s worth of little changes and fixes, see the Changelog for a complete list</li>
-        </ul>
+        <ul>';
+        foreach($this->release_features as $feature) {
+            echo "<li>".$feature."</li>";
+        
+        }
+        echo '</ul>
         </p>
         ';
         
@@ -50,9 +61,12 @@ class Downloads extends AModule
         
         echo '</td><td>';
         echo '<p>Features currently in testing:'
-        .'<ul>'
-        .'<li>Nothing! Haha!</li>'
-        .'</ul>'
+        .'<ul>';
+        foreach($this->test_features as $feature) {
+            echo "<li>".$feature."</li>";
+        
+        }
+        echo '</ul>'
         .'</p>'
 
         .'</td></tr><tr><td>'
@@ -60,7 +74,11 @@ class Downloads extends AModule
         .'<h2><a href="https://github.com/MASGAU/MASGAU/downloads">Download Older Versions</a></h2>'
         
         .'</td><td>'
-        .'<h2><a href="https://github.com/MASGAU/">Source Code (GitHub)</a></h2>';
+        .'<h2><a href="https://github.com/MASGAU/">Source Code (GitHub)</a></h2>'
+        
+        .'</td></tr><tr><td>Mirrors: '
+        
+        .'<a href="http://download.cnet.com/Masgau/3000-2242_4-75761200.html?part=dl-&subj=dl&tag=button"><img src="http://i.i.com.com/cnwk.1d/i/dl/button/dl-button_a.gif" alt="Get it from CNET Download.com!" height="60" width="150" align="center" border="0"></a> ';
         
         echo '</td></tr></table>';
 
