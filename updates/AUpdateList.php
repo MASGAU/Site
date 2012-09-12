@@ -3,11 +3,11 @@
 abstract class AUpdateList {
     
     public static $latest_program_version = array(
-        "name"=>"MASGAU 1.0.1",
+        "name"=>"MASGAU 1.0.2",
         "major"=>1,
         "minor"=>0,
-        "revision"=>1,
-        "url"=>"https://github.com/downloads/MASGAU/MASGAU/MASGAU-1.0.1-Release-Setup.exe",
+        "revision"=>2,
+        "url"=>"https://github.com/downloads/MASGAU/MASGAU/MASGAU-1.0.2-Release-Setup.exe",
         "os"=>"windows",
         "release_date"=>"2012-09-04T08:00:00"
         );
