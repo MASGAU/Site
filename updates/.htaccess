@@ -5,4 +5,4 @@ RewriteEngine On
 RewriteRule index.php.* - [L]
 
 RewriteRule   ^([^/]+)/(.+)$  /updates/index.php?exporter=$1&file=$2   [L]
-RewriteRule   ^([^/]+)$  /updates/index.php?exporter=$1   [L]
+RewriteRule   ^([^/]+)[/]?$  /updates/index.php?exporter=$1   [L]
