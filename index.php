@@ -190,6 +190,7 @@ if(isset($module)) {
     echo $module->footer(); 
 }
 ?>
+<br/>MASGAU is created by Matthew Barbour and various other contributors
 </div>
 
 <div class="social_footer">
