@@ -78,7 +78,11 @@ class Downloads extends AModule
         
         .'</td></tr><tr><td>Mirrors: '
         
-        .'<a href="http://download.cnet.com/Masgau/3000-2242_4-75761200.html?part=dl-&subj=dl&tag=button"><img src="http://i.i.com.com/cnwk.1d/i/dl/button/dl-button_a.gif" alt="Get it from CNET Download.com!" height="60" width="150" align="center" border="0"></a> ';
+        .'<a href="http://download.cnet.com/Masgau/3000-2242_4-75761200.html?part=dl-&subj=dl&tag=button"><img src="http://i.i.com.com/cnwk.1d/i/dl/button/dl-button_a.gif" alt="Get it from CNET Download.com!" height="60" width="150" align="center" border="0"></a> '
+        
+        
+        .'<a href="http://www.soft82.com/download/windows/masgau/"><img src="http://www.soft82.com/images/download_buttons/download_button_1.gif" width="158" height="44" border="0" alt="Download From Soft82.com"></a>'
+        ;
         
         echo '</td></tr></table>';
 
