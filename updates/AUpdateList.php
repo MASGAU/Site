@@ -7,7 +7,7 @@ abstract class AUpdateList {
         "major"=>1,
         "minor"=>0,
         "revision"=>4,
-        "url"=>"MASGAU-1.0.4-Release-Setup.exe",
+        "filename"=>"MASGAU-1.0.4-Release-Setup.exe",
         "os"=>"windows",
         "release_date"=>"2013-01-01T12:00:00",
         "features"=>array(
@@ -74,7 +74,7 @@ abstract class AUpdateList {
             $root->appendChild($this->createProgramElement());
     }
     
-    public function curPageURL() {
+    public function pageURL() {
         $pageURL = 'http';
         $pageURL .= "://";
         if ($_SERVER["SERVER_PORT"] != "80") {
@@ -82,7 +82,11 @@ abstract class AUpdateList {
         } else {
             $pageURL .= $_SERVER["SERVER_NAME"];// . $_SERVER["REQUEST_URI"];
         }
-        return $pageURL.'/updates';
+        return $pageURL;
+    }
+    
+    public function curPageURL() {
+        return $this->pageURL().'/updates';
     }
 
     public function drawPage() {
