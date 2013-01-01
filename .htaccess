@@ -2,6 +2,7 @@ RewriteEngine On
 
 RewriteRule ^.*gamesaveinfo/.*$ - [L]
 RewriteRule ^.*updates/.*$ - [L]
+RewriteRule ^.*downloads/.+ - [L]
 RewriteRule ((phpbb/.*)|(tardisbleu/.*)|(forums/.*)|(updates/.*)|(images.php.*)|(ajax.php.*)|(css/.*)|(images/.*)|(thumbs/.*)|(js/.*)|(libs/.*))$  - [L]
 RewriteRule ^page/([^/]+)/.*$ /index.php?module=page&name=$1 [L]
 RewriteRule   ^([^/]+)/.*$  /index.php?module=$1   [L]
