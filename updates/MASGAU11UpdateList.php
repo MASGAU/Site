@@ -93,7 +93,7 @@ class MASGAU11UpdateList extends AUpdateList {
         $file->appendChild($this->xml->createAttribute("revision"))->
                 appendChild($this->xml->createTextNode(self::$latest_program_version["revision"]));
         $file->appendChild($this->xml->createAttribute("url"))->
-                appendChild($this->xml->createTextNode(self::$latest_program_version["url"]));
+                appendChild($this->xml->createTextNode($this->pageURL()."/downloads/"));
         $file->appendChild($this->xml->createAttribute("date"))->
                 appendChild($this->xml->createTextNode(self::$latest_program_version["release_date"]));
         return $file;

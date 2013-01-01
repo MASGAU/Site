@@ -3,13 +3,27 @@
 abstract class AUpdateList {
     
     public static $latest_program_version = array(
-        "name"=>"MASGAU 1.0.2",
+        "name"=>"MASGAU 1.0.4",
         "major"=>1,
         "minor"=>0,
-        "revision"=>2,
-        "url"=>"https://github.com/downloads/MASGAU/MASGAU/MASGAU-1.0.2-Release-Setup.exe",
+        "revision"=>4,
+        "filename"=>"MASGAU-1.0.4-Release-Setup.exe",
         "os"=>"windows",
-        "release_date"=>"2012-09-04T08:00:00"
+        "release_date"=>"2013-01-01T12:00:00",
+        "features"=>array(
+            "All-new interface!",
+            "Portable AND Desktop version in one installer! Just choose which kind of install you want!",
+            'Support for <a href="http://gamesave.info/">GameSave.Info</a> data!',
+            "The ability to add custom games, and a new automated analyzer system!",
+            "Half a  year's worth of little changes and fixes, see the Changelog for a complete list",
+            "Support for Steam's new install-wherever-you-want feature!"
+            )
+        );
+    public static $old_program_versions = array(
+        "MASGAU-1.0.2-Release-Setup.exe",
+        "MASGAU-1.0.0-Release-Setup.exe",
+        "MASGAU-0.9.1-Setup.exe",
+        "MASGAU-0.9.1-Portable.zip"
         );
     
     protected $xml;
@@ -60,7 +74,7 @@ abstract class AUpdateList {
             $root->appendChild($this->createProgramElement());
     }
     
-    public function curPageURL() {
+    public function pageURL() {
         $pageURL = 'http';
         $pageURL .= "://";
         if ($_SERVER["SERVER_PORT"] != "80") {
@@ -68,7 +82,11 @@ abstract class AUpdateList {
         } else {
             $pageURL .= $_SERVER["SERVER_NAME"];// . $_SERVER["REQUEST_URI"];
         }
-        return $pageURL.'/updates';
+        return $pageURL;
+    }
+    
+    public function curPageURL() {
+        return $this->pageURL().'/updates';
     }
 
     public function drawPage() {

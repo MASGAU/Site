@@ -9,13 +9,7 @@ class Downloads extends AModule
     }
 
 
-    private $release_features = array(
-        "All-new interface!",
-        "Portable AND Desktop version in one installer! Just choose which kind of install you want!",
-        'Support for <a href="http://gamesave.info/">GameSave.Info</a> data!',
-        "The ability to add custom games, and a new automated analyzer system!",
-        "Half a  year's worth of little changes and fixes, see the Changelog for a complete list"
-        );
+
     private $test_features = array(
         "Nothing in particular"
         );
@@ -31,7 +25,7 @@ class Downloads extends AModule
         $version_string = "v.".$version['major'].".".$version['minor'].".".$version['revision'];
         
         
-        echo '<h2><a href="'.$version['url'].'" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'stable\', \''.$version_string.'\']);return true;">';
+        echo '<h2><a href="'.$version['filename'].'" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'stable\', \''.$version_string.'\']);return true;">';
     //    echo '<p>You can download the latest version from the <a href="https://github.com/MASGAU/">GitHub page</a>, or from here:</p>';
         echo 'Download '.$version_string.' Installer for Windows<br />(Desktop AND Portable!)</a></h2>'        
         .'<p>MASGAU REQUIRES <a href="http://www.microsoft.com/NET/">Microsoft\'s .NET framework</a> to be installed. Setup will  download and install it automatically if it isn\'t.</p>';
@@ -40,7 +34,7 @@ class Downloads extends AModule
         echo '
         <p>Release highlights:
         <ul>';
-        foreach($this->release_features as $feature) {
+        foreach($version['features'] as $feature) {
             echo "<li>".$feature."</li>";
         
         }
@@ -71,9 +65,14 @@ class Downloads extends AModule
 
         .'</td></tr><tr><td>'
                 
-        .'<h2><a href="https://github.com/MASGAU/MASGAU/downloads">Download Older Versions</a></h2>'
+        .'<h2>Download Older Versions</h2>';
         
-        .'</td><td>'
+        $old_version = AUpdateList::$old_program_versions;
+        foreach($old_version as $feature) {
+            echo "<center><b><a href=\"".$feature."\">".$feature."</a></b></center>";
+        }
+
+        echo '</td><td>'
         .'<h2><a href="https://github.com/MASGAU/">Source Code (GitHub)</a></h2>'
         
         .'</td></tr><tr><td>Mirrors: '
