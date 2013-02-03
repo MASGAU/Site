@@ -18,6 +18,7 @@ class MASGAUExport extends APIController {
         
         echo '<html><head>'."\n";
         echo '<title>'.$title.'</title>'."\n";
+        echo '<META NAME="robots" CONTENT="noindex,nofollow,noarchive">';
         echo '<script type="text/javascript" src="../libs/jquery/jquery-1.7.2.min.js"></script>'."\n";
         echo '<script type="text/javascript" src="../libs/flot/jquery.flot.js"></script>'."\n";
         
