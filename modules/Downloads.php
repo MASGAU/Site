@@ -25,7 +25,7 @@ class Downloads extends AModule
         $version_string = "v.".$version['major'].".".$version['minor'].".".$version['revision'];
         
         
-        echo '<h2><a href="'.$version['filename'].'" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'stable\', \''.$version_string.'\']);return true;">';
+        echo '<h2><a href="'.$version['filename'].'" target="_blank" onclick="_gaq.push([\'_trackEvent\',\'Download\',\''.$version['name'].'\',this.href]);">';
     //    echo '<p>You can download the latest version from the <a href="https://github.com/MASGAU/">GitHub page</a>, or from here:</p>';
         echo 'Download '.$version_string.' Installer for Windows<br />(Desktop AND Portable!)</a></h2>'        
         .'<p>MASGAU REQUIRES <a href="http://www.microsoft.com/NET/">Microsoft\'s .NET framework</a> to be installed. Setup will  download and install it automatically if it isn\'t.</p>';
@@ -48,7 +48,7 @@ class Downloads extends AModule
         
         . '</td></tr><tr><td>'
                 
-        .'<h2><a href="https://docs.google.com/open?id=0By2Mfv6zO9SkVGktb1NCWnJqMkU" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'unstable\', \'TEST\']);return true;">';
+        .'<h2><a href="https://docs.google.com/open?id=0By2Mfv6zO9SkVGktb1NCWnJqMkU" target="_blank" onclick="_gaq.push([\'_trackEvent\',\'Download\',\'Unstable\',this.href]);">';
         
         
         echo 'Download <B>UNSTABLE TEST</B><br/>version for Windows</a></h2>';
@@ -68,8 +68,9 @@ class Downloads extends AModule
         .'<h2>Download Older Versions</h2>';
         
         $old_version = AUpdateList::$old_program_versions;
-        foreach($old_version as $feature) {
-            echo "<center><b><a href=\"".$feature."\">".$feature."</a></b></center>";
+        foreach($old_version as $version) {
+            echo '<center><b><a href="'.$version.'" target="_blank" onclick="_gaq.push([\'_trackEvent\',\'Download\',\''.$version.'\',this.href]);">';
+            echo $version."</a></b></center>";
         }
 
         echo '</td><td>'
@@ -77,10 +78,12 @@ class Downloads extends AModule
         
         .'</td></tr><tr><td>Mirrors: '
         
-        .'<a href="http://download.cnet.com/Masgau/3000-2242_4-75761200.html?part=dl-&subj=dl&tag=button"><img src="http://i.i.com.com/cnwk.1d/i/dl/button/dl-button_a.gif" alt="Get it from CNET Download.com!" height="60" width="150" align="center" border="0"></a> '
+        .'<a href="http://download.cnet.com/Masgau/3000-2242_4-75761200.html?part=dl-&subj=dl&tag=button" target="_blank" onclick="_gaq.push([\'_trackEvent\',\'Download\',\'CNET\',this.href]);">
+        <img src="http://i.i.com.com/cnwk.1d/i/dl/button/dl-button_a.gif" alt="Get it from CNET Download.com!" height="60" width="150" align="center" border="0"></a> '
         
         
-        .'<a href="http://www.soft82.com/download/windows/masgau/"><img src="http://www.soft82.com/images/download_buttons/download_button_1.gif" width="158" height="44" border="0" alt="Download From Soft82.com"></a>'
+        .'<a href="http://www.soft82.com/download/windows/masgau/" target="_blank" onclick="_gaq.push([\'_trackEvent\',\'Download\',\'SOFT82\',this.href]);">
+        <img src="http://www.soft82.com/images/download_buttons/download_button_1.gif" width="158" height="44" border="0" alt="Download From Soft82.com"></a>'
         ;
         
         echo '</td></tr></table>';

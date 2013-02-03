@@ -156,7 +156,7 @@ class CompatabilityTable {
     
     function drawCompatRow($game_res, $make_link = true) {
         $new_row = '<tr class="compatibility"><th>';
-        $new_row .= '<a href="http://gamesave.info/#'.$game_res->name.'">'. $game_res->title . '</a>';
+        $new_row .= '<a href="http://gamesave.info/'.$game_res->name.'/">'. $game_res->title . '</a>';
         $new_row .= '</th>';
 
         $compats = array();
