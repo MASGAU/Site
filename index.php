@@ -86,8 +86,7 @@ include_once 'updates/AUpdateList.php';
 $version = AUpdateList::$latest_program_version;
 $version_string = "v.".$version['major'].".".$version['minor'].".".$version['revision'];
 
-
-echo '<a href="http://masgau.org/downloads/'.$version['filename'].'" onlick="_gaq.push([\'_trackEvent\', \'downloads\', \'stable\', \''.$version_string.'\']);return true;">';
+echo '<a href="http://masgau.org/downloads/'.$version['filename'].'" target="_blank" onclick="_gaq.push([\'_trackEvent\',\'Download\',\''.$version['name'].'\',this.href]);">';
 
 ?>
 
