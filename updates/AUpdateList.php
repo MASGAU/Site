@@ -3,23 +3,23 @@
 abstract class AUpdateList {
     
     public static $latest_program_version = array(
-        "name"=>"MASGAU 1.0.4",
+        "name"=>"MASGAU 1.0.6",
         "major"=>1,
         "minor"=>0,
-        "revision"=>4,
-        "filename"=>"MASGAU-1.0.4-Release-Setup.exe",
+        "revision"=>6,
+        "filename"=>"MASGAU-1.0.6-Release-Setup.exe",
         "os"=>"windows",
         "release_date"=>"2013-01-01T12:00:00",
         "features"=>array(
-            "All-new interface!",
             "Portable AND Desktop version in one installer! Just choose which kind of install you want!",
             'Support for <a href="http://gamesave.info/">GameSave.Info</a> data!',
             "The ability to add custom games, and a new automated analyzer system!",
-            "Half a  year's worth of little changes and fixes, see the Changelog for a complete list",
-            "Support for Steam's new install-wherever-you-want feature!"
+            "Support for Steam's new install-wherever-you-want feature!",
+            "More issue fixes than you can shake a stick at! Check the Changelog for details!"
             )
         );
     public static $old_program_versions = array(
+        "MASGAU-1.0.4-Release-Setup.exe",
         "MASGAU-1.0.2-Release-Setup.exe",
         "MASGAU-1.0.0-Release-Setup.exe",
         "MASGAU-0.9.1-Setup.exe",
