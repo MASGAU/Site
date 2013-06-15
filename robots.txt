@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /css/
+Disallow: /gamesaveinfo/
+Disallow: /js/
+Disallow: /libs/
+Disallow: /modules/
+Disallow: /shared/
+Disallow: /thumbs/
+Disallow: /updates/

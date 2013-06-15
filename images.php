@@ -14,7 +14,7 @@
                 filemtime($original_name)>filemtime($adjusted_name)) {
                     
                     if(!is_dir('thumbs/'.$info['dirname']))
-                        mkdir('thumbs/'.$info['dirname']);
+                        mkdir('thumbs/'.$info['dirname'],0775,true);
                 $image = WideImage::load($original_name);
                 $image = $image->resize($image_width,null);
                 $image->saveToFile($adjusted_name);
