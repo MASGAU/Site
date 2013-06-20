@@ -124,7 +124,7 @@ echo '<p>'.$version_string.' FOR WINDOWS</p>'   ;
             array("MASGAU on GitHub","hyperlink","https://github.com/MASGAU/"),
             ),
         "For Some Help"=>array(
-            array("Forums","hyperlink","http://forums.masgau.org/"),
+            //array("Forums","hyperlink","http://forums.masgau.org/"),
             array("Report A Problem!","hyperlink","https://github.com/MASGAU/MASGAU/issues/new"),
             array("MASGAU On Twitter","hyperlink","http://twitter.com/MASGAU/"),
             array("MASGAU On Facebook","hyperlink","http://www.facebook.com/masgau"),

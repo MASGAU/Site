@@ -47,7 +47,7 @@ class Contributors extends AModule
                         $column_count = null;
                     }
                 }
-               // echo "</div>";
+                echo "</div>";
                 echo "</div>";
             }
         }
