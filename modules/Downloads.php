@@ -74,17 +74,26 @@ class Downloads extends AModule
         }
 
         echo '</td><td>'
-        .'<h2><a href="https://github.com/MASGAU/">Source Code (GitHub)</a></h2>'
+        .'<h2><a href="https://github.com/MASGAU/">Source Code (GitHub)</a></h2>';
         
-        .'</td></tr><tr><td>Mirrors: '
+        echo '</td></tr><tr><td colspan="2">Award/emblem things: ';
+        
+        echo '<a href="http://www.soft82.com/download/windows/masgau/" target="_blank"><img src="http://www.soft82.com/images/produse/clean_awards/soft82_clean_award_40523.png" width="167" height="129" border="0" alt="Soft82 100% Clean Award For MASGAU" /></a>';
+        echo '<a href="http://www.softpedia.com/progClean/MASGAU-Clean-135066.html" target="_blank"><img src="http://www.softpedia.com/base_img/softpedia_free_award_f.gif" /></a>';
+        
+        echo '</td></tr><tr><td colspan="2">Mirrors: '
         
         .'<a href="http://download.cnet.com/Masgau/3000-2242_4-75761200.html?part=dl-&subj=dl&tag=button" target="_blank" onclick="_gaq.push([\'_trackEvent\',\'Download\',\'CNET\',this.href]);">
         <img src="http://i.i.com.com/cnwk.1d/i/dl/button/dl-button_a.gif" alt="Get it from CNET Download.com!" height="60" width="150" align="center" border="0"></a> '
         
         
         .'<a href="http://www.soft82.com/download/windows/masgau/" target="_blank" onclick="_gaq.push([\'_trackEvent\',\'Download\',\'SOFT82\',this.href]);">
-        <img src="http://www.soft82.com/images/download_buttons/download_button_1.gif" width="158" height="44" border="0" alt="Download From Soft82.com"></a>'
+        <img src="http://www.soft82.com/images/download_buttons/download_button_1.gif" alt="Download From Soft82.com"></a>'
+
+        .'<a href="http://www.softpedia.com/get/System/Back-Up-and-Recovery/MASGAU.shtml" target="_blank" onclick="_gaq.push([\'_trackEvent\',\'Download\',\'SoftPedia\',this.href]);">
+        <img src="http://s1.softpedia-static.com/base_img/softpedia_logo4a.gif" ></a>'
         ;
+        
         
         echo '</td></tr></table>';
 

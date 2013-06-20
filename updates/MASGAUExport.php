@@ -9,7 +9,8 @@ class MASGAUExport extends APIController {
     }
     private $xml_versions = array(
         "MASGAU11"=>array(),
-        "GameSaveInfo20"=>array()
+        "GameSaveInfo20"=>array(),
+        "GameSaveInfo202"=>array()
         );
 
 
@@ -19,8 +20,8 @@ class MASGAUExport extends APIController {
         echo '<html><head>'."\n";
         echo '<title>'.$title.'</title>'."\n";
         echo '<META NAME="robots" CONTENT="noindex,nofollow,noarchive">';
-        echo '<script type="text/javascript" src="../libs/jquery/jquery-1.7.2.min.js"></script>'."\n";
-        echo '<script type="text/javascript" src="../libs/flot/jquery.flot.js"></script>'."\n";
+        //echo '<script type="text/javascript" src="../libs/jquery/jquery-1.7.2.min.js"></script>'."\n";
+        //echo '<script type="text/javascript" src="../libs/flot/jquery.flot.js"></script>'."\n";
         
         
         
@@ -28,7 +29,7 @@ class MASGAUExport extends APIController {
         
         echo '</head><body>'."\n";
         
-         echo '<div id="placeholder" style="width:600px;height:300px;float:right;border:solid 1px black;"></div>'."\n";
+         //echo '<div id="placeholder" style="width:600px;height:300px;float:right;border:solid 1px black;"></div>'."\n";
         
         echo '<h1>'.$title.'</h1>'."\n";
         
@@ -38,8 +39,8 @@ class MASGAUExport extends APIController {
         $usage_stats = array();
         
         foreach(array_keys($this->xml_versions) as $exporter) {
-          echo '<li>';
-          echo '<a href="/updates/'.$exporter.'/">'.$exporter.'</a>'."\n";
+          echo '<li><details>';
+          echo '<summary><a href="/updates/'.$exporter.'/">'.$exporter.'</a></summary>'."\n";
           $class = $exporter.'UpdateList';
 
             $exporter_stats = array();
@@ -62,7 +63,7 @@ class MASGAUExport extends APIController {
             }
             
             echo '</ul>'."\n";
-            echo '</li>'."\n";
+            echo '</details></li>'."\n";
             
 //            $usage_stats[$exporter] = $exporter_stats;
 
