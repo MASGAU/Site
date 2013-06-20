@@ -9,7 +9,7 @@ abstract class AUpdateList {
         "revision"=>6,
         "filename"=>"MASGAU-1.0.6-Release-Setup.exe",
         "os"=>"windows",
-        "release_date"=>"2013-01-01T12:00:00",
+        "release_date"=>"2013-06-20T12:00:00",
         "features"=>array(
             "Portable AND Desktop version in one installer! Just choose which kind of install you want!",
             'Support for <a href="http://gamesave.info/">GameSave.Info</a> data!',
