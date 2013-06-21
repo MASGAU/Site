@@ -3,13 +3,13 @@
 abstract class AUpdateList {
     
     public static $latest_program_version = array(
-        "name"=>"MASGAU 1.0.4",
+        "name"=>"MASGAU 1.0.6",
         "major"=>1,
         "minor"=>0,
-        "revision"=>4,
-        "filename"=>"MASGAU-1.0.4-Release-Setup.exe",
+        "revision"=>6,
+        "filename"=>"MASGAU-1.0.6-Release-Setup.exe",
         "os"=>"windows",
-        "release_date"=>"2013-01-01T12:00:00",
+        "release_date"=>"2013-06-20T12:00:00",
         "features"=>array(
             "Portable AND Desktop version in one installer! Just choose which kind of install you want!",
             'Support for <a href="http://gamesave.info/">GameSave.Info</a> data!',
