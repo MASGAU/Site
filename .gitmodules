@@ -1,6 +1,6 @@
 [submodule "libs"]
 	path = libs
-	url = https://github.com/sanmadjack/SiteLibs.git
+	url = ../../sanmadjack/SiteLibs.git
 [submodule "gamesaveinfo"]
 	path = gamesaveinfo
-	url = https://github.com/GameSaveInfo/Site.git
+	url = ../../GameSaveInfo/Site.git
