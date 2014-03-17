@@ -1,6 +1,0 @@
-[submodule "libs"]
-	path = libs
-	url = ../../sanmadjack/SiteLibs.git
-[submodule "gamesaveinfo"]
-	path = gamesaveinfo
-	url = ../../GameSaveInfo/Site.git
