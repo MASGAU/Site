@@ -1,7 +1,7 @@
 <?php
 include_once 'AModule.php';
 include_once 'shared/CompatabilityTable.php';
-include_once 'gamesaveinfo/gamedata/Games.php';
+include_once 'libs/gsi/Games.php';
 class Support extends AModule
 {
     private $letters;

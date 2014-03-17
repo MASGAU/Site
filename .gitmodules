@@ -4,3 +4,6 @@
 [submodule "libs/smj"]
 	path = libs/smj
 	url = ../../sanmadjack/SiteLibs.git
+[submodule "libs/wideimage"]
+	path = libs/wideimage
+	url = https://github.com/spekkionu/wideimage.git

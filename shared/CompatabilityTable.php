@@ -1,6 +1,6 @@
 <?php
 include_once 'modules/GameData.php';
-include_once 'gamesaveinfo/gamedata/Game.php';
+include_once 'libs/gsi/Game.php';
 class CompatabilityTable {
     private static $db = null;
     private static $decoder;
