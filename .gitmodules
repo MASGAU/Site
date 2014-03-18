@@ -1,6 +1,6 @@
 [submodule "libs/gsi"]
 	path = libs/gsi
-	url = ../Lib.PHP.git
+	url = ../../GameSaveInfo/Lib.PHP.git
 [submodule "libs/smj"]
 	path = libs/smj
 	url = ../../sanmadjack/SiteLibs.git
