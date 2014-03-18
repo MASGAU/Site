@@ -1,5 +1,5 @@
 <?php
-include_once '../gamesaveinfo/api/APIController.php';
+include_once '../libs/gsi/api/APIController.php';
 
 class MASGAUExport extends APIController {
     

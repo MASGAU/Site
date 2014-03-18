@@ -8,8 +8,14 @@
         if(is_file($folder.'/libs/smj/'.$class_name.'.php')) {
             include_once $folder.'/libs/smj/'.$class_name.'.php';
         }
-        if(is_file($folder.'/libs/gsi/'.$class_name.'.php')) {
-            include_once $folder.'/libs/gsi/'.$class_name.'.php';
+        if(is_file($folder.'/libs/gsi/data/'.$class_name.'.php')) {
+            include_once $folder.'/libs/gsi/data/'.$class_name.'.php';
+        }
+        if(is_file($folder.'/libs/gsi/api/'.$class_name.'.php')) {
+            include_once $folder.'/libs/gsi/api/'.$class_name.'.php';
+        }
+        if(is_file($folder.'/libs/gsi/exporters/'.$class_name.'.php')) {
+            include_once $folder.'/libs/gsi/exporters/'.$class_name.'.php';
         }
     }
     
