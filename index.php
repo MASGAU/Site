@@ -1,10 +1,13 @@
 <?php
     $title = "MASGAU";
+    
+    
+    include_once 'headers.php';
+
 	include_once 'modules/AModule.php';
     include_once 'modules/Page.php';
     include_once 'modules/Downloads.php';
 
-    include_once 'headers.php';
     if(!isset($module)) {
         $_GET['name'] = 'home';
         $module = AModule::LoadModule('page');

@@ -14,6 +14,7 @@
     }
     
     include_once $folder.'/config.php';
+    include_once $folder.'/libs/smj/Database.php';
     
     global $test_mode;
     $url = $_SERVER["SERVER_NAME"];
